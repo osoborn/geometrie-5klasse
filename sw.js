@@ -1,4 +1,4 @@
-const CACHE_NAME = "geometrie-5klasse-v1";
+const CACHE_NAME = "geometrie-5klasse-v2";
 const ASSETS = [
   "./",
   "./index.html",
@@ -30,6 +30,12 @@ self.addEventListener("activate", (event) => {
 
 self.addEventListener("fetch", (event) => {
   event.respondWith(
-    caches.match(event.request).then((cached) => cached || fetch(event.request))
+    fetch(event.request)
+      .then((networkResp) => {
+        const clone = networkResp.clone();
+        caches.open(CACHE_NAME).then((cache) => cache.put(event.request, clone));
+        return networkResp;
+      })
+      .catch(() => caches.match(event.request))
   );
 });

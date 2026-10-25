@@ -719,62 +719,121 @@
     renderWinkelPaarSvg(state.wpCurrentItem, false);
   }
 
-  function renderWinkelPaarSvg(item, solved) {
-    const cx = 195;
-    const cy = 140;
-    const rRay = 105;
-    const startDeg = item.ray1Deg || 0;
-    const d1 = item.d1;
-    const d2 = item.d2;
+  // Helper para dibujar un par de ángulos estilo cuaderno (con vértice, puntos en los rayos, flechas y arcos antihorarios)
+  function buildAnglePairNotebookSvg({
+    vertex,
+    p1,
+    p2,
+    startDeg = 0,
+    d1,
+    d2,
+    txt1,
+    txt2,
+    viewWidth = 390,
+    viewHeight = 260,
+    cx = 195,
+    cy = 135,
+    rPoint = 82,
+    rRay = 108
+  }) {
     const ray2Deg = (startDeg + d1) % 360;
 
-    const pt1 = polarToScreen(cx, cy, rRay, startDeg);
-    const pt2 = polarToScreen(cx, cy, rRay, ray2Deg);
-    const lbl1 = polarToScreen(cx, cy, rRay + 20, startDeg);
-    const lbl2 = polarToScreen(cx, cy, rRay + 20, ray2Deg);
-    const vLbl = polarToScreen(cx, cy, 22, (startDeg + d1 / 2 + 180) % 360);
+    // Puntos sobre los rayos (donde va la marquita y la letra) y puntas de flecha al final del rayo
+    const pt1 = polarToScreen(cx, cy, rPoint, startDeg);
+    const tip1 = polarToScreen(cx, cy, rRay, startDeg);
+    const pt2 = polarToScreen(cx, cy, rPoint, ray2Deg);
+    const tip2 = polarToScreen(cx, cy, rRay, ray2Deg);
 
-    const arc1 = describeArcCCW(cx, cy, 38, startDeg, d1);
-    const arc2 = describeArcCCW(cx, cy, 54, ray2Deg, d2);
+    // Pequeñas marquitas transversales (ticks) en los puntos p1 y p2 como en el cuaderno
+    const perp1A = polarToScreen(pt1.x, pt1.y, 6, startDeg + 90);
+    const perp1B = polarToScreen(pt1.x, pt1.y, 6, startDeg - 90);
+    const perp2A = polarToScreen(pt2.x, pt2.y, 6, ray2Deg + 90);
+    const perp2B = polarToScreen(pt2.x, pt2.y, 6, ray2Deg - 90);
 
-    const mid1 = polarToScreen(cx, cy, 62, startDeg + d1 / 2);
-    const mid2 = polarToScreen(cx, cy, 76, ray2Deg + d2 / 2);
+    // Posición de las etiquetas de las letras p1, p2 y vértice (desplazadas perpendicularmente para que no choquen con el rayo)
+    const lbl1 = polarToScreen(pt1.x, pt1.y, 20, startDeg - 75);
+    const lbl2 = polarToScreen(pt2.x, pt2.y, 20, ray2Deg + 75);
+    const vLbl = polarToScreen(cx, cy, 24, (startDeg + d1 / 2 + 180) % 360);
 
-    const txt1 = solved || item.given === 1 ? `${d1}°` : `?°`;
-    const txt2 = solved || item.given === 2 ? `${d2}°` : `?°`;
+    const rArc1 = 34;
+    const rArc2 = 50;
+    const arc1 = describeArcCCW(cx, cy, rArc1, startDeg, d1);
+    const arc2 = describeArcCCW(cx, cy, rArc2, ray2Deg, d2);
 
-    document.getElementById("wp-svg-stage").innerHTML = `
-      <svg viewBox="0 0 390 280" aria-label="Winkelpaar ${item.p1}${item.vertex}${item.p2}">
-        <rect x="4" y="4" width="382" height="272" rx="12" fill="#ffffff" stroke="#e2e8f0"/>
-        <!-- Arco 2 (azul) -->
-        <path d="${arc2}" fill="rgba(2, 132, 199, 0.08)" stroke="#0284c7" stroke-width="2.5" stroke-dasharray="5,3"/>
-        <!-- Arco 1 (verde) -->
-        <path d="${arc1}" fill="rgba(22, 163, 74, 0.18)" stroke="#16a34a" stroke-width="3"/>
+    const mid1 = polarToScreen(cx, cy, rArc1 + 22, startDeg + d1 / 2);
+    const mid2 = polarToScreen(cx, cy, rArc2 + 24, ray2Deg + d2 / 2);
 
-        <!-- Rayos -->
-        <line x1="${cx}" y1="${cy}" x2="${pt1.x.toFixed(1)}" y2="${pt1.y.toFixed(1)}" stroke="#0f172a" stroke-width="3"/>
-        <line x1="${cx}" y1="${cy}" x2="${pt2.x.toFixed(1)}" y2="${pt2.y.toFixed(1)}" stroke="#0f172a" stroke-width="3"/>
+    const uid = `${vertex}_${p1}_${p2}_${d1}`;
 
-        <!-- Puntos en los rayos -->
-        <circle cx="${pt1.x.toFixed(1)}" cy="${pt1.y.toFixed(1)}" r="4.5" fill="#0f172a"/>
-        <text x="${lbl1.x.toFixed(1)}" y="${(lbl1.y + 5).toFixed(1)}" text-anchor="middle" font-size="16" font-weight="900" fill="#0f172a">${item.p1}</text>
+    return `
+      <svg viewBox="0 0 ${viewWidth} ${viewHeight}" aria-label="Winkelpaar ${p1}${vertex}${p2}">
+        <defs>
+          <marker id="rayArr_${uid}" viewBox="0 0 10 10" refX="7" refY="5" markerWidth="6" markerHeight="6" orient="auto">
+            <path d="M 0 1 L 9 5 L 0 9 z" fill="#0f172a"/>
+          </marker>
+          <marker id="arcArrG_${uid}" viewBox="0 0 10 10" refX="6" refY="5" markerWidth="5" markerHeight="5" orient="auto">
+            <path d="M 0 1 L 9 5 L 0 9 z" fill="#16a34a"/>
+          </marker>
+          <marker id="arcArrB_${uid}" viewBox="0 0 10 10" refX="6" refY="5" markerWidth="5" markerHeight="5" orient="auto">
+            <path d="M 0 1 L 9 5 L 0 9 z" fill="#0284c7"/>
+          </marker>
+        </defs>
+        <rect x="4" y="4" width="${viewWidth - 8}" height="${viewHeight - 8}" rx="12" fill="#ffffff" stroke="#e2e8f0"/>
 
-        <circle cx="${pt2.x.toFixed(1)}" cy="${pt2.y.toFixed(1)}" r="4.5" fill="#0f172a"/>
-        <text x="${lbl2.x.toFixed(1)}" y="${(lbl2.y + 5).toFixed(1)}" text-anchor="middle" font-size="16" font-weight="900" fill="#0f172a">${item.p2}</text>
+        <!-- Arco 2 (azul exterior antihorario) -->
+        <path d="${arc2}" fill="rgba(2, 132, 199, 0.08)" stroke="#0284c7" stroke-width="2.5" stroke-dasharray="5,3" marker-end="url(#arcArrB_${uid})"/>
+        <!-- Arco 1 (verde interior antihorario) -->
+        <path d="${arc1}" fill="rgba(22, 163, 74, 0.18)" stroke="#16a34a" stroke-width="3" marker-end="url(#arcArrG_${uid})"/>
 
-        <!-- Vértice -->
+        <!-- Rayos con flecha en la punta -->
+        <line x1="${cx}" y1="${cy}" x2="${tip1.x.toFixed(1)}" y2="${tip1.y.toFixed(1)}" stroke="#0f172a" stroke-width="3" marker-end="url(#rayArr_${uid})"/>
+        <line x1="${cx}" y1="${cy}" x2="${tip2.x.toFixed(1)}" y2="${tip2.y.toFixed(1)}" stroke="#0f172a" stroke-width="3" marker-end="url(#rayArr_${uid})"/>
+
+        <!-- Marquita (tick) y punto para P1 -->
+        <line x1="${perp1A.x.toFixed(1)}" y1="${perp1A.y.toFixed(1)}" x2="${perp1B.x.toFixed(1)}" y2="${perp1B.y.toFixed(1)}" stroke="#0f172a" stroke-width="2.5"/>
+        <circle cx="${pt1.x.toFixed(1)}" cy="${pt1.y.toFixed(1)}" r="4" fill="#0f172a"/>
+        <text x="${lbl1.x.toFixed(1)}" y="${(lbl1.y + 5).toFixed(1)}" text-anchor="middle" font-size="16" font-weight="900" fill="#0f172a">${p1}</text>
+
+        <!-- Marquita (tick) y punto para P2 -->
+        <line x1="${perp2A.x.toFixed(1)}" y1="${perp2A.y.toFixed(1)}" x2="${perp2B.x.toFixed(1)}" y2="${perp2B.y.toFixed(1)}" stroke="#0f172a" stroke-width="2.5"/>
+        <circle cx="${pt2.x.toFixed(1)}" cy="${pt2.y.toFixed(1)}" r="4" fill="#0f172a"/>
+        <text x="${lbl2.x.toFixed(1)}" y="${(lbl2.y + 5).toFixed(1)}" text-anchor="middle" font-size="16" font-weight="900" fill="#0f172a">${p2}</text>
+
+        <!-- Vértice (Scheitelpunkt) -->
         <circle cx="${cx}" cy="${cy}" r="5.5" fill="#dc2626"/>
-        <text x="${vLbl.x.toFixed(1)}" y="${(vLbl.y + 5).toFixed(1)}" text-anchor="middle" font-size="17" font-weight="900" fill="#dc2626">${item.vertex}</text>
+        <text x="${vLbl.x.toFixed(1)}" y="${(vLbl.y + 6).toFixed(1)}" text-anchor="middle" font-size="17" font-weight="900" fill="#dc2626">${vertex}</text>
 
         <!-- Etiquetas de grados -->
         <text x="${mid1.x.toFixed(1)}" y="${mid1.y.toFixed(1)}" text-anchor="middle" font-size="13" font-weight="900" fill="#15803d">
-          ∡${item.p1}${item.vertex}${item.p2}: ${txt1} ↺
+          ${txt1}
         </text>
         <text x="${mid2.x.toFixed(1)}" y="${mid2.y.toFixed(1)}" text-anchor="middle" font-size="13" font-weight="900" fill="#0369a1">
-          ∡${item.p2}${item.vertex}${item.p1}: ${txt2} ↺
+          ${txt2}
         </text>
       </svg>
     `;
+  }
+
+  function renderWinkelPaarSvg(item, solved) {
+    const d1 = item.d1;
+    const d2 = item.d2;
+    const txt1 = `∡${item.p1}${item.vertex}${item.p2}: ${solved || item.given === 1 ? d1 + "°" : "?°"} ↺`;
+    const txt2 = `∡${item.p2}${item.vertex}${item.p1}: ${solved || item.given === 2 ? d2 + "°" : "?°"} ↺`;
+
+    document.getElementById("wp-svg-stage").innerHTML = buildAnglePairNotebookSvg({
+      vertex: item.vertex,
+      p1: item.p1,
+      p2: item.p2,
+      startDeg: item.ray1Deg || 0,
+      d1,
+      d2,
+      txt1,
+      txt2,
+      viewWidth: 390,
+      viewHeight: 280,
+      cx: 195,
+      cy: 140
+    });
   }
 
   function checkWinkelPaarExercise() {
@@ -1108,21 +1167,187 @@
   function buildMiniQuizSvg(svgType) {
     switch (svgType) {
       case "ray_ab":
-        return `<svg viewBox="0 0 240 70"><line x1="40" y1="22" x2="40" y2="48" stroke="#0284c7" stroke-width="3.5"/><line x1="40" y1="35" x2="195" y2="35" stroke="#0284c7" stroke-width="3.5"/><polygon points="202,35 188,28 188,42" fill="#0284c7"/><text x="40" y="62" text-anchor="middle" font-size="13" font-weight="800">A</text><circle cx="135" cy="35" r="4" fill="#0f172a"/><text x="135" y="62" text-anchor="middle" font-size="13" font-weight="800">B</text></svg>`;
+        return `<svg viewBox="0 0 280 95">
+          <line x1="45" y1="30" x2="45" y2="56" stroke="#0284c7" stroke-width="3.5"/>
+          <line x1="45" y1="43" x2="225" y2="43" stroke="#0284c7" stroke-width="3.5"/>
+          <polygon points="235,43 219,35 219,51" fill="#0284c7"/>
+          <circle cx="45" cy="43" r="4.5" fill="#0f172a"/>
+          <text x="45" y="76" text-anchor="middle" font-size="14" font-weight="900" fill="#0f172a">A</text>
+          <line x1="155" y1="34" x2="155" y2="52" stroke="#0f172a" stroke-width="2.5"/>
+          <circle cx="155" cy="43" r="4.5" fill="#0f172a"/>
+          <text x="155" y="76" text-anchor="middle" font-size="14" font-weight="900" fill="#0f172a">B</text>
+        </svg>`;
       case "segment_lm":
-        return `<svg viewBox="0 0 240 70"><line x1="45" y1="22" x2="45" y2="48" stroke="#16a34a" stroke-width="3.5"/><line x1="195" y1="22" x2="195" y2="48" stroke="#16a34a" stroke-width="3.5"/><line x1="45" y1="35" x2="195" y2="35" stroke="#16a34a" stroke-width="3.5"/><text x="45" y="62" text-anchor="middle" font-size="13" font-weight="800">L</text><text x="195" y="62" text-anchor="middle" font-size="13" font-weight="800">M</text></svg>`;
+        return `<svg viewBox="0 0 280 95">
+          <line x1="55" y1="30" x2="55" y2="56" stroke="#16a34a" stroke-width="3.5"/>
+          <line x1="225" y1="30" x2="225" y2="56" stroke="#16a34a" stroke-width="3.5"/>
+          <line x1="55" y1="43" x2="225" y2="43" stroke="#16a34a" stroke-width="3.5"/>
+          <circle cx="55" cy="43" r="4.5" fill="#0f172a"/>
+          <circle cx="225" cy="43" r="4.5" fill="#0f172a"/>
+          <text x="55" y="76" text-anchor="middle" font-size="14" font-weight="900" fill="#0f172a">L</text>
+          <text x="225" y="76" text-anchor="middle" font-size="14" font-weight="900" fill="#0f172a">M</text>
+        </svg>`;
       case "ray_ba_left":
-        return `<svg viewBox="0 0 240 70"><line x1="195" y1="22" x2="195" y2="48" stroke="#9333ea" stroke-width="3.5"/><line x1="195" y1="35" x2="45" y2="35" stroke="#9333ea" stroke-width="3.5"/><polygon points="36,35 50,28 50,42" fill="#9333ea"/><circle cx="100" cy="35" r="4" fill="#0f172a"/><text x="100" y="62" text-anchor="middle" font-size="13" font-weight="800">A</text><text x="195" y="62" text-anchor="middle" font-size="13" font-weight="800">B (Start)</text></svg>`;
+        return `<svg viewBox="0 0 280 95">
+          <line x1="225" y1="30" x2="225" y2="56" stroke="#9333ea" stroke-width="3.5"/>
+          <line x1="225" y1="43" x2="50" y2="43" stroke="#9333ea" stroke-width="3.5"/>
+          <polygon points="38,43 54,35 54,51" fill="#9333ea"/>
+          <line x1="115" y1="34" x2="115" y2="52" stroke="#0f172a" stroke-width="2.5"/>
+          <circle cx="115" cy="43" r="4.5" fill="#0f172a"/>
+          <circle cx="225" cy="43" r="4.5" fill="#0f172a"/>
+          <text x="115" y="76" text-anchor="middle" font-size="14" font-weight="900" fill="#0f172a">A</text>
+          <text x="225" y="76" text-anchor="middle" font-size="14" font-weight="900" fill="#0f172a">B (Start)</text>
+        </svg>`;
       case "horizon_line":
-        return `<svg viewBox="0 0 240 70"><circle cx="120" cy="38" r="16" fill="#fde047" stroke="#eab308" stroke-width="2"/><line x1="25" y1="38" x2="215" y2="38" stroke="#0284c7" stroke-width="4"/></svg>`;
+        return `<svg viewBox="0 0 280 95">
+          <circle cx="140" cy="48" r="18" fill="#fde047" stroke="#eab308" stroke-width="2"/>
+          <line x1="35" y1="48" x2="245" y2="48" stroke="#0284c7" stroke-width="4"/>
+          <circle cx="80" cy="48" r="4" fill="#0f172a"/><text x="80" y="72" text-anchor="middle" font-size="13" font-weight="800">A</text>
+          <circle cx="200" cy="48" r="4" fill="#0f172a"/><text x="200" y="72" text-anchor="middle" font-size="13" font-weight="800">B</text>
+        </svg>`;
       case "parallel_lines":
-        return `<svg viewBox="0 0 240 70"><line x1="30" y1="24" x2="210" y2="16" stroke="#16a34a" stroke-width="3"/><line x1="30" y1="52" x2="210" y2="44" stroke="#16a34a" stroke-width="3"/><text x="220" y="20" font-size="12" font-weight="800">g</text><text x="220" y="48" font-size="12" font-weight="800">h</text></svg>`;
+        return `<svg viewBox="0 0 280 95">
+          <line x1="35" y1="32" x2="235" y2="22" stroke="#16a34a" stroke-width="3"/>
+          <line x1="35" y1="64" x2="235" y2="54" stroke="#16a34a" stroke-width="3"/>
+          <circle cx="90" cy="29" r="3.5" fill="#0f172a"/><text x="90" y="18" text-anchor="middle" font-size="12" font-weight="800">A</text>
+          <circle cx="180" cy="25" r="3.5" fill="#0f172a"/><text x="180" y="14" text-anchor="middle" font-size="12" font-weight="800">B</text>
+          <circle cx="90" cy="61" r="3.5" fill="#0f172a"/><text x="90" y="82" text-anchor="middle" font-size="12" font-weight="800">C</text>
+          <circle cx="180" cy="57" r="3.5" fill="#0f172a"/><text x="180" y="78" text-anchor="middle" font-size="12" font-weight="800">D</text>
+          <text x="250" y="26" font-size="13" font-weight="900" fill="#166534">g</text>
+          <text x="250" y="58" font-size="13" font-weight="900" fill="#166534">h</text>
+        </svg>`;
       case "perp_lines":
-        return `<svg viewBox="0 0 240 80"><path d="M 120 45 L 136 45 A 16 16 0 0 0 120 29 Z" fill="#bfdbfe" stroke="#1d4ed8"/><circle cx="126" cy="39" r="2" fill="#1e40af"/><line x1="50" y1="45" x2="190" y2="45" stroke="#1d4ed8" stroke-width="3"/><line x1="120" y1="10" x2="120" y2="72" stroke="#1d4ed8" stroke-width="3"/></svg>`;
+        return `<svg viewBox="0 0 280 105">
+          <path d="M 140 55 L 158 55 A 18 18 0 0 0 140 37 Z" fill="#bfdbfe" stroke="#1d4ed8" stroke-width="1.8"/>
+          <circle cx="147" cy="48" r="2.2" fill="#1e40af"/>
+          <line x1="55" y1="55" x2="225" y2="55" stroke="#1d4ed8" stroke-width="3"/>
+          <line x1="140" y1="12" x2="140" y2="95" stroke="#1d4ed8" stroke-width="3"/>
+          <circle cx="140" cy="55" r="4.5" fill="#dc2626"/>
+          <text x="126" y="72" font-size="13" font-weight="900" fill="#dc2626">S</text>
+          <text x="236" y="59" font-size="13" font-weight="900" fill="#1e40af">g</text>
+          <text x="148" y="22" font-size="13" font-weight="900" fill="#1e40af">h</text>
+        </svg>`;
       case "angle_135":
-        return `<svg viewBox="0 0 240 85"><path d="M 148 65 A 28 28 0 0 0 100 45" fill="rgba(234,88,12,0.2)" stroke="#ea580c" stroke-width="2.5"/><line x1="120" y1="65" x2="195" y2="65" stroke="#0f172a" stroke-width="3"/><line x1="120" y1="65" x2="68" y2="15" stroke="#0f172a" stroke-width="3"/><text x="135" y="42" font-size="13" font-weight="800" fill="#c2410c">α = 135°</text></svg>`;
+        return buildAnglePairNotebookSvg({
+          vertex: "B",
+          p1: "A",
+          p2: "C",
+          startDeg: 0,
+          d1: 135,
+          d2: 225,
+          txt1: "α = 135° ↺",
+          txt2: "225° ↺",
+          viewWidth: 340,
+          viewHeight: 195,
+          cx: 170,
+          cy: 112,
+          rPoint: 62,
+          rRay: 84
+        });
+      case "angle_180_240":
+        return `<svg viewBox="0 0 340 165" aria-label="180 Grad und 240 Grad Winkel mit Punkten">
+          <rect x="2" y="2" width="336" height="161" rx="10" fill="#ffffff" stroke="#e2e8f0"/>
+          <!-- Izquierda: 180° Gestreckter Winkel ∡ABC -->
+          <path d="M 135 95 A 35 35 0 0 0 65 95" fill="rgba(234, 179, 8, 0.2)" stroke="#ca8a04" stroke-width="2.5"/>
+          <line x1="32" y1="95" x2="168" y2="95" stroke="#0f172a" stroke-width="3"/>
+          <circle cx="150" cy="95" r="4" fill="#0f172a"/><text x="150" y="116" text-anchor="middle" font-size="13" font-weight="900">A</text>
+          <circle cx="100" cy="95" r="5" fill="#dc2626"/><text x="100" y="116" text-anchor="middle" font-size="14" font-weight="900" fill="#dc2626">B</text>
+          <circle cx="50" cy="95" r="4" fill="#0f172a"/><text x="50" y="116" text-anchor="middle" font-size="13" font-weight="900">C</text>
+          <text x="100" y="48" text-anchor="middle" font-size="13" font-weight="900" fill="#854d0e">∡ABC = 180° ↺</text>
+
+          <!-- Derecha: 240° Überstumpfer Winkel ∡DEF -->
+          <path d="M 282 85 A 32 32 0 1 0 234 113" fill="rgba(147, 51, 234, 0.16)" stroke="#7e22ce" stroke-width="2.5"/>
+          <line x1="250" y1="85" x2="322" y2="85" stroke="#0f172a" stroke-width="3"/>
+          <line x1="250" y1="85" x2="214" y2="145" stroke="#0f172a" stroke-width="3"/>
+          <circle cx="305" cy="85" r="4" fill="#0f172a"/><text x="305" y="105" text-anchor="middle" font-size="13" font-weight="900">D</text>
+          <circle cx="250" cy="85" r="5" fill="#dc2626"/><text x="236" y="82" text-anchor="middle" font-size="14" font-weight="900" fill="#dc2626">E</text>
+          <circle cx="222" cy="132" r="4" fill="#0f172a"/><text x="205" y="138" text-anchor="middle" font-size="13" font-weight="900">F</text>
+          <text x="255" y="38" text-anchor="middle" font-size="13" font-weight="900" fill="#6b21a8">∡DEF = 240° ↺</text>
+        </svg>`;
+      case "pair_120_240":
+        // Frage 9: ∡LMN = 120° y ∡NML = ?° (Con los puntos L, M, N claramente marcados en las líneas!)
+        return buildAnglePairNotebookSvg({
+          vertex: "M",
+          p1: "L",
+          p2: "N",
+          startDeg: 0,
+          d1: 120,
+          d2: 240,
+          txt1: "∡LMN = 120° ↺",
+          txt2: "∡NML = ?° ↺",
+          viewWidth: 340,
+          viewHeight: 205,
+          cx: 165,
+          cy: 112,
+          rPoint: 64,
+          rRay: 86
+        });
+      case "pair_80_280":
+        // Frage 10: ∡CDF = 80° y ∡FDC = 280° (Con los puntos C, D, F claramente marcados en las líneas!)
+        return buildAnglePairNotebookSvg({
+          vertex: "D",
+          p1: "C",
+          p2: "F",
+          startDeg: 0,
+          d1: 80,
+          d2: 280,
+          txt1: "∡CDF = 80° ↺",
+          txt2: "∡FDC = 280° ↺",
+          viewWidth: 340,
+          viewHeight: 205,
+          cx: 165,
+          cy: 112,
+          rPoint: 64,
+          rRay: 86
+        });
+      case "pair_95_265":
+        // Frage 11: ∡LJI = 265° y ∡IJL = ?° (Con los puntos I, J, L claramente marcados en las líneas!)
+        return buildAnglePairNotebookSvg({
+          vertex: "J",
+          p1: "I",
+          p2: "L",
+          startDeg: 0,
+          d1: 95,
+          d2: 265,
+          txt1: "∡IJL = ?° ↺",
+          txt2: "∡LJI = 265° ↺",
+          viewWidth: 340,
+          viewHeight: 205,
+          cx: 165,
+          cy: 112,
+          rPoint: 64,
+          rRay: 86
+        });
+      case "angle_50_geodreieck":
       default:
-        return `<svg viewBox="0 0 240 75"><circle cx="120" cy="38" r="26" fill="none" stroke="#0284c7" stroke-width="2.5" stroke-dasharray="4,2"/><line x1="120" y1="38" x2="185" y2="38" stroke="#0f172a" stroke-width="3"/><line x1="120" y1="38" x2="85" y2="12" stroke="#0f172a" stroke-width="3"/><text x="120" y="68" text-anchor="middle" font-size="12" font-weight="800" fill="#0369a1">∡ABC + ∡CBA = 360°</text></svg>`;
+        // Frage 12: ∡ABC con Geodreieck mostrando 50° / 130° y los puntos A, B, C marcados en las líneas!
+        return `<svg viewBox="0 0 340 190" aria-label="Winkel ABC mit Geodreieck bei 50 Grad und 130 Grad">
+          <rect x="2" y="2" width="336" height="186" rx="10" fill="#ffffff" stroke="#e2e8f0"/>
+          <!-- Silueta Geodreieck centrada en B(160, 145) -->
+          <polygon points="35,145 285,145 160,20" fill="rgba(254, 249, 195, 0.65)" stroke="#ca8a04" stroke-width="1.8"/>
+          <path d="M 75 145 A 85 85 0 0 1 245 145" fill="none" stroke="#a16207" stroke-width="1.5"/>
+          <!-- Línea de 90° de referencia -->
+          <line x1="160" y1="145" x2="160" y2="24" stroke="#94a3b8" stroke-width="1.5" stroke-dasharray="4,3"/>
+          <text x="160" y="16" text-anchor="middle" font-size="11" font-weight="800" fill="#64748b">90°</text>
+          <!-- Arco de 50° -->
+          <path d="M 200 145 A 40 40 0 0 0 185.7 114.4" fill="rgba(22, 163, 74, 0.22)" stroke="#16a34a" stroke-width="2.5"/>
+          <!-- Rayo BA (0°) -->
+          <line x1="160" y1="145" x2="275" y2="145" stroke="#0f172a" stroke-width="3"/>
+          <line x1="240" y1="138" x2="240" y2="152" stroke="#0f172a" stroke-width="2.5"/>
+          <circle cx="240" cy="145" r="4.5" fill="#0f172a"/>
+          <text x="240" y="168" text-anchor="middle" font-size="15" font-weight="900" fill="#0f172a">A</text>
+          <!-- Vértice B -->
+          <circle cx="160" cy="145" r="5.5" fill="#dc2626"/>
+          <text x="148" y="168" text-anchor="middle" font-size="15" font-weight="900" fill="#dc2626">B</text>
+          <!-- Rayo BC (50°) -->
+          <line x1="160" y1="145" x2="234" y2="57" stroke="#0f172a" stroke-width="3"/>
+          <circle cx="214" cy="81" r="4.5" fill="#0f172a"/>
+          <text x="232" y="84" text-anchor="middle" font-size="15" font-weight="900" fill="#0f172a">C</text>
+          <!-- Etiqueta en la escala: 50° / 130° -->
+          <rect x="208" y="32" width="84" height="22" rx="6" fill="#fef08a" stroke="#ca8a04" stroke-width="1.5"/>
+          <text x="250" y="47" text-anchor="middle" font-size="12" font-weight="900" fill="#713f12">50° / 130°</text>
+          <text x="192" y="134" font-size="12" font-weight="900" fill="#15803d">∡ABC = ?°</text>
+        </svg>`;
     }
   }
 

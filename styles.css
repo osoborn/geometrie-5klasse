@@ -1022,7 +1022,7 @@ body:not(.show-es) .es-inline {
 }
 
 .quiz-card-svg svg {
-  max-block-size: 140px;
+  max-block-size: 205px;
   inline-size: 100%;
 }
 
