@@ -1,4 +1,4 @@
-const CACHE_NAME = "geometrie-5klasse-v2";
+const CACHE_NAME = "geometrie-5klasse-v3";
 const ASSETS = [
   "./",
   "./index.html",

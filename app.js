@@ -412,6 +412,7 @@
 
         <!-- 3. Strahl MJ: empieza con tope en M(245, 165) y pasa por J(95, 55) con flecha en (65, 33) -->
         <line x1="245" y1="165" x2="65" y2="33" stroke="${colMJ}" stroke-width="${wMJ}" marker-end="url(#${hl === "MJ" ? "arrRed" : "arrDark"})"/>
+        <line x1="240" y1="171" x2="250" y2="159" stroke="${colMJ}" stroke-width="3"/>
 
         <!-- 4. Gerade KM: recta con flecha en ambos lados pasando por M(245, 165) y K(355, 180) -->
         <line x1="210" y1="160" x2="390" y2="185" stroke="${colKM}" stroke-width="${wKM}"
@@ -444,7 +445,7 @@
         <line x1="125" y1="45" x2="105" y2="57" stroke="#dc2626" stroke-width="3.5"/>
         <line x1="115" y1="51" x2="265" y2="165" stroke="#dc2626" stroke-width="4"/>
         <polygon points="272,170 256,167 265,155" fill="#dc2626"/>
-        <text x="235" y="95" font-size="14" font-weight="800" fill="#dc2626">Was für eine Linie ist das?</text>
+        <text x="275" y="88" text-anchor="middle" font-size="14" font-weight="800" fill="#dc2626">Was für eine Linie ist das?</text>
       </svg>`;
     }
 
@@ -719,7 +720,7 @@
     renderWinkelPaarSvg(state.wpCurrentItem, false);
   }
 
-  // Helper para dibujar un par de ángulos estilo cuaderno (con vértice, puntos en los rayos, flechas y arcos antihorarios)
+  // Helper para dibujar un par de ángulos estilo cuaderno sin colisiones (con vértice, puntos en los rayos, flechas y arcos antihorarios)
   function buildAnglePairNotebookSvg({
     vertex,
     p1,
@@ -731,10 +732,10 @@
     txt2,
     viewWidth = 390,
     viewHeight = 260,
-    cx = 195,
+    cx = 185,
     cy = 135,
-    rPoint = 82,
-    rRay = 108
+    rPoint = 68,
+    rRay = 90
   }) {
     const ray2Deg = (startDeg + d1) % 360;
 
@@ -750,20 +751,34 @@
     const perp2A = polarToScreen(pt2.x, pt2.y, 6, ray2Deg + 90);
     const perp2B = polarToScreen(pt2.x, pt2.y, 6, ray2Deg - 90);
 
-    // Posición de las etiquetas de las letras p1, p2 y vértice (desplazadas perpendicularmente para que no choquen con el rayo)
-    const lbl1 = polarToScreen(pt1.x, pt1.y, 20, startDeg - 75);
-    const lbl2 = polarToScreen(pt2.x, pt2.y, 20, ray2Deg + 75);
-    const vLbl = polarToScreen(cx, cy, 24, (startDeg + d1 / 2 + 180) % 360);
+    // Cuando d1 > 180, invertimos el lado de las letras p1/p2 para que siempre queden en el sector amplio y nunca en la cuña estrecha
+    const sign = d1 <= 180 ? 1 : -1;
+    const lbl1 = polarToScreen(pt1.x, pt1.y, 20, startDeg - sign * 80);
+    const lbl2 = polarToScreen(pt2.x, pt2.y, 20, ray2Deg + sign * 80);
 
-    const rArc1 = 34;
-    const rArc2 = 50;
+    const bis1 = (startDeg + d1 / 2) % 360;
+    const bis2 = (ray2Deg + d2 / 2) % 360;
+    const largeBis = d1 <= 180 ? bis2 : bis1;
+    const vLbl = polarToScreen(cx, cy, 22, (largeBis + 45) % 360);
+
+    const rArc1 = 30;
+    const rArc2 = 44;
     const arc1 = describeArcCCW(cx, cy, rArc1, startDeg, d1);
     const arc2 = describeArcCCW(cx, cy, rArc2, ray2Deg, d2);
 
-    const mid1 = polarToScreen(cx, cy, rArc1 + 22, startDeg + d1 / 2);
-    const mid2 = polarToScreen(cx, cy, rArc2 + 24, ray2Deg + d2 / 2);
+    function computeLabelPos(bisDeg, rArc, sweepDeg) {
+      const rTxt = sweepDeg <= 45 ? rRay + 10 : rArc + 16;
+      const pt = polarToScreen(cx, cy, rTxt, bisDeg);
+      const cosV = Math.cos((bisDeg * Math.PI) / 180);
+      const anchor = cosV > 0.3 ? "start" : cosV < -0.3 ? "end" : "middle";
+      return { x: pt.x, y: pt.y + 4, anchor };
+    }
+
+    const pos1 = computeLabelPos(bis1, rArc1, d1);
+    const pos2 = computeLabelPos(bis2, rArc2, d2);
 
     const uid = `${vertex}_${p1}_${p2}_${d1}`;
+    const haloStyle = "paint-order: stroke; stroke: #ffffff; stroke-width: 3.5px; stroke-linejoin: round;";
 
     return `
       <svg viewBox="0 0 ${viewWidth} ${viewHeight}" aria-label="Winkelpaar ${p1}${vertex}${p2}">
@@ -792,22 +807,22 @@
         <!-- Marquita (tick) y punto para P1 -->
         <line x1="${perp1A.x.toFixed(1)}" y1="${perp1A.y.toFixed(1)}" x2="${perp1B.x.toFixed(1)}" y2="${perp1B.y.toFixed(1)}" stroke="#0f172a" stroke-width="2.5"/>
         <circle cx="${pt1.x.toFixed(1)}" cy="${pt1.y.toFixed(1)}" r="4" fill="#0f172a"/>
-        <text x="${lbl1.x.toFixed(1)}" y="${(lbl1.y + 5).toFixed(1)}" text-anchor="middle" font-size="16" font-weight="900" fill="#0f172a">${p1}</text>
+        <text x="${lbl1.x.toFixed(1)}" y="${(lbl1.y + 5).toFixed(1)}" text-anchor="middle" font-size="16" font-weight="900" fill="#0f172a" style="${haloStyle}">${p1}</text>
 
         <!-- Marquita (tick) y punto para P2 -->
         <line x1="${perp2A.x.toFixed(1)}" y1="${perp2A.y.toFixed(1)}" x2="${perp2B.x.toFixed(1)}" y2="${perp2B.y.toFixed(1)}" stroke="#0f172a" stroke-width="2.5"/>
         <circle cx="${pt2.x.toFixed(1)}" cy="${pt2.y.toFixed(1)}" r="4" fill="#0f172a"/>
-        <text x="${lbl2.x.toFixed(1)}" y="${(lbl2.y + 5).toFixed(1)}" text-anchor="middle" font-size="16" font-weight="900" fill="#0f172a">${p2}</text>
+        <text x="${lbl2.x.toFixed(1)}" y="${(lbl2.y + 5).toFixed(1)}" text-anchor="middle" font-size="16" font-weight="900" fill="#0f172a" style="${haloStyle}">${p2}</text>
 
         <!-- Vértice (Scheitelpunkt) -->
         <circle cx="${cx}" cy="${cy}" r="5.5" fill="#dc2626"/>
-        <text x="${vLbl.x.toFixed(1)}" y="${(vLbl.y + 6).toFixed(1)}" text-anchor="middle" font-size="17" font-weight="900" fill="#dc2626">${vertex}</text>
+        <text x="${vLbl.x.toFixed(1)}" y="${(vLbl.y + 6).toFixed(1)}" text-anchor="middle" font-size="17" font-weight="900" fill="#dc2626" style="${haloStyle}">${vertex}</text>
 
         <!-- Etiquetas de grados -->
-        <text x="${mid1.x.toFixed(1)}" y="${mid1.y.toFixed(1)}" text-anchor="middle" font-size="13" font-weight="900" fill="#15803d">
+        <text x="${pos1.x.toFixed(1)}" y="${pos1.y.toFixed(1)}" text-anchor="${pos1.anchor}" font-size="13" font-weight="900" fill="#15803d" style="${haloStyle}">
           ${txt1}
         </text>
-        <text x="${mid2.x.toFixed(1)}" y="${mid2.y.toFixed(1)}" text-anchor="middle" font-size="13" font-weight="900" fill="#0369a1">
+        <text x="${pos2.x.toFixed(1)}" y="${pos2.y.toFixed(1)}" text-anchor="${pos2.anchor}" font-size="13" font-weight="900" fill="#0369a1" style="${haloStyle}">
           ${txt2}
         </text>
       </svg>
@@ -831,8 +846,10 @@
       txt2,
       viewWidth: 390,
       viewHeight: 280,
-      cx: 195,
-      cy: 140
+      cx: 185,
+      cy: 140,
+      rPoint: 68,
+      rRay: 90
     });
   }
 
@@ -964,7 +981,7 @@
       if (!handle.hasPointerCapture(event.pointerId)) return;
       const rect = svg.getBoundingClientRect();
       const scaleX = 560 / rect.width;
-      const scaleY = 400 / rect.height;
+      const scaleY = 430 / rect.height;
       const svgX = (event.clientX - rect.left) * scaleX;
       const svgY = (event.clientY - rect.top) * scaleY;
 
@@ -1065,7 +1082,7 @@
     // Actualizar rayo base
     const pBaseEnd = polarToScreen(cx, cy, rRay, base);
     const pBaseDot = polarToScreen(cx, cy, 155, base);
-    const pBaseLbl = polarToScreen(cx, cy, 155, base - 8);
+    const pBaseLbl = polarToScreen(pBaseDot.x, pBaseDot.y, 22, base - 80);
     const rayBaseEl = document.getElementById("lab-ray-base");
     rayBaseEl.setAttribute("x2", pBaseEnd.x.toFixed(1));
     rayBaseEl.setAttribute("y2", pBaseEnd.y.toFixed(1));
@@ -1076,7 +1093,7 @@
 
     const lblP1 = document.getElementById("lab-label-p1");
     lblP1.setAttribute("x", pBaseLbl.x.toFixed(1));
-    lblP1.setAttribute("y", (pBaseLbl.y + 18).toFixed(1));
+    lblP1.setAttribute("y", (pBaseLbl.y + 5).toFixed(1));
     lblP1.textContent = ch.p1;
 
     document.getElementById("lab-label-vertex").textContent = ch.vertex;
@@ -1084,7 +1101,7 @@
     // Actualizar rayo móvil y manilla
     const pMovEnd = polarToScreen(cx, cy, rRay, absRay2);
     const pHandle = polarToScreen(cx, cy, 155, absRay2);
-    const pLbl2 = polarToScreen(cx, cy, 178, absRay2);
+    const pLbl2 = polarToScreen(pHandle.x, pHandle.y, 24, absRay2 + 75);
 
     const rayMovEl = document.getElementById("lab-ray-movable");
     rayMovEl.setAttribute("x2", pMovEnd.x.toFixed(1));
@@ -1100,6 +1117,7 @@
     const lblP2 = document.getElementById("lab-label-p2");
     lblP2.setAttribute("x", pLbl2.x.toFixed(1));
     lblP2.setAttribute("y", (pLbl2.y + 5).toFixed(1));
+    lblP2.setAttribute("text-anchor", "middle");
     lblP2.textContent = ch.p2;
 
     // Arcos interior y exterior
@@ -1222,10 +1240,12 @@
           <circle cx="147" cy="48" r="2.2" fill="#1e40af"/>
           <line x1="55" y1="55" x2="225" y2="55" stroke="#1d4ed8" stroke-width="3"/>
           <line x1="140" y1="12" x2="140" y2="95" stroke="#1d4ed8" stroke-width="3"/>
+          <circle cx="195" cy="55" r="3.5" fill="#0f172a"/><text x="195" y="73" text-anchor="middle" font-size="12" font-weight="800">A</text>
+          <circle cx="140" cy="24" r="3.5" fill="#0f172a"/><text x="126" y="28" text-anchor="middle" font-size="12" font-weight="800">B</text>
           <circle cx="140" cy="55" r="4.5" fill="#dc2626"/>
           <text x="126" y="72" font-size="13" font-weight="900" fill="#dc2626">S</text>
           <text x="236" y="59" font-size="13" font-weight="900" fill="#1e40af">g</text>
-          <text x="148" y="22" font-size="13" font-weight="900" fill="#1e40af">h</text>
+          <text x="152" y="22" font-size="13" font-weight="900" fill="#1e40af">h</text>
         </svg>`;
       case "angle_135":
         return buildAnglePairNotebookSvg({
@@ -1239,10 +1259,10 @@
           txt2: "225° ↺",
           viewWidth: 340,
           viewHeight: 195,
-          cx: 170,
+          cx: 165,
           cy: 112,
-          rPoint: 62,
-          rRay: 84
+          rPoint: 56,
+          rRay: 76
         });
       case "angle_180_240":
         return `<svg viewBox="0 0 340 165" aria-label="180 Grad und 240 Grad Winkel mit Punkten">
@@ -1279,8 +1299,8 @@
           viewHeight: 205,
           cx: 165,
           cy: 112,
-          rPoint: 64,
-          rRay: 86
+          rPoint: 56,
+          rRay: 76
         });
       case "pair_80_280":
         // Frage 10: ∡CDF = 80° y ∡FDC = 280° (Con los puntos C, D, F claramente marcados en las líneas!)
@@ -1297,8 +1317,8 @@
           viewHeight: 205,
           cx: 165,
           cy: 112,
-          rPoint: 64,
-          rRay: 86
+          rPoint: 56,
+          rRay: 76
         });
       case "pair_95_265":
         // Frage 11: ∡LJI = 265° y ∡IJL = ?° (Con los puntos I, J, L claramente marcados en las líneas!)
@@ -1315,8 +1335,8 @@
           viewHeight: 205,
           cx: 165,
           cy: 112,
-          rPoint: 64,
-          rRay: 86
+          rPoint: 56,
+          rRay: 76
         });
       case "angle_50_geodreieck":
       default:
@@ -1346,7 +1366,7 @@
           <!-- Etiqueta en la escala: 50° / 130° -->
           <rect x="208" y="32" width="84" height="22" rx="6" fill="#fef08a" stroke="#ca8a04" stroke-width="1.5"/>
           <text x="250" y="47" text-anchor="middle" font-size="12" font-weight="900" fill="#713f12">50° / 130°</text>
-          <text x="192" y="134" font-size="12" font-weight="900" fill="#15803d">∡ABC = ?°</text>
+          <text x="202" y="125" font-size="12" font-weight="900" fill="#15803d" style="paint-order: stroke; stroke: #ffffff; stroke-width: 3px;">∡ABC = ?°</text>
         </svg>`;
     }
   }
