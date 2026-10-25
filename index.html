@@ -1,0 +1,697 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="robots" content="noindex, nofollow">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="apple-mobile-web-app-title" content="Geometrie 5. Kl">
+  <link rel="manifest" href="manifest.json">
+  <title>Geometrie 5. Klasse — Prozessnote-Trainer</title>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body class="show-es">
+  <header class="app-header">
+    <div class="header-inner">
+      <div class="title-group">
+        <div class="badges-row">
+          <span class="badge-topic">Mathematik · 5. Klasse</span>
+          <span class="badge-teacher">Prozessnote · Frau Ana María López Güell</span>
+        </div>
+        <h1>Geometrie: Linien, Lagebeziehungen &amp; Winkel</h1>
+        <p class="subtitle">
+          Interaktives Training nach deinem Mathe-Heft (5. bis 23. Oktober)
+          <span class="es-sub">· Entrenador interactivo basado en tu cuaderno de Geometría</span>
+        </p>
+      </div>
+
+      <div class="header-controls">
+        <button type="button" id="btn-toggle-es" class="btn-lang-toggle" aria-pressed="true">
+          <span class="flag-icon">🇩🇪 / 🇪🇸</span>
+          <span id="lang-toggle-text">Spanisch-Hilfe: AN</span>
+        </button>
+
+        <div class="score-bar" aria-live="polite" id="global-score-summary">
+          <div class="stat-pill stat-correct">
+            <span class="stat-label">Gelöst <span class="es-inline">(Correctas)</span></span>
+            <strong id="global-correct-count">0</strong>
+          </div>
+          <div class="stat-pill stat-streak">
+            <span class="stat-label">Serie 🔥</span>
+            <strong id="global-streak-count">0</strong>
+          </div>
+          <div class="stat-pill stat-progress">
+            <span class="stat-label">Punkte ⭐</span>
+            <strong id="global-points-count">0</strong>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Navegación de los 5 Módulos -->
+    <nav class="tabs-nav" aria-label="Lernmodule">
+      <button type="button" class="tab-btn active" data-tab="tab-spickzettel" aria-selected="true">
+        <span class="tab-icon">📖</span>
+        <span class="tab-text">
+          <strong>1. Heft &amp; Vokabeln</strong>
+          <small class="es-sub">Esquemas del cuaderno y tabla</small>
+        </span>
+      </button>
+      <button type="button" class="tab-btn" data-tab="tab-detektiv" aria-selected="false">
+        <span class="tab-icon">🔍</span>
+        <span class="tab-text">
+          <strong>2. Linien-Detektiv</strong>
+          <small class="es-sub">Recta, rayo, segmento y ∥ / ⊥</small>
+        </span>
+      </button>
+      <button type="button" class="tab-btn" data-tab="tab-winkelpaare" aria-selected="false">
+        <span class="tab-icon">🔄</span>
+        <span class="tab-text">
+          <strong>3. Winkel ∡ABC (360°)</strong>
+          <small class="es-sub">Pares de ángulos y Sortierung</small>
+        </span>
+      </button>
+      <button type="button" class="tab-btn" data-tab="tab-labor" aria-selected="false">
+        <span class="tab-icon">📐</span>
+        <span class="tab-text">
+          <strong>4. Geodreieck-Labor</strong>
+          <small class="es-sub">Medir y construir ángulos / ⊥</small>
+        </span>
+      </button>
+      <button type="button" class="tab-btn" data-tab="tab-probe" aria-selected="false">
+        <span class="tab-icon">🏆</span>
+        <span class="tab-text">
+          <strong>5. Prozessnote-Test</strong>
+          <small class="es-sub">Simulacro de prueba</small>
+        </span>
+      </button>
+    </nav>
+  </header>
+
+  <main class="main-container">
+    <!-- ===================================================================
+         TAB 1: HEFT-SPICKZETTEL & VOKABEL-TABELLE
+    ==================================================================== -->
+    <section id="tab-spickzettel" class="tab-panel active" aria-label="Heft-Spickzettel und Vokabel-Trainer">
+      <div class="section-intro-bar">
+        <div>
+          <h2>📖 Zusammenfassung aus deinem Heft &amp; Begriffe-Trainer</h2>
+          <p class="es-sub">Resumen visual exacto de tus páginas del 5 al 23 de octubre + Tabla entrenadora de vocabulario en alemán.</p>
+        </div>
+        <div class="subview-pills">
+          <button type="button" class="pill-btn active" id="btn-show-posters">🎨 Visuelle Heft-Karten (Esquemas)</button>
+          <button type="button" class="pill-btn" id="btn-show-vocabtable">✍️ Begriffe-Tabelle üben (Practicar tabla)</button>
+        </div>
+      </div>
+
+      <!-- Vista 1A: Esquemas visuales del cuaderno -->
+      <div id="spickzettel-posters" class="posters-grid">
+        <!-- Card 1: Die Linie (5. Oktober) -->
+        <article class="poster-card">
+          <div class="poster-header">
+            <span class="poster-date">Montag, 5. Oktober</span>
+            <h3>1. Die Linie <span class="es-inline">(Clasificación de la línea)</span></h3>
+          </div>
+          <div class="poster-body">
+            <div class="concept-split">
+              <div class="concept-box">
+                <h4>a) Offene Linie <span class="es-inline">(Abierta)</span></h4>
+                <ul class="clean-list">
+                  <li>
+                    <strong>die Kurve</strong> <span class="es-inline">(curva / espiral 🌀)</span>
+                  </li>
+                  <li>
+                    <strong>Gerade Linien</strong> <span class="es-inline">(líneas derechas)</span>:
+                    <div class="mini-svg-list">
+                      <div class="mini-svg-item">
+                        <span class="sym-badge">⟷ AB</span>
+                        <div>
+                          <strong>die Gerade</strong> <span class="es-inline">(recta)</span><br>
+                          <small>Kein Anfang, kein Ende (Pfeile links &amp; rechts)</small>
+                        </div>
+                      </div>
+                      <div class="mini-svg-item">
+                        <span class="sym-badge">I—I AB</span>
+                        <div>
+                          <strong>die Strecke</strong> <span class="es-inline">(segmento)</span><br>
+                          <small>Anfangspunkt &amp; Endpunkt (messbar)</small>
+                        </div>
+                      </div>
+                      <div class="mini-svg-item highlight-bonus">
+                        <span class="sym-badge">⟼ AB</span>
+                        <div>
+                          <strong>der Strahl</strong> <span class="es-inline">(rayo / semirrecta)</span><br>
+                          <small>1 Anfangspunkt, kein Ende. <strong>★ Bonus:</strong> Im Symbol steht der Startpunkt IMMER zuerst!</small>
+                          <small class="es-sub">En el símbolo la flecha va a la derecha y la 1ª letra es SIEMPRE donde empieza el rayo.</small>
+                        </div>
+                      </div>
+                    </div>
+                  </li>
+                </ul>
+              </div>
+
+              <div class="concept-box">
+                <h4>b) Geschlossene Linie <span class="es-inline">(Cerrada)</span></h4>
+                <svg viewBox="0 0 240 125" class="poster-svg" aria-label="Geschlossene Linie mit Innenbereich, Außenbereich und Grenze">
+                  <rect x="2" y="2" width="236" height="121" rx="10" fill="#f8fafc" stroke="#cbd5e1"/>
+                  <!-- Puntos exteriores verdes -->
+                  <circle cx="35" cy="30" r="3.5" fill="#10b981"/><circle cx="52" cy="24" r="3.5" fill="#10b981"/>
+                  <circle cx="28" cy="60" r="3.5" fill="#10b981"/><circle cx="48" cy="95" r="3.5" fill="#10b981"/>
+                  <text x="12" y="114" font-size="10" fill="#047857" font-weight="700">Außenbereich (exterior)</text>
+                  <!-- Círculo cerrado con puntos morados -->
+                  <ellipse cx="145" cy="58" rx="52" ry="38" fill="#f3e8ff" stroke="#7e22ce" stroke-width="3"/>
+                  <circle cx="130" cy="48" r="3.5" fill="#7e22ce"/><circle cx="155" cy="45" r="3.5" fill="#7e22ce"/>
+                  <circle cx="142" cy="62" r="3.5" fill="#7e22ce"/><circle cx="162" cy="66" r="3.5" fill="#7e22ce"/>
+                  <circle cx="125" cy="68" r="3.5" fill="#7e22ce"/>
+                  <text x="145" y="57" text-anchor="middle" font-size="10" fill="#581c87" font-weight="800">Innenbereich</text>
+                  <text x="145" y="69" text-anchor="middle" font-size="9" fill="#6b21a8">(región interior)</text>
+                  <text x="165" y="113" text-anchor="middle" font-size="10" fill="#7e22ce" font-weight="700">Rand / Grenze (frontera)</text>
+                </svg>
+
+                <h4 class="mt-sm">Nach dem Boden <span class="es-inline">(Según el suelo)</span></h4>
+                <div class="chips-row">
+                  <span class="info-chip">☀️ <strong>waagerecht</strong> (horizontal)</span>
+                  <span class="info-chip">🧍 <strong>senkrecht</strong> (vertical ⊥ Boden)</span>
+                  <span class="info-chip">📐 <strong>schräg</strong> (oblicua)</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </article>
+
+        <!-- Card 2: Beziehung zwischen Linien (6. - 13. Oktober) -->
+        <article class="poster-card">
+          <div class="poster-header">
+            <span class="poster-date">6., 8. &amp; 13. Oktober</span>
+            <h3>2. Beziehung zwischen Linien <span class="es-inline">(Relación entre líneas)</span></h3>
+          </div>
+          <div class="poster-body">
+            <svg viewBox="0 0 460 140" class="poster-svg" aria-label="Sekanten, Senkrechte Linien und Parallelen">
+              <!-- Box 1: Sekanten -->
+              <rect x="6" y="8" width="142" height="124" rx="10" fill="#fff7ed" stroke="#fdba74"/>
+              <text x="77" y="26" text-anchor="middle" font-size="12" font-weight="800" fill="#9a3412">1. Sekanten</text>
+              <text x="77" y="40" text-anchor="middle" font-size="10" fill="#c2410c">Schneiden sich (Secantes)</text>
+              <line x1="28" y1="108" x2="126" y2="56" stroke="#ea580c" stroke-width="2.5"/>
+              <line x1="28" y1="62" x2="126" y2="104" stroke="#ea580c" stroke-width="2.5"/>
+              <circle cx="77" cy="82" r="4" fill="#9a3412"/>
+              <text x="77" y="122" text-anchor="middle" font-size="10" fill="#7c2d12">1 Schnittpunkt (≠ 90°)</text>
+
+              <!-- Box 2: Senkrechte Linien -->
+              <rect x="159" y="8" width="142" height="124" rx="10" fill="#eff6ff" stroke="#93c5fd"/>
+              <text x="230" y="26" text-anchor="middle" font-size="12" font-weight="800" fill="#1e40af">2. Senkrechte (g ⊥ h)</text>
+              <text x="230" y="40" text-anchor="middle" font-size="10" fill="#1d4ed8">Besondere Sekante: 90°</text>
+              <!-- Inclinadas a 90° para recordar que también pueden estar rotadas -->
+              <path d="M 230 82 L 244 82 A 14 14 0 0 0 230 68 Z" fill="#bfdbfe" stroke="#1d4ed8" stroke-width="1.5"/>
+              <circle cx="235" cy="77" r="1.8" fill="#1e40af"/>
+              <line x1="190" y1="82" x2="275" y2="82" stroke="#1d4ed8" stroke-width="2.5"/>
+              <line x1="230" y1="48" x2="230" y2="112" stroke="#1d4ed8" stroke-width="2.5"/>
+              <text x="230" y="124" text-anchor="middle" font-size="10" fill="#1e3a8a" font-weight="700">Rechter Winkel (90° ⦜)</text>
+
+              <!-- Box 3: Parallelen -->
+              <rect x="312" y="8" width="142" height="124" rx="10" fill="#f0fdf4" stroke="#86efac"/>
+              <text x="383" y="26" text-anchor="middle" font-size="12" font-weight="800" fill="#166534">3. Parallelen (g ∥ h)</text>
+              <text x="383" y="40" text-anchor="middle" font-size="10" fill="#15803d">Schneiden sich NIE</text>
+              <line x1="332" y1="70" x2="434" y2="54" stroke="#16a34a" stroke-width="2.5"/>
+              <line x1="332" y1="98" x2="434" y2="82" stroke="#16a34a" stroke-width="2.5"/>
+              <line x1="383" y1="62" x2="387" y2="90" stroke="#64748b" stroke-width="1.5" stroke-dasharray="3,2"/>
+              <text x="383" y="122" text-anchor="middle" font-size="10" fill="#14532d">Gleicher Abstand (Paralelas)</text>
+            </svg>
+            <div class="heft-note-box">
+              <strong>📌 Heft-Beispiele (19. Okt):</strong>
+              <span><strong>Parallel zum Boden:</strong> Buch, Schließfach-Boden, Waschbecken-Boden.</span> ·
+              <span><strong>Senkrecht zur Wand / zum Boden:</strong> Möbel, Vorhang, Heizung (Estufa), Tür.</span>
+            </div>
+          </div>
+        </article>
+
+        <!-- Card 3: Winkel Sortieren & Nennen (19. - 23. Oktober) -->
+        <article class="poster-card poster-wide">
+          <div class="poster-header">
+            <span class="poster-date">Montag 19., Mittwoch 21. &amp; Freitag 23. Oktober</span>
+            <h3>3. Winkel: Sortieren, Messen, Zeichnen &amp; Nennen (∡ABC + ∡CBA = 360°)</h3>
+          </div>
+          <div class="poster-body">
+            <div class="angles-showcase-grid">
+              <div class="angle-mini-card">
+                <span class="deg-pill">0°</span>
+                <strong>Nullwinkel</strong>
+                <small class="es-sub">Ángulo nulo (0-Winkel)</small>
+              </div>
+              <div class="angle-mini-card">
+                <span class="deg-pill pill-spitz">1° – 89°</span>
+                <strong>Spitzer Winkel</strong>
+                <small class="es-sub">Ángulo agudo</small>
+              </div>
+              <div class="angle-mini-card">
+                <span class="deg-pill pill-recht">90° (⦜)</span>
+                <strong>Rechter Winkel</strong>
+                <small class="es-sub">Ángulo recto</small>
+              </div>
+              <div class="angle-mini-card">
+                <span class="deg-pill pill-stumpf">91° – 179°</span>
+                <strong>Stumpfer Winkel</strong>
+                <small class="es-sub">Ángulo obtuso</small>
+              </div>
+              <div class="angle-mini-card">
+                <span class="deg-pill pill-gestreckt">180°</span>
+                <strong>Gestreckter Winkel</strong>
+                <small class="es-sub">Ángulo extendido</small>
+              </div>
+              <div class="angle-mini-card">
+                <span class="deg-pill pill-ueber">181° – 359°</span>
+                <strong>Überstumpfer Winkel</strong>
+                <small class="es-sub">Convexo / Entrante (&gt;180°)</small>
+              </div>
+              <div class="angle-mini-card">
+                <span class="deg-pill pill-voll">360°</span>
+                <strong>Voller Winkel</strong>
+                <small class="es-sub">Ángulo completo</small>
+              </div>
+            </div>
+
+            <div class="golden-rule-banner">
+              <div class="golden-rule-text">
+                <h4>⭐ Goldene Heft-Regel beim Winkel nennen: <code>∡ D A̲ L</code> vs. <code>∡ L A̲ D</code></h4>
+                <ul>
+                  <li>
+                    <strong>Scheitelpunkt immer in der Mitte:</strong> Der Punkt, wo der Winkel entsteht (z. B. <strong>A̲</strong> oder <strong>K̲</strong>), steht <strong>IMMER als mittlerer Buchstabe</strong>!
+                    <span class="es-sub">(El vértice SIEMPRE va al medio de las 3 letras).</span>
+                  </li>
+                  <li>
+                    <strong>Gegen den Uhrzeigersinn (↺):</strong> Man liest immer vom 1. Buchstaben gegen den Uhrzeigersinn zum 3. Buchstaben.
+                    <span class="es-sub">(Siempre se recorre el arco en sentido antihorario ↺ desde la 1ª letra hasta la 3ª letra).</span>
+                  </li>
+                  <li>
+                    <strong>Zusammen immer 360°:</strong> Wenn <code>∡LMN = 120°</code> (Stumpfer Winkel), dann ist <code>∡NML = 360° − 120° = 240°</code> (Überstumpfer Winkel)!
+                  </li>
+                </ul>
+              </div>
+              <svg viewBox="0 0 220 140" class="golden-rule-svg" aria-label="Beispiel ∡JKL = 30° und ∡LKJ = 330°">
+                <rect x="2" y="2" width="216" height="136" rx="10" fill="#ffffff" stroke="#cbd5e1"/>
+                <!-- Arco 330° exterior azul -->
+                <path d="M 118 53 A 34 34 0 1 0 124 70" fill="none" stroke="#0284c7" stroke-width="2.5" stroke-dasharray="4,2"/>
+                <!-- Arco 30° interior verde -->
+                <path d="M 116 70 A 26 26 0 0 0 112 57" fill="rgba(22, 163, 74, 0.18)" stroke="#16a34a" stroke-width="2.5"/>
+                <!-- Rayos KJ y KL -->
+                <line x1="90" y1="70" x2="185" y2="70" stroke="#0f172a" stroke-width="2.5"/>
+                <line x1="90" y1="70" x2="172" y2="23" stroke="#0f172a" stroke-width="2.5"/>
+                <circle cx="90" cy="70" r="4" fill="#dc2626"/>
+                <text x="76" y="75" font-size="13" font-weight="800" fill="#dc2626">K</text>
+                <text x="190" y="74" font-size="12" font-weight="700" fill="#0f172a">J</text>
+                <text x="177" y="22" font-size="12" font-weight="700" fill="#0f172a">L</text>
+                <text x="135" y="62" font-size="11" font-weight="800" fill="#15803d">30° ↺</text>
+                <text x="48" y="112" font-size="11" font-weight="800" fill="#0369a1">330° ↺</text>
+                <text x="110" y="130" text-anchor="middle" font-size="11" font-weight="700" fill="#334155">∡JKL = 30° · ∡LKJ = 330°</text>
+              </svg>
+            </div>
+          </div>
+        </article>
+      </div>
+
+      <!-- Vista 1B: Tabla interactiva de conceptos (como el Entrenador de Verbos) -->
+      <div id="spickzettel-vocabtable" hidden>
+        <div class="controls-card">
+          <div class="controls-grid">
+            <div class="form-group">
+              <label for="vocab-block-select">Themenblock <span class="es-inline">(Bloque de estudio)</span></label>
+              <select id="vocab-block-select">
+                <option value="all" selected>Alle 21 Heft-Begriffe (Todos los conceptos)</option>
+                <option value="1. Die Linie (Tipos de línea)">1. Die Linie (Gerade, Strahl, Strecke, Kurve...)</option>
+                <option value="2. Lage zum Boden (Según el suelo)">2. Nach dem Boden (waagerecht, senkrecht, schräg)</option>
+                <option value="3. Beziehung zwischen Linien (Relación entre líneas)">3. Beziehung (Sekanten, Senkrechte, Parallelen)</option>
+                <option value="4. Winkel-Grundbegriffe (Partes del ángulo)">4. Winkel-Grundbegriffe (Scheitelpunkt, Schenkel)</option>
+                <option value="5. Winkelarten / Sortierung (Clasificación de ángulos)">5. Winkelarten (Nullwinkel bis Voller Winkel)</option>
+              </select>
+            </div>
+
+            <div class="form-group">
+              <label for="vocab-mode-select">Übungsmodus <span class="es-inline">(Qué columna completar)</span></label>
+              <select id="vocab-mode-select">
+                <option value="ask_de" selected>🇩🇪 Deutschen Begriff schreiben (Escribir en alemán)</option>
+                <option value="ask_es">🇪🇸 Spanische Bedeutung schreiben (Escribir en español)</option>
+                <option value="random">🎲 Zufällig pro Zeile (Aleatoria en cada fila)</option>
+                <option value="study">👁️ Alle gelöst anzeigen (Ver tabla resuelta)</option>
+              </select>
+            </div>
+          </div>
+
+          <div class="actions-bar">
+            <div class="actions-left">
+              <button type="button" id="btn-vocab-check" class="btn-primary">✓ Antworten prüfen (Revisar)</button>
+              <button type="button" id="btn-vocab-retry" class="btn-warning" hidden>
+                🔁 Nur Fehler üben (<span id="vocab-retry-count">0</span>)
+              </button>
+              <button type="button" id="btn-vocab-reset" class="btn-secondary">🎲 Neu mischen / Leeren</button>
+            </div>
+          </div>
+        </div>
+
+        <!-- Barra de caracteres alemanes y símbolos geométricos -->
+        <div class="umlaut-bar" role="toolbar" aria-label="Sonderzeichen einfügen">
+          <span class="umlaut-label">In aktives Feld einfügen:</span>
+          <div class="umlaut-buttons">
+            <button type="button" class="umlaut-btn" data-char="ä">ä</button>
+            <button type="button" class="umlaut-btn" data-char="ö">ö</button>
+            <button type="button" class="umlaut-btn" data-char="ü">ü</button>
+            <button type="button" class="umlaut-btn" data-char="ß">ß</button>
+            <button type="button" class="umlaut-btn" data-char="Ä">Ä</button>
+            <button type="button" class="umlaut-btn" data-char="Ö">Ö</button>
+            <button type="button" class="umlaut-btn" data-char="Ü">Ü</button>
+            <button type="button" class="umlaut-btn" data-char="°">°</button>
+            <button type="button" class="umlaut-btn" data-char="∥">∥</button>
+            <button type="button" class="umlaut-btn" data-char="⊥">⊥</button>
+          </div>
+          <span class="keyboard-tip">Tipp: Drücke <kbd>Enter</kbd> zum Prüfen der aktuellen Zeile.</span>
+        </div>
+
+        <div class="table-wrapper" tabindex="0" role="region" aria-label="Geometrie-Vokabeltabelle">
+          <table id="vocab-table">
+            <thead>
+              <tr>
+                <th scope="col">#</th>
+                <th scope="col">Symbol / Grad</th>
+                <th scope="col">Begriff auf Deutsch 🇩🇪</th>
+                <th scope="col">Merkmal / Erklärung</th>
+                <th scope="col">Spanisch 🇪🇸</th>
+                <th scope="col">Prüfen</th>
+              </tr>
+            </thead>
+            <tbody id="vocab-tbody"></tbody>
+          </table>
+        </div>
+      </div>
+    </section>
+
+    <!-- ===================================================================
+         TAB 2: LINIEN- & FIGUREN-DETEKTIV
+    ==================================================================== -->
+    <section id="tab-detektiv" class="tab-panel" hidden aria-label="Linien- und Figuren-Detektiv">
+      <div class="section-intro-bar">
+        <div>
+          <h2>🔍 Linien- &amp; Figuren-Detektiv (Heft: 5., 6., 8. &amp; 13. Oktober)</h2>
+          <p class="es-sub">Reconoce Gerade (⟷), Strahl (⟼), Strecke (I—I), paralelas (∥) y perpendiculares (⊥) en figuras y ejercicios del cuaderno.</p>
+        </div>
+        <div class="subview-pills">
+          <button type="button" class="pill-btn active" data-det-filter="all">Alle Aufgaben (10)</button>
+          <button type="button" class="pill-btn" data-det-filter="figure_symbols">📐 Übung 13. Okt (J, L, M, K)</button>
+          <button type="button" class="pill-btn" data-det-filter="line_classification">〰️ Die Linie (5. Okt)</button>
+          <button type="button" class="pill-btn" data-det-filter="line_relations">⊥ / ∥ Beziehungen (6.–13. Okt)</button>
+        </div>
+      </div>
+
+      <div class="detektiv-workspace">
+        <div class="detektiv-figure-card">
+          <div class="card-top-meta">
+            <span class="step-badge" id="det-progress-badge">Aufgabe 1 / 10</span>
+            <span class="source-tag" id="det-title-de">Heft-Übung</span>
+          </div>
+          <div id="det-svg-container" class="svg-stage" aria-live="polite"></div>
+        </div>
+
+        <div class="detektiv-question-card">
+          <h3 id="det-question-de">Frage lädt...</h3>
+          <p id="det-question-es" class="es-sub question-es-box"></p>
+
+          <div id="det-options-list" class="options-stack"></div>
+
+          <div id="det-feedback-box" class="feedback-banner" hidden></div>
+
+          <div class="card-footer-nav">
+            <button type="button" id="btn-det-prev" class="btn-secondary">← Zurück</button>
+            <button type="button" id="btn-det-next" class="btn-primary">Nächste Aufgabe →</button>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ===================================================================
+         TAB 3: WINKEL-PAARE (∡ABC & ∡CBA = 360°) & SORTIERUNG
+    ==================================================================== -->
+    <section id="tab-winkelpaare" class="tab-panel" hidden aria-label="Winkel-Paare und Sortierung">
+      <div class="section-intro-bar">
+        <div>
+          <h2>🔄 Winkel nennen, berechnen (360°) &amp; sortieren (Heft: 19., 21. &amp; 23. Oktober)</h2>
+          <p class="es-sub">Exactamente como en tus páginas de ejercicios: halla los dos ángulos antihorarios (↺) que suman 360° y clasifícalos.</p>
+        </div>
+        <div class="subview-pills">
+          <button type="button" id="btn-wp-heft" class="pill-btn active">📓 15 Original-Heftaufgaben</button>
+          <button type="button" id="btn-wp-random" class="pill-btn">🎲 Zufalls-Winkel generieren (Infinitos)</button>
+        </div>
+      </div>
+
+      <div class="wp-workspace">
+        <div class="wp-visual-card">
+          <div class="card-top-meta">
+            <span class="step-badge" id="wp-counter-badge">Heft #1 / 15</span>
+            <span class="source-tag" id="wp-source-label">Montag, 19. Oktober</span>
+          </div>
+          <div id="wp-svg-stage" class="svg-stage"></div>
+          <div class="ccw-helper-note">
+            <span>↺ <strong>Tipp:</strong> Immer gegen den Uhrzeigersinn vom 1. Buchstaben zum 3. Buchstaben lesen!</span>
+            <span class="es-sub">· Lee siempre en sentido antihorario (↺) desde la 1ª letra hasta la 3ª letra.</span>
+          </div>
+        </div>
+
+        <div class="wp-form-card">
+          <h3>Bestimme beide Winkel (zusammen 360°) und die Sortierung:</h3>
+          <p class="es-sub">Completa los grados de ambos ángulos, cuál letra es el vértice y la clasificación en alemán:</p>
+
+          <div class="wp-inputs-grid">
+            <div class="wp-input-row">
+              <label for="wp-input-vertex">
+                1. Welcher Buchstabe ist der <strong>Scheitelpunkt</strong> (in der Mitte)?
+                <span class="es-sub">¿Cuál letra es el vértice (al medio)?</span>
+              </label>
+              <input type="text" id="wp-input-vertex" maxlength="2" class="short-input" placeholder="z.B. K" autocomplete="off">
+            </div>
+
+            <div class="wp-input-row">
+              <label for="wp-input-deg1" id="wp-label-deg1">
+                2. Maß von <strong id="wp-name-1">∡ABC</strong> (grüner Bogen ↺):
+              </label>
+              <div class="deg-input-wrap">
+                <input type="number" id="wp-input-deg1" min="0" max="360" class="deg-input" placeholder="0–360">
+                <span class="unit-deg">°</span>
+              </div>
+            </div>
+
+            <div class="wp-input-row">
+              <label for="wp-select-sort1">
+                3. <strong>Sortierung</strong> von <strong id="wp-name-sort1">∡ABC</strong>:
+                <span class="es-sub">Clasificación de este primer ángulo:</span>
+              </label>
+              <select id="wp-select-sort1" class="sort-select">
+                <option value="">— Winkelart wählen —</option>
+                <option value="Nullwinkel">Nullwinkel (0°)</option>
+                <option value="Spitzer Winkel">Spitzer Winkel (1° – 89°)</option>
+                <option value="Rechter Winkel">Rechter Winkel (90°)</option>
+                <option value="Stumpfer Winkel">Stumpfer Winkel (91° – 179°)</option>
+                <option value="Gestreckter Winkel">Gestreckter Winkel (180°)</option>
+                <option value="Überstumpfer Winkel">Überstumpfer Winkel (181° – 359°)</option>
+                <option value="Voller Winkel">Voller Winkel (360°)</option>
+              </select>
+            </div>
+
+            <div class="wp-input-row">
+              <label for="wp-input-deg2" id="wp-label-deg2">
+                4. Maß des Gegenwinkels <strong id="wp-name-2">∡CBA</strong> (blauer Bogen ↺):
+              </label>
+              <div class="deg-input-wrap">
+                <input type="number" id="wp-input-deg2" min="0" max="360" class="deg-input" placeholder="360 - ...">
+                <span class="unit-deg">°</span>
+              </div>
+            </div>
+
+            <div class="wp-input-row">
+              <label for="wp-select-sort2">
+                5. <strong>Sortierung</strong> von <strong id="wp-name-sort2">∡CBA</strong>:
+                <span class="es-sub">Clasificación del ángulo inverso:</span>
+              </label>
+              <select id="wp-select-sort2" class="sort-select">
+                <option value="">— Winkelart wählen —</option>
+                <option value="Nullwinkel">Nullwinkel (0°)</option>
+                <option value="Spitzer Winkel">Spitzer Winkel (1° – 89°)</option>
+                <option value="Rechter Winkel">Rechter Winkel (90°)</option>
+                <option value="Stumpfer Winkel">Stumpfer Winkel (91° – 179°)</option>
+                <option value="Gestreckter Winkel">Gestreckter Winkel (180°)</option>
+                <option value="Überstumpfer Winkel">Überstumpfer Winkel (181° – 359°)</option>
+                <option value="Voller Winkel">Voller Winkel (360°)</option>
+              </select>
+            </div>
+          </div>
+
+          <div id="wp-feedback-box" class="feedback-banner" hidden></div>
+
+          <div class="card-footer-nav">
+            <button type="button" id="btn-wp-prev" class="btn-secondary">← Vorherige</button>
+            <button type="button" id="btn-wp-check" class="btn-primary">✓ Prüfen (Revisar)</button>
+            <button type="button" id="btn-wp-next" class="btn-secondary">Nächste →</button>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ===================================================================
+         TAB 4: GEODREIECK-LABOR (MESSEN & ZEICHNEN)
+    ==================================================================== -->
+    <section id="tab-labor" class="tab-panel" hidden aria-label="Interaktives Geodreieck-Labor">
+      <div class="section-intro-bar">
+        <div>
+          <h2>📐 Interaktives Geodreieck-Labor: Winkel &amp; Senkrechte zeichnen</h2>
+          <p class="es-sub">Arrastra el punto rojo del segundo rayo (o usa las flechas del teclado) para construir ángulos y perpendiculares con el Geodreieck.</p>
+        </div>
+        <div class="subview-pills">
+          <button type="button" id="btn-toggle-geodreieck" class="pill-btn active">📐 Geodreieck ein/ausblenden</button>
+          <button type="button" id="btn-lab-random" class="pill-btn">🎲 Neues Ziel (Nuevo ángulo objetivo)</button>
+        </div>
+      </div>
+
+      <div class="lab-workspace">
+        <div class="lab-canvas-card">
+          <div class="card-top-meta">
+            <span class="step-badge" id="lab-step-badge">Labor-Aufgabe 1 / 6</span>
+            <strong id="lab-task-title-de">Heft-Aufgabe #5: Zeichne ∡LMN = 150°</strong>
+          </div>
+          <p id="lab-task-hint-de" class="lab-hint-text"></p>
+          <p id="lab-task-hint-es" class="es-sub lab-hint-es"></p>
+
+          <!-- Escenario SVG interactivo con manilla arrastrable (Pointer Capture + Teclado) -->
+          <div class="lab-svg-wrapper">
+            <svg id="lab-svg" viewBox="0 0 560 400" aria-label="Interaktives Zeichenbrett mit Geodreieck">
+              <defs>
+                <pattern id="mathGrid" width="20" height="20" patternUnits="userSpaceOnUse">
+                  <path d="M 20 0 L 0 0 0 20" fill="none" stroke="#e2e8f0" stroke-width="1"/>
+                </pattern>
+              </defs>
+              <!-- Fondo cuadriculado de cuaderno de matemáticas -->
+              <rect x="0" y="0" width="560" height="400" fill="url(#mathGrid)"/>
+
+              <!-- Grupo del Geodreieck transparente (se rota según la línea base) -->
+              <g id="lab-geodreieck-group" transform="translate(280, 230)">
+                <!-- Triángulo de la escuadra alemana -->
+                <polygon points="-210,0 210,0 0,-210" fill="rgba(254, 249, 195, 0.55)" stroke="#ca8a04" stroke-width="2"/>
+                <!-- Líneas paralelas de ayuda (Parallelenhilfslinien) -->
+                <line x1="-170" y1="-35" x2="170" y2="-35" stroke="rgba(202,138,4,0.35)" stroke-width="1" stroke-dasharray="4,3"/>
+                <line x1="-135" y1="-70" x2="135" y2="-70" stroke="rgba(202,138,4,0.35)" stroke-width="1" stroke-dasharray="4,3"/>
+                <line x1="-100" y1="-105" x2="100" y2="-105" stroke="rgba(202,138,4,0.35)" stroke-width="1" stroke-dasharray="4,3"/>
+                <!-- Mittellinie 90° (perpendicular) -->
+                <line x1="0" y1="0" x2="0" y2="-205" stroke="#dc2626" stroke-width="1.5" stroke-dasharray="4,2"/>
+                <text x="8" y="-165" font-size="10" font-weight="800" fill="#dc2626">90° (⊥ Mittellinie)</text>
+                <!-- Semicírculo graduado del transportador -->
+                <path d="M -135 0 A 135 135 0 0 1 135 0" fill="none" stroke="#a16207" stroke-width="1.5"/>
+                <g id="lab-protractor-ticks"></g>
+              </g>
+
+              <!-- Arco exterior (conjugado 360° - α) -->
+              <path id="lab-arc-outer" d="" fill="none" stroke="#0284c7" stroke-width="2.5" stroke-dasharray="5,3"/>
+              <!-- Arco interior (ángulo construido α) -->
+              <path id="lab-arc-inner" d="" fill="rgba(22, 163, 74, 0.2)" stroke="#16a34a" stroke-width="3"/>
+
+              <!-- Rayo base (1. Schenkel) -->
+              <line id="lab-ray-base" x1="280" y1="230" x2="475" y2="230" stroke="#0f172a" stroke-width="3.5" stroke-linecap="round"/>
+              <circle id="lab-point-p1" cx="445" cy="230" r="4.5" fill="#0f172a"/>
+              <text id="lab-label-p1" x="445" y="252" text-anchor="middle" font-size="15" font-weight="800" fill="#0f172a">L</text>
+
+              <!-- Rayo móvil (2. Schenkel) -->
+              <line id="lab-ray-movable" x1="280" y1="230" x2="410" y2="100" stroke="#dc2626" stroke-width="3.5" stroke-linecap="round"/>
+
+              <!-- Vértice (Scheitelpunkt) -->
+              <circle id="lab-vertex-dot" cx="280" cy="230" r="6" fill="#1e293b"/>
+              <text id="lab-label-vertex" x="266" y="252" font-size="16" font-weight="900" fill="#1e293b">M</text>
+
+              <!-- Manilla arrastrable (Handle accesible con teclado y Pointer Capture) -->
+              <g id="lab-drag-handle" class="drag-handle" tabindex="0" role="slider"
+                 aria-label="Zweiten Schenkel drehen (Pfeiltasten links/rechts für 1°, Shift+Pfeil für 5°)"
+                 aria-valuemin="0" aria-valuemax="360" aria-valuenow="60">
+                <circle id="lab-handle-halo" cx="410" cy="100" r="20" fill="rgba(220, 38, 38, 0.16)"/>
+                <circle id="lab-handle-circle" cx="410" cy="100" r="11" fill="#dc2626" stroke="#ffffff" stroke-width="3"/>
+                <text id="lab-label-p2" x="430" y="96" font-size="15" font-weight="800" fill="#dc2626">N</text>
+              </g>
+            </svg>
+          </div>
+        </div>
+
+        <div class="lab-controls-card">
+          <h3>Live-Messung <span class="es-inline">(Medición en vivo)</span></h3>
+
+          <div class="live-readout-grid">
+            <div class="readout-box readout-main">
+              <span class="readout-label" id="lab-readout-name1">∡LMN (Innen / ↺)</span>
+              <strong class="readout-value" id="lab-readout-deg1">60°</strong>
+              <span class="readout-type" id="lab-readout-type1">Spitzer Winkel</span>
+            </div>
+            <div class="readout-box readout-secondary">
+              <span class="readout-label" id="lab-readout-name2">∡NML (360° − α)</span>
+              <strong class="readout-value" id="lab-readout-deg2">300°</strong>
+              <span class="readout-type" id="lab-readout-type2">Überstumpfer Winkel</span>
+            </div>
+          </div>
+
+          <div class="slider-fine-control">
+            <label for="lab-angle-slider">
+              Feineinstellung (oder roten Punkt auf dem Geodreieck ziehen):
+              <span class="es-sub">Ajuste fino (o arrastra el punto rojo con el dedo / mouse):</span>
+            </label>
+            <input type="range" id="lab-angle-slider" min="0" max="360" step="1" value="60">
+            <div class="quick-deg-buttons">
+              <button type="button" class="btn-chip" data-set-deg="45">45°</button>
+              <button type="button" class="btn-chip" data-set-deg="90">90° (⊥)</button>
+              <button type="button" class="btn-chip" data-set-deg="150">150°</button>
+              <button type="button" class="btn-chip" data-set-deg="180">180°</button>
+              <button type="button" class="btn-chip" data-set-deg="190">190°</button>
+              <button type="button" class="btn-chip" data-set-deg="270">270°</button>
+            </div>
+          </div>
+
+          <div id="lab-feedback-box" class="feedback-banner" hidden></div>
+
+          <div class="card-footer-nav">
+            <button type="button" id="btn-lab-prev" class="btn-secondary">← Zurück</button>
+            <button type="button" id="btn-lab-check" class="btn-primary">✓ Winkel prüfen!</button>
+            <button type="button" id="btn-lab-next" class="btn-secondary">Nächste →</button>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ===================================================================
+         TAB 5: PROZESSNOTE-TEST (PROBE-SIMULATION)
+    ==================================================================== -->
+    <section id="tab-probe" class="tab-panel" hidden aria-label="Prozessnote Probe-Simulation">
+      <div class="section-intro-bar">
+        <div>
+          <h2>🏆 Prozessnote-Simulation (Alle Themen der Probe)</h2>
+          <p class="es-sub">Simulacro completo con preguntas de líneas, símbolos, paralelas/perpendiculares, clasificación y pares de ángulos de 360°.</p>
+        </div>
+        <div class="actions-right">
+          <button type="button" id="btn-quiz-retry-errors" class="btn-warning" hidden>
+            🔁 Nur Fehler üben (<span id="quiz-error-count">0</span>)
+          </button>
+          <button type="button" id="btn-quiz-restart" class="btn-secondary">🔄 Neue Probe starten</button>
+        </div>
+      </div>
+
+      <div id="quiz-summary-banner" class="quiz-result-card" hidden></div>
+
+      <div id="quiz-questions-container" class="quiz-list"></div>
+
+      <div class="quiz-submit-bar">
+        <button type="button" id="btn-quiz-evaluate-all" class="btn-primary btn-lg">
+          ✓ Ganze Probe auswerten (Corregir prueba completa)
+        </button>
+      </div>
+    </section>
+  </main>
+
+  <script src="geometry-data.js"></script>
+  <script src="app.js"></script>
+  <script>
+    if ("serviceWorker" in navigator) {
+      window.addEventListener("load", () => {
+        navigator.serviceWorker.register("./sw.js").catch(() => {});
+      });
+    }
+  </script>
+</body>
+</html>

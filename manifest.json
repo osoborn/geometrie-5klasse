@@ -1,0 +1,10 @@
+{
+  "name": "Geometrie 5. Klasse — Prozessnote-Trainer",
+  "short_name": "Geometrie 5.Kl",
+  "description": "Interaktiver Geometrie-Trainer (Linien, Lagebeziehungen & Winkel) für die 5. Klasse",
+  "start_url": "./index.html",
+  "display": "standalone",
+  "background_color": "#0f172a",
+  "theme_color": "#0f172a",
+  "lang": "de"
+}
