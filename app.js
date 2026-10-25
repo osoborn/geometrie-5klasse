@@ -1566,10 +1566,10 @@
         txt2,
         viewWidth: 340,
         viewHeight: 205,
-        cx: 165,
+        cx: 155,
         cy: 112,
-        rPoint: 56,
-        rRay: 76
+        rPoint: 52,
+        rRay: 70
       });
     }
 
@@ -1758,7 +1758,7 @@
           <rect x="2" y="2" width="336" height="176" rx="10" fill="#ffffff" stroke="#e2e8f0"/>
           <!-- Recta principal inclinada h (rotada -30° respecto a la horizontal, pasando por (120,115) y (225,54.4)) -->
           <line x1="35" y1="164" x2="305" y2="8" stroke="#0f172a" stroke-width="3.5"/>
-          <text x="318" y="16" font-size="16" font-weight="900" fill="#0f172a">h</text>
+          <text x="316" y="24" font-size="16" font-weight="900" fill="#0f172a">h</text>
 
           <!-- 1) Linie m (izquierda, vertical al borde de la hoja en x=115, cruza h en (115, 117.8) a 60°) -->
           <line x1="115" y1="28" x2="115" y2="168" stroke="#ea580c" stroke-width="3" stroke-dasharray="5,3"/>
@@ -1769,10 +1769,10 @@
           <g transform="translate(220, 57.2) rotate(-30)">
             <rect x="0" y="0" width="18" height="18" fill="#bfdbfe" stroke="#1d4ed8" stroke-width="1.8"/>
             <circle cx="7" cy="7" r="2" fill="#1e40af"/>
-            <line x1="0" y1="-48" x2="0" y2="95" stroke="#1d4ed8" stroke-width="3.5"/>
+            <line x1="0" y1="-44" x2="0" y2="88" stroke="#1d4ed8" stroke-width="3.5"/>
             <circle cx="0" cy="0" r="5" fill="#1d4ed8"/>
-            <text x="10" y="88" font-size="14" font-weight="900" fill="#1d4ed8">Linie n (90° ⦜)</text>
           </g>
+          <text x="235" y="162" text-anchor="middle" font-size="14" font-weight="900" fill="#1d4ed8" style="paint-order: stroke; stroke: #ffffff; stroke-width: 3px;">Linie n (90° ⦜)</text>
         </svg>`;
 
       case "geodreieck_115_mno":
@@ -1908,19 +1908,23 @@
         const pS = { x: 170, y: 132 };
         const rad = ((180 - givenDeg) * Math.PI) / 180;
         const pC = {
-          x: pS.x + 88 * Math.cos(rad),
-          y: pS.y - 88 * Math.sin(rad)
+          x: pS.x + 84 * Math.cos(rad),
+          y: pS.y - 84 * Math.sin(rad)
         };
         const ptC = {
-          x: pS.x + 66 * Math.cos(rad),
-          y: pS.y - 66 * Math.sin(rad)
+          x: pS.x + 62 * Math.cos(rad),
+          y: pS.y - 62 * Math.sin(rad)
+        };
+        const lblC = {
+          x: pS.x + 98 * Math.cos(rad),
+          y: pS.y - 98 * Math.sin(rad)
         };
         return `<svg viewBox="0 0 340 175" aria-label="Gestreckter Winkel ASB mit Strahl SC">
           <rect x="2" y="2" width="336" height="171" rx="10" fill="#ffffff" stroke="#e2e8f0"/>
           <!-- Arco de 180° completo arriba -->
           <path d="M 218 132 A 48 48 0 0 0 122 132" fill="rgba(2, 132, 199, 0.1)" stroke="#0284c7" stroke-width="2" stroke-dasharray="4,3"/>
           <!-- Arco dado (izquierda: ∡ASC) -->
-          <path d="M ${pS.x + 34 * Math.cos(rad)} ${pS.y - 34 * Math.sin(rad)} A 34 34 0 0 0 ${pS.x - 34} ${pS.y}" fill="rgba(22, 163, 74, 0.22)" stroke="#16a34a" stroke-width="2.5"/>
+          <path d="M ${(pS.x + 34 * Math.cos(rad)).toFixed(1)} ${(pS.y - 34 * Math.sin(rad)).toFixed(1)} A 34 34 0 0 0 ${pS.x - 34} ${pS.y}" fill="rgba(22, 163, 74, 0.22)" stroke="#16a34a" stroke-width="2.5"/>
           <!-- Recta A - S - B -->
           <line x1="${pA.x}" y1="${pA.y}" x2="${pB.x}" y2="${pB.y}" stroke="#0f172a" stroke-width="3.5"/>
           <!-- Rayo SC -->
@@ -1930,11 +1934,11 @@
           <circle cx="170" cy="132" r="5.5" fill="#dc2626"/><text x="170" y="155" text-anchor="middle" font-size="15" font-weight="900" fill="#dc2626">S</text>
           <circle cx="270" cy="132" r="4.5" fill="#0f172a"/><text x="270" y="155" text-anchor="middle" font-size="15" font-weight="900">B</text>
           <circle cx="${ptC.x.toFixed(1)}" cy="${ptC.y.toFixed(1)}" r="4.5" fill="#0f172a"/>
-          <text x="${(ptC.x - 16).toFixed(1)}" y="${(ptC.y - 6).toFixed(1)}" text-anchor="middle" font-size="15" font-weight="900">C</text>
+          <text x="${lblC.x.toFixed(1)}" y="${(lblC.y + 4).toFixed(1)}" text-anchor="middle" font-size="15" font-weight="900">C</text>
           <!-- Textos de grados -->
           <text x="112" y="114" text-anchor="middle" font-size="13" font-weight="900" fill="#15803d">${givenDeg}°</text>
-          <text x="218" y="98" text-anchor="middle" font-size="14" font-weight="900" fill="#0369a1">∡CSB = ?°</text>
-          <text x="170" y="24" text-anchor="middle" font-size="12" font-weight="800" fill="#475569">Gestreckter Winkel (A—S—B = 180°)</text>
+          <text x="224" y="98" text-anchor="middle" font-size="14" font-weight="900" fill="#0369a1">∡CSB = ?°</text>
+          <text x="170" y="22" text-anchor="middle" font-size="12" font-weight="800" fill="#475569">Gestreckter Winkel (A—S—B = 180°)</text>
         </svg>`;
       }
 
@@ -1944,8 +1948,9 @@
         const cx = 115;
         const cy = 142;
         const rad = (givenDeg * Math.PI) / 180;
-        const tipN = { x: cx + 105 * Math.cos(rad), y: cy - 105 * Math.sin(rad) };
-        const ptN = { x: cx + 80 * Math.cos(rad), y: cy - 80 * Math.sin(rad) };
+        const tipN = { x: cx + 98 * Math.cos(rad), y: cy - 98 * Math.sin(rad) };
+        const ptN = { x: cx + 74 * Math.cos(rad), y: cy - 74 * Math.sin(rad) };
+        const lblN = { x: cx + 114 * Math.cos(rad), y: cy - 114 * Math.sin(rad) };
         return `<svg viewBox="0 0 340 175" aria-label="Rechter Winkel KLM geteilt durch Strahl LN">
           <rect x="2" y="2" width="336" height="171" rx="10" fill="#ffffff" stroke="#e2e8f0"/>
           <!-- Cuadradito de 90° total (∡KLM) -->
@@ -1961,14 +1966,14 @@
           <!-- Rayo divisor LN -->
           <line x1="${cx}" y1="${cy}" x2="${tipN.x.toFixed(1)}" y2="${tipN.y.toFixed(1)}" stroke="#dc2626" stroke-width="3"/>
           <circle cx="${ptN.x.toFixed(1)}" cy="${ptN.y.toFixed(1)}" r="4.5" fill="#dc2626"/>
-          <text x="${(ptN.x + 18).toFixed(1)}" y="${(ptN.y + 4).toFixed(1)}" font-size="15" font-weight="900" fill="#dc2626">N</text>
+          <text x="${lblN.x.toFixed(1)}" y="${(lblN.y + 5).toFixed(1)}" text-anchor="middle" font-size="15" font-weight="900" fill="#dc2626">N</text>
           <!-- Vértice L -->
           <circle cx="${cx}" cy="${cy}" r="5.5" fill="#dc2626"/>
           <text x="${cx - 16}" y="${cy + 18}" font-size="15" font-weight="900" fill="#dc2626">L</text>
-          <!-- Etiquetas de medida -->
-          <text x="${cx + 62}" y="${cy - 10}" font-size="13" font-weight="900" fill="#15803d">∡KLN = ${givenDeg}°</text>
-          <text x="${cx + 34}" y="${cy - 54}" font-size="13" font-weight="900" fill="#1e40af">∡NLM = ?°</text>
-          <text x="245" y="34" text-anchor="middle" font-size="12" font-weight="800" fill="#1e40af">∡KLM = 90° (⦜)</text>
+          <!-- Etiquetas de medida libres de colisión -->
+          <text x="${cx + 58}" y="${cy - 8}" font-size="12.5" font-weight="900" fill="#15803d" style="paint-order: stroke; stroke: #ffffff; stroke-width: 3px;">∡KLN = ${givenDeg}°</text>
+          <text x="${cx + 10}" y="${cy - 88}" font-size="12.5" font-weight="900" fill="#1e40af" style="paint-order: stroke; stroke: #ffffff; stroke-width: 3px;">∡NLM = ?°</text>
+          <text x="255" y="32" text-anchor="middle" font-size="12" font-weight="800" fill="#1e40af">∡KLM = 90° (⦜)</text>
         </svg>`;
       }
 
@@ -2017,7 +2022,7 @@
           <text x="184" y="115" font-size="15" font-weight="900" fill="#dc2626">S</text>
           <!-- Etiquetas de los 3 sectores -->
           <text x="215" y="56" font-size="13" font-weight="900" fill="#15803d">∡ASB = 110° ↺</text>
-          <text x="78" y="102" font-size="13" font-weight="900" fill="#0369a1">∡BSC = 130° ↺</text>
+          <text x="72" y="102" text-anchor="middle" font-size="13" font-weight="900" fill="#0369a1">∡BSC = 130° ↺</text>
           <text x="225" y="152" font-size="13" font-weight="900" fill="#dc2626">∡CSA = ?° ↺</text>
         </svg>`;
 
@@ -2033,9 +2038,9 @@
             <rect x="-46" y="32" width="14" height="14" fill="#dbeafe" stroke="#1d4ed8" stroke-width="1.4"/>
           </g>
           <!-- Puntos E (abajo), F (derecha), G (arriba), H (izquierda) -->
-          <circle cx="170" cy="153" r="5" fill="#0f172a"/><text x="170" y="170" text-anchor="middle" font-size="15" font-weight="900">E</text>
+          <circle cx="170" cy="153" r="5" fill="#0f172a"/><text x="188" y="162" text-anchor="middle" font-size="15" font-weight="900">E</text>
           <circle cx="235" cy="88" r="5" fill="#0f172a"/><text x="252" y="93" text-anchor="middle" font-size="15" font-weight="900">F</text>
-          <circle cx="170" cy="23" r="5" fill="#0f172a"/><text x="170" y="16" text-anchor="middle" font-size="15" font-weight="900">G</text>
+          <circle cx="170" cy="23" r="5" fill="#0f172a"/><text x="188" y="24" text-anchor="middle" font-size="15" font-weight="900">G</text>
           <circle cx="105" cy="88" r="5" fill="#0f172a"/><text x="88" y="93" text-anchor="middle" font-size="15" font-weight="900">H</text>
           <text x="285" y="42" text-anchor="middle" font-size="12" font-weight="800" fill="#1e40af">4 × 90° (⦜)</text>
         </svg>`;
@@ -2097,7 +2102,7 @@
     const pair1Conj = 360 - pair1Deg;
     const pair2Deg = pick([110, 125, 135, 145, 155]);
     const pair2Conj = 360 - pair2Deg;
-    const suppDeg = pick([40, 55, 65, 70, 115]);
+    const suppDeg = pick([40, 50, 55, 65, 70]);
     const compDeg = pick([25, 30, 35, 40, 55]);
 
     // Tomamos una selección balanceada de los bancos A, B y C + preguntas con números frescos
