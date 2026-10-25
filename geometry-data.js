@@ -956,8 +956,12 @@ window.GEOMETRY_DATA = {
   extraExams: {
     probe_a: {
       id: "probe_a",
+      levelBadgeDe: "🟢 Niveau 1 · Basis",
+      levelColor: "easy",
       titleDe: "🟢 Probe A — Niveau 1: Basis-Training (Wie im Heft)",
       titleEs: "Prueba A — Nivel 1: Entrenamiento Base (Mismo nivel del cuaderno, ejercicios nuevos)",
+      descDe: "12 neue Aufgaben zum sicheren Einstieg: Linienarten (⟼ PQ, I—I QR, ⟷ RS), geschlossene Linien, Parallelen, Senkrechte und 360°-Winkelpaare.",
+      descEs: "12 ejercicios nuevos de nivel base: tipos de línea (⟼ PQ, I—I QR, ⟷ RS), líneas cerradas, paralelas, perpendiculares y pares de ángulos de 360°.",
       questions: [
         {
           id: "pa_1",
@@ -1144,8 +1148,12 @@ window.GEOMETRY_DATA = {
 
     probe_b: {
       id: "probe_b",
+      levelBadgeDe: "🟡 Niveau 2 · Mittelschwer & Fallen",
+      levelColor: "medium",
       titleDe: "🟡 Probe B — Niveau 2: Mittelschwer & Prüfungsfallen",
       titleEs: "Prueba B — Nivel 2: Intermedio con Trampas Clásicas de Prueba",
+      descDe: "12 mittelschwere Aufgaben mit den typischen Prüfungsfallen: Strahl nach links (⟼ TK), schräge Senkrechte, 89°/91°/181°-Grenzen und Geodreieck-Doppelskala.",
+      descEs: "12 ejercicios intermedios con las trampas clásicas: rayo hacia la izquierda (⟼ TK), perpendiculares inclinadas, límites 89°/91°/181° y doble escala del Geodreieck.",
       questions: [
         {
           id: "pb_1",
@@ -1332,8 +1340,12 @@ window.GEOMETRY_DATA = {
 
     probe_c: {
       id: "probe_c",
+      levelBadgeDe: "🔴 Niveau 3 · Experten (Note 7,0)",
+      levelColor: "hard",
       titleDe: "🔴 Probe C — Niveau 3: Experten-Probe (Für die Note 7,0)",
       titleEs: "Prueba C — Nivel 3: Prueba Experta (Desafíos para el 7.0)",
+      descDe: "12 anspruchsvolle Aufgaben für die Bestnote: Kombinierte Figuren, doppelte Senkrechte, geteilte 90°/180°/360°-Winkel, gedrehtes Geodreieck und Stadtplan-Logik.",
+      descEs: "12 desafíos avanzados para el 7.0: figuras combinadas, doble perpendicular, ángulos divididos de 90°/180°/360°, Geodreieck rotado y lógica de plano de calles.",
       questions: [
         {
           id: "pc_1",

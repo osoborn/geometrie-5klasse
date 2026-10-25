@@ -1548,6 +1548,13 @@
     if (!spec || !spec.type) return "";
 
     if (spec.type === "angle_pair") {
+      const txt1 =
+        spec.txt1 ||
+        `∡${spec.p1}${spec.vertex}${spec.p2} = ${spec.given === 1 ? spec.d1 + "°" : "?°"} ↺`;
+      const txt2 =
+        spec.txt2 ||
+        `∡${spec.p2}${spec.vertex}${spec.p1} = ${spec.given === 2 ? spec.d2 + "°" : "?°"} ↺`;
+
       return buildAnglePairNotebookSvg({
         vertex: spec.vertex,
         p1: spec.p1,
@@ -1555,8 +1562,8 @@
         startDeg: spec.startDeg || 0,
         d1: spec.d1,
         d2: spec.d2,
-        txt1: spec.txt1,
-        txt2: spec.txt2,
+        txt1,
+        txt2,
         viewWidth: 340,
         viewHeight: 205,
         cx: 165,
@@ -1567,32 +1574,59 @@
     }
 
     switch (spec.type) {
-      case "fig_pqrs":
-        // Recta PQ (flechas ambos lados), Segmento RS (topes), Rayo QT (tope en Q, flecha tras T)
-        return `<svg viewBox="0 0 340 165" aria-label="Linien mit Punkten P, Q, R, S, T">
-          <rect x="2" y="2" width="336" height="161" rx="10" fill="#ffffff" stroke="#e2e8f0"/>
-          <!-- 1) Gerade PQ (arriba, azul, flechas ambos extremos) -->
-          <polygon points="24,38 38,31 38,45" fill="#0284c7"/>
-          <polygon points="316,38 302,31 302,45" fill="#0284c7"/>
-          <line x1="34" y1="38" x2="306" y2="38" stroke="#0284c7" stroke-width="3"/>
-          <circle cx="95" cy="38" r="4.5" fill="#0f172a"/><text x="95" y="25" text-anchor="middle" font-size="14" font-weight="900">P</text>
-          <circle cx="235" cy="38" r="4.5" fill="#0f172a"/><text x="235" y="25" text-anchor="middle" font-size="14" font-weight="900">Q</text>
+      case "fig_pqrs": {
+        // Figura compuesta P - Q - R - S (estilo cuaderno 13. Okt):
+        // - ⟼ PQ: Strahl que inicia con tope en P(72, 42) y pasa por Q(132, 132) con flecha en (152, 162)
+        // - I—I QR: Strecke entre Q(132, 132) y R(232, 114) con topes en Q y R
+        // - ⟷ RS: Gerade infinita con flechas en ambos extremos pasando por R(232, 114) y S(284, 52)
+        const hl = spec.highlight || "";
+        const colPQ = hl === "PQ" ? "#dc2626" : "#475569";
+        const colQR = hl === "QR" ? "#dc2626" : "#475569";
+        const colRS = hl === "RS" ? "#dc2626" : "#475569";
+        const wPQ = hl === "PQ" ? 4.5 : 2.8;
+        const wQR = hl === "QR" ? 4.5 : 2.8;
+        const wRS = hl === "RS" ? 4.5 : 2.8;
+        const halo = "paint-order: stroke; stroke: #ffffff; stroke-width: 3.5px; stroke-linejoin: round;";
 
-          <!-- 2) Strecke RS (medio, verde, topes en R y S) -->
-          <line x1="65" y1="74" x2="65" y2="96" stroke="#16a34a" stroke-width="3.5"/>
-          <line x1="255" y1="74" x2="255" y2="96" stroke="#16a34a" stroke-width="3.5"/>
-          <line x1="65" y1="85" x2="255" y2="85" stroke="#16a34a" stroke-width="3.5"/>
-          <circle cx="65" cy="85" r="4.5" fill="#0f172a"/><text x="65" y="112" text-anchor="middle" font-size="14" font-weight="900">R</text>
-          <circle cx="255" cy="85" r="4.5" fill="#0f172a"/><text x="255" y="112" text-anchor="middle" font-size="14" font-weight="900">S</text>
+        return `<svg viewBox="0 0 340 175" aria-label="Figur mit Punkten P, Q, R, S">
+          <defs>
+            <marker id="arrDark_pqrs" viewBox="0 0 10 10" refX="7" refY="5" markerWidth="5.5" markerHeight="5.5" orient="auto-start-reverse">
+              <path d="M 0 1 L 9 5 L 0 9 z" fill="#475569"/>
+            </marker>
+            <marker id="arrRed_pqrs" viewBox="0 0 10 10" refX="7" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+              <path d="M 0 1 L 9 5 L 0 9 z" fill="#dc2626"/>
+            </marker>
+          </defs>
+          <rect x="2" y="2" width="336" height="171" rx="10" fill="#ffffff" stroke="#e2e8f0"/>
 
-          <!-- 3) Strahl QT (abajo, morado, inicio en Q y flecha pasando por T) -->
-          <line x1="75" y1="124" x2="75" y2="146" stroke="#9333ea" stroke-width="3.5"/>
-          <line x1="75" y1="135" x2="292" y2="135" stroke="#9333ea" stroke-width="3"/>
-          <polygon points="304,135 288,128 288,142" fill="#9333ea"/>
-          <circle cx="75" cy="135" r="4.5" fill="#0f172a"/><text x="75" y="157" text-anchor="middle" font-size="13" font-weight="900">Q</text>
-          <line x1="210" y1="127" x2="210" y2="143" stroke="#0f172a" stroke-width="2.5"/>
-          <circle cx="210" cy="135" r="4.5" fill="#0f172a"/><text x="210" y="157" text-anchor="middle" font-size="13" font-weight="900">T</text>
+          <!-- 1) Strahl ⟼ PQ: tope en P(72,42), pasa por Q(132,132), flecha en (150,159) -->
+          <line x1="72" y1="42" x2="150" y2="159" stroke="${colPQ}" stroke-width="${wPQ}" marker-end="url(#${hl === "PQ" ? "arrRed_pqrs" : "arrDark_pqrs"})"/>
+          <line x1="63" y1="48" x2="81" y2="36" stroke="${colPQ}" stroke-width="3.5"/>
+
+          <!-- 2) Strecke I—I QR: entre Q(132,132) y R(232,114) con topes en Q y R -->
+          <line x1="132" y1="132" x2="232" y2="114" stroke="${colQR}" stroke-width="${wQR}"/>
+          <line x1="130" y1="122" x2="134" y2="142" stroke="${colQR}" stroke-width="3.5"/>
+          <line x1="230" y1="104" x2="234" y2="124" stroke="${colQR}" stroke-width="3.5"/>
+
+          <!-- 3) Gerade ⟷ RS: flechas en ambos extremos (207,144) y (309,22), pasando por R(232,114) y S(284,52) -->
+          <line x1="207" y1="144" x2="309" y2="22" stroke="${colRS}" stroke-width="${wRS}"
+                marker-start="url(#${hl === "RS" ? "arrRed_pqrs" : "arrDark_pqrs"})"
+                marker-end="url(#${hl === "RS" ? "arrRed_pqrs" : "arrDark_pqrs"})"/>
+
+          <!-- Puntos P, Q, R, S sobre las líneas -->
+          <circle cx="72" cy="42" r="5" fill="#0f172a"/>
+          <text x="50" y="47" text-anchor="middle" font-size="16" font-weight="900" fill="#0f172a" style="${halo}">P</text>
+
+          <circle cx="132" cy="132" r="5" fill="#0f172a"/>
+          <text x="112" y="144" text-anchor="middle" font-size="16" font-weight="900" fill="#0f172a" style="${halo}">Q</text>
+
+          <circle cx="232" cy="114" r="5" fill="#0f172a"/>
+          <text x="248" y="132" text-anchor="middle" font-size="16" font-weight="900" fill="#0f172a" style="${halo}">R</text>
+
+          <circle cx="284" cy="52" r="5" fill="#0f172a"/>
+          <text x="264" y="48" text-anchor="middle" font-size="16" font-weight="900" fill="#0f172a" style="${halo}">S</text>
         </svg>`;
+      }
 
       case "closed_xyz":
         // Línea cerrada con punto X adentro, punto Y en el borde y punto Z afuera
@@ -1602,10 +1636,10 @@
           <!-- Punto X en el Innenbereich -->
           <circle cx="135" cy="76" r="5" fill="#dc2626"/>
           <text x="135" y="64" text-anchor="middle" font-size="15" font-weight="900" fill="#dc2626">X</text>
-          <text x="135" y="96" text-anchor="middle" font-size="11" font-weight="800" fill="#581c87">(?)</text>
+          <text x="135" y="96" text-anchor="middle" font-size="11" font-weight="800" fill="#581c87">(drinnen)</text>
           <!-- Punto Y en el Rand / Grenze -->
           <circle cx="243" cy="82" r="5" fill="#7e22ce"/>
-          <text x="260" y="87" font-size="15" font-weight="900" fill="#7e22ce">Y</text>
+          <text x="262" y="87" font-size="15" font-weight="900" fill="#7e22ce">Y</text>
           <!-- Punto Z en el Außenbereich -->
           <circle cx="52" cy="40" r="5" fill="#047857"/>
           <text x="52" y="28" text-anchor="middle" font-size="15" font-weight="900" fill="#047857">Z</text>
@@ -1632,27 +1666,33 @@
           <text x="148" y="34" text-anchor="middle" font-size="15" font-weight="900" fill="#0284c7">U</text>
         </svg>`;
 
-      case "rect_abcd":
-        // Rectángulo con vértices A, B, C, D marcados en las esquinas
+      case "rect_abcd": {
+        // Rectángulo con vértices A, B, C, D marcados en las esquinas y resaltado según spec.highlight ("parallel" o "perp")
+        const isPerp = spec.highlight === "perp";
+        const colTop = isPerp ? "#64748b" : "#dc2626";
+        const colBottom = "#dc2626";
+        const colLeft = isPerp ? "#dc2626" : "#1d4ed8";
+        const colRight = isPerp ? "#64748b" : "#1d4ed8";
         return `<svg viewBox="0 0 340 165" aria-label="Rechteck ABCD">
           <rect x="2" y="2" width="336" height="161" rx="10" fill="#ffffff" stroke="#e2e8f0"/>
           <!-- Ángulos de 90° en las esquinas -->
           <rect x="85" y="38" width="14" height="14" fill="#dbeafe" stroke="#1d4ed8" stroke-width="1.2"/>
           <rect x="241" y="38" width="14" height="14" fill="#dbeafe" stroke="#1d4ed8" stroke-width="1.2"/>
-          <rect x="85" y="111" width="14" height="14" fill="#dbeafe" stroke="#1d4ed8" stroke-width="1.2"/>
+          <rect x="85" y="109" width="16" height="16" fill="${isPerp ? "#fecaca" : "#dbeafe"}" stroke="${isPerp ? "#dc2626" : "#1d4ed8"}" stroke-width="1.8"/>
           <rect x="241" y="111" width="14" height="14" fill="#dbeafe" stroke="#1d4ed8" stroke-width="1.2"/>
-          <!-- Lados AB y DC resaltados en verde (paralelos) -->
-          <line x1="85" y1="38" x2="255" y2="38" stroke="#16a34a" stroke-width="4"/>
-          <line x1="85" y1="125" x2="255" y2="125" stroke="#16a34a" stroke-width="4"/>
-          <!-- Lados AD y BC en azul (perpendiculares) -->
-          <line x1="85" y1="38" x2="85" y2="125" stroke="#1d4ed8" stroke-width="3.5"/>
-          <line x1="255" y1="38" x2="255" y2="125" stroke="#1d4ed8" stroke-width="3.5"/>
+          <!-- Lados AB (arriba) y DC (abajo) -->
+          <line x1="85" y1="38" x2="255" y2="38" stroke="${colTop}" stroke-width="${isPerp ? 3 : 4.5}"/>
+          <line x1="85" y1="125" x2="255" y2="125" stroke="${colBottom}" stroke-width="4.5"/>
+          <!-- Lados AD (izquierda) y BC (derecha) -->
+          <line x1="85" y1="38" x2="85" y2="125" stroke="${colLeft}" stroke-width="${isPerp ? 4.5 : 3}"/>
+          <line x1="255" y1="38" x2="255" y2="125" stroke="${colRight}" stroke-width="3"/>
           <!-- Puntos A, B, C, D -->
           <circle cx="85" cy="38" r="5" fill="#0f172a"/><text x="68" y="34" font-size="15" font-weight="900">A</text>
           <circle cx="255" cy="38" r="5" fill="#0f172a"/><text x="266" y="34" font-size="15" font-weight="900">B</text>
           <circle cx="255" cy="125" r="5" fill="#0f172a"/><text x="266" y="138" font-size="15" font-weight="900">C</text>
-          <circle cx="85" cy="125" r="5" fill="#0f172a"/><text x="68" y="138" font-size="15" font-weight="900">D</text>
+          <circle cx="85" cy="125" r="5" fill="#dc2626"/><text x="68" y="138" font-size="15" font-weight="900" fill="#dc2626">D</text>
         </svg>`;
+      }
 
       case "angle_0_360":
         // Izquierda: ∡EFG = 0° (Nullwinkel) | Derecha: ∡HIJ = 360° (Voller Winkel) con todos los puntos
@@ -1675,19 +1715,21 @@
         </svg>`;
 
       case "ray_tk_trap":
-        // Rayo que empieza a la derecha en T y va hacia la izquierda pasando por K (Símbolo correcto: ⟼ TK)
-        return `<svg viewBox="0 0 340 120" aria-label="Strahl mit Startpunkt T rechts und Punkt K links">
-          <rect x="2" y="2" width="336" height="116" rx="10" fill="#ffffff" stroke="#e2e8f0"/>
-          <line x1="275" y1="40" x2="275" y2="70" stroke="#9333ea" stroke-width="4"/>
-          <line x1="275" y1="55" x2="55" y2="55" stroke="#9333ea" stroke-width="3.5"/>
-          <polygon points="40,55 58,46 58,64" fill="#9333ea"/>
+        // pb_1: El rayo empieza en el punto T (arriba a la derecha con tope) y baja oblicuo hacia abajo-izquierda pasando por K con flecha (⟼ TK)
+        return `<svg viewBox="0 0 340 155" aria-label="Strahl mit Startpunkt T rechts oben schräg nach links unten durch Punkt K">
+          <rect x="2" y="2" width="336" height="151" rx="10" fill="#ffffff" stroke="#e2e8f0"/>
+          <!-- Tope de inicio en T(265, 36) perpendicular al rayo -->
+          <line x1="259" y1="24" x2="271" y2="48" stroke="#9333ea" stroke-width="4"/>
+          <!-- Línea del rayo desde T(265, 36) pasando por K(150, 92) hasta la flecha en (64, 134) -->
+          <line x1="265" y1="36" x2="68" y2="132" stroke="#9333ea" stroke-width="3.8"/>
+          <polygon points="55,138 75,137 67,121" fill="#9333ea"/>
           <!-- Punto K en la línea -->
-          <line x1="135" y1="44" x2="135" y2="66" stroke="#0f172a" stroke-width="2.5"/>
-          <circle cx="135" cy="55" r="5" fill="#0f172a"/>
-          <text x="135" y="92" text-anchor="middle" font-size="15" font-weight="900" fill="#0f172a">K</text>
-          <!-- Punto inicial T a la derecha -->
-          <circle cx="275" cy="55" r="5.5" fill="#dc2626"/>
-          <text x="275" y="92" text-anchor="middle" font-size="15" font-weight="900" fill="#dc2626">T (Start)</text>
+          <line x1="145" y1="81" x2="155" y2="103" stroke="#0f172a" stroke-width="2.5"/>
+          <circle cx="150" cy="92" r="5" fill="#0f172a"/>
+          <text x="135" y="76" text-anchor="middle" font-size="16" font-weight="900" fill="#0f172a">K</text>
+          <!-- Punto inicial T arriba a la derecha -->
+          <circle cx="265" cy="36" r="5.5" fill="#dc2626"/>
+          <text x="265" y="70" text-anchor="middle" font-size="15" font-weight="900" fill="#dc2626">T (Start)</text>
         </svg>`;
 
       case "slanted_gerade_ef":
@@ -1709,28 +1751,28 @@
         </svg>`;
 
       case "trap_slanted_perp":
-        // Dos rectas inclinadas g(AB) y h(CD) que se cortan en S a 90° (rotadas 35°)
-        return `<svg viewBox="0 0 340 175" aria-label="Schräge senkrechte Geraden g und h mit 90 Grad in S">
-          <rect x="2" y="2" width="336" height="171" rx="10" fill="#ffffff" stroke="#e2e8f0"/>
-          <g transform="translate(170, 90) rotate(-32)">
-            <!-- Cuadradito / arco de 90° en el cruce S -->
-            <path d="M 0 0 L 22 0 A 22 22 0 0 0 0 -22 Z" fill="#bfdbfe" stroke="#1d4ed8" stroke-width="1.8"/>
-            <circle cx="9" cy="-9" r="2.2" fill="#1e40af"/>
-            <!-- Recta g (con puntos A y B) -->
-            <line x1="-115" y1="0" x2="115" y2="0" stroke="#1d4ed8" stroke-width="3"/>
-            <circle cx="-70" cy="0" r="4.5" fill="#0f172a"/><text x="-70" y="20" text-anchor="middle" font-size="14" font-weight="900">A</text>
-            <circle cx="75" cy="0" r="4.5" fill="#0f172a"/><text x="75" y="20" text-anchor="middle" font-size="14" font-weight="900">B</text>
-            <text x="126" y="5" font-size="14" font-weight="900" fill="#1d4ed8">g</text>
-            <!-- Recta h (con puntos C y D) -->
-            <line x1="0" y1="-72" x2="0" y2="72" stroke="#dc2626" stroke-width="3"/>
-            <circle cx="0" cy="-48" r="4.5" fill="#0f172a"/><text x="-16" y="-44" text-anchor="middle" font-size="14" font-weight="900">C</text>
-            <circle cx="0" cy="48" r="4.5" fill="#0f172a"/><text x="16" y="54" text-anchor="middle" font-size="14" font-weight="900">D</text>
-            <text x="12" y="-62" font-size="14" font-weight="900" fill="#dc2626">h</text>
-            <!-- Punto de intersección S -->
-            <circle cx="0" cy="0" r="5" fill="#dc2626"/>
-            <text x="-15" y="18" font-size="14" font-weight="900" fill="#dc2626">S</text>
+        // pb_3: Sobre la recta inclinada h cruzan DOS líneas:
+        // - Linie m: vertical al borde inferior de la hoja (60° con h)
+        // - Linie n: inclinada formando exactamente 90° (⦜) con la recta inclinada h
+        return `<svg viewBox="0 0 340 180" aria-label="Schräge Gerade h mit Linie m (60 Grad) und Linie n (90 Grad senkrecht)">
+          <rect x="2" y="2" width="336" height="176" rx="10" fill="#ffffff" stroke="#e2e8f0"/>
+          <!-- Recta principal inclinada h (rotada -30° respecto a la horizontal, pasando por (120,115) y (225,54.4)) -->
+          <line x1="35" y1="164" x2="305" y2="8" stroke="#0f172a" stroke-width="3.5"/>
+          <text x="318" y="16" font-size="16" font-weight="900" fill="#0f172a">h</text>
+
+          <!-- 1) Linie m (izquierda, vertical al borde de la hoja en x=115, cruza h en (115, 117.8) a 60°) -->
+          <line x1="115" y1="28" x2="115" y2="168" stroke="#ea580c" stroke-width="3" stroke-dasharray="5,3"/>
+          <circle cx="115" cy="117.8" r="4.5" fill="#ea580c"/>
+          <text x="115" y="20" text-anchor="middle" font-size="14" font-weight="900" fill="#c2410c">Linie m (60°)</text>
+
+          <!-- 2) Linie n (derecha, perpendicular 90° ⦜ a la recta inclinada h en (220, 57.2)) -->
+          <g transform="translate(220, 57.2) rotate(-30)">
+            <rect x="0" y="0" width="18" height="18" fill="#bfdbfe" stroke="#1d4ed8" stroke-width="1.8"/>
+            <circle cx="7" cy="7" r="2" fill="#1e40af"/>
+            <line x1="0" y1="-48" x2="0" y2="95" stroke="#1d4ed8" stroke-width="3.5"/>
+            <circle cx="0" cy="0" r="5" fill="#1d4ed8"/>
+            <text x="10" y="88" font-size="14" font-weight="900" fill="#1d4ed8">Linie n (90° ⦜)</text>
           </g>
-          <text x="285" y="30" text-anchor="middle" font-size="12" font-weight="900" fill="#1e40af">90° (⦜)</text>
         </svg>`;
 
       case "geodreieck_115_mno":
@@ -1808,32 +1850,30 @@
         </svg>`;
 
       case "fig_abcd_expert":
-        // Figura experta con puntos A, B, C, D:
-        // - Gerade AB (horizontal con flechas en ambos extremos)
-        // - Strecke BD (con topes en B y D)
-        // - Strahl CD (empieza en C con tope y pasa por D con flecha)
-        return `<svg viewBox="0 0 340 175" aria-label="Experten-Figur mit Punkten A, B, C, D">
+        // pc_1:
+        // - Entre A y B dos topes -> I—I AB (Strecke)
+        // - De B pasando por C va una flecha -> ⟼ BC (Strahl)
+        // - Por C y D van flechas en ambos extremos -> ⟷ CD (Gerade)
+        return `<svg viewBox="0 0 340 175" aria-label="Experten-Figur mit Strecke AB, Strahl BC und Gerade CD">
           <rect x="2" y="2" width="336" height="171" rx="10" fill="#ffffff" stroke="#e2e8f0"/>
-          <!-- 1) Gerade AB (arriba, azul, flechas en ambos lados) -->
-          <polygon points="26,48 42,40 42,56" fill="#0284c7"/>
-          <polygon points="314,48 298,40 298,56" fill="#0284c7"/>
-          <line x1="36" y1="48" x2="304" y2="48" stroke="#0284c7" stroke-width="3.5"/>
-          <circle cx="95" cy="48" r="5" fill="#0f172a"/><text x="95" y="32" text-anchor="middle" font-size="15" font-weight="900">A</text>
-          <circle cx="245" cy="48" r="5" fill="#0f172a"/><text x="245" y="32" text-anchor="middle" font-size="15" font-weight="900">B</text>
+          <!-- 1) Strecke I—I AB (arriba, verde, topes en A y B) -->
+          <line x1="75" y1="34" x2="75" y2="58" stroke="#16a34a" stroke-width="3.5"/>
+          <line x1="215" y1="34" x2="215" y2="58" stroke="#16a34a" stroke-width="3.5"/>
+          <line x1="75" y1="46" x2="215" y2="46" stroke="#16a34a" stroke-width="3.5"/>
+          <circle cx="75" cy="46" r="5" fill="#0f172a"/><text x="75" y="26" text-anchor="middle" font-size="15" font-weight="900">A</text>
+          <circle cx="215" cy="46" r="5" fill="#0f172a"/><text x="215" y="26" text-anchor="middle" font-size="15" font-weight="900">B</text>
 
-          <!-- 2) Strecke AC (izquierda, verde, topes en A y C) -->
-          <line x1="95" y1="48" x2="95" y2="134" stroke="#16a34a" stroke-width="3.5"/>
-          <line x1="85" y1="134" x2="105" y2="134" stroke="#16a34a" stroke-width="3.5"/>
-          <circle cx="95" cy="134" r="5" fill="#0f172a"/><text x="74" y="140" text-anchor="middle" font-size="15" font-weight="900">C</text>
+          <!-- 2) Strahl ⟼ BC (inicia en B(215,46) con tope, pasa por C(125,126) y termina con flecha en (98,150)) -->
+          <line x1="207" y1="38" x2="223" y2="54" stroke="#9333ea" stroke-width="3.5"/>
+          <line x1="215" y1="46" x2="104" y2="145" stroke="#9333ea" stroke-width="3.5"/>
+          <polygon points="94,154 112,148 102,136" fill="#9333ea"/>
 
-          <!-- 3) Strecke BD (derecha, verde, topes en B y D) -->
-          <line x1="245" y1="48" x2="245" y2="134" stroke="#16a34a" stroke-width="3.5"/>
-
-          <!-- 4) Strahl CD (abajo, morado: empieza en C y sigue con flecha pasando por D) -->
-          <line x1="95" y1="122" x2="95" y2="146" stroke="#9333ea" stroke-width="3.5"/>
-          <line x1="95" y1="134" x2="302" y2="134" stroke="#9333ea" stroke-width="3.5"/>
-          <polygon points="314,134 298,126 298,142" fill="#9333ea"/>
-          <circle cx="245" cy="134" r="5" fill="#0f172a"/><text x="245" y="158" text-anchor="middle" font-size="15" font-weight="900">D</text>
+          <!-- 3) Gerade ⟷ CD (abajo, azul, flechas en ambos extremos pasando por C(125,126) y D(255,126)) -->
+          <polygon points="34,126 50,118 50,134" fill="#0284c7"/>
+          <polygon points="316,126 300,118 300,134" fill="#0284c7"/>
+          <line x1="46" y1="126" x2="304" y2="126" stroke="#0284c7" stroke-width="3.5"/>
+          <circle cx="125" cy="126" r="5" fill="#0f172a"/><text x="125" y="152" text-anchor="middle" font-size="15" font-weight="900">C</text>
+          <circle cx="255" cy="126" r="5" fill="#0f172a"/><text x="255" y="152" text-anchor="middle" font-size="15" font-weight="900">D</text>
         </svg>`;
 
       case "double_perp_abg":
@@ -1866,7 +1906,7 @@
         const pA = { x: 45, y: 132 };
         const pB = { x: 295, y: 132 };
         const pS = { x: 170, y: 132 };
-        const rad = ((180 - givenDeg) * Math.PI) / 180; // Rayo SC hacia arriba-izquierda para que ∡ASC sea givenDeg
+        const rad = ((180 - givenDeg) * Math.PI) / 180;
         const pC = {
           x: pS.x + 88 * Math.cos(rad),
           y: pS.y - 88 * Math.sin(rad)
@@ -1899,68 +1939,68 @@
       }
 
       case "split_90_klmn": {
-        // Ángulo recto 90° (KL ⊥ LN) dividido por el rayo LM con ∡KLM = givenDeg (por defecto 35°)
+        // pc_4: ∡KLM es un ángulo recto (90° ⦜: LK horizontal y LM vertical). El rayo ⟼ LN lo divide con ∡KLN = givenDeg (35°), pidiendo ∡NLM y el exterior ∡MLK (270°)
         const givenDeg = spec.givenDeg || 35;
         const cx = 115;
         const cy = 142;
         const rad = (givenDeg * Math.PI) / 180;
-        const tipM = { x: cx + 105 * Math.cos(rad), y: cy - 105 * Math.sin(rad) };
-        const ptM = { x: cx + 80 * Math.cos(rad), y: cy - 80 * Math.sin(rad) };
-        return `<svg viewBox="0 0 340 175" aria-label="Rechter Winkel KLN geteilt durch Strahl LM">
+        const tipN = { x: cx + 105 * Math.cos(rad), y: cy - 105 * Math.sin(rad) };
+        const ptN = { x: cx + 80 * Math.cos(rad), y: cy - 80 * Math.sin(rad) };
+        return `<svg viewBox="0 0 340 175" aria-label="Rechter Winkel KLM geteilt durch Strahl LN">
           <rect x="2" y="2" width="336" height="171" rx="10" fill="#ffffff" stroke="#e2e8f0"/>
-          <!-- Cuadradito de 90° total -->
+          <!-- Cuadradito de 90° total (∡KLM) -->
           <rect x="${cx}" y="${cy - 22}" width="22" height="22" fill="#dbeafe" stroke="#1d4ed8" stroke-width="1.5"/>
-          <!-- Arco de 35° (∡KLM) -->
+          <!-- Arco de givenDeg (∡KLN) -->
           <path d="M ${cx + 42} ${cy} A 42 42 0 0 0 ${(cx + 42 * Math.cos(rad)).toFixed(1)} ${(cy - 42 * Math.sin(rad)).toFixed(1)}" fill="rgba(22, 163, 74, 0.22)" stroke="#16a34a" stroke-width="2.5"/>
           <!-- Rayo LK (horizontal) -->
           <line x1="${cx}" y1="${cy}" x2="265" y2="${cy}" stroke="#0f172a" stroke-width="3.5"/>
           <circle cx="235" cy="${cy}" r="4.5" fill="#0f172a"/><text x="235" y="${cy + 22}" text-anchor="middle" font-size="15" font-weight="900">K</text>
-          <!-- Rayo LN (vertical 90°) -->
+          <!-- Rayo LM (vertical 90°) -->
           <line x1="${cx}" y1="${cy}" x2="${cx}" y2="24" stroke="#0f172a" stroke-width="3.5"/>
-          <circle cx="${cx}" cy="46" r="4.5" fill="#0f172a"/><text x="${cx - 18}" y="52" text-anchor="middle" font-size="15" font-weight="900">N</text>
-          <!-- Rayo intermedio LM -->
-          <line x1="${cx}" y1="${cy}" x2="${tipM.x.toFixed(1)}" y2="${tipM.y.toFixed(1)}" stroke="#dc2626" stroke-width="3"/>
-          <circle cx="${ptM.x.toFixed(1)}" cy="${ptM.y.toFixed(1)}" r="4.5" fill="#dc2626"/>
-          <text x="${(ptM.x + 18).toFixed(1)}" y="${(ptM.y + 4).toFixed(1)}" font-size="15" font-weight="900" fill="#dc2626">M</text>
+          <circle cx="${cx}" cy="46" r="4.5" fill="#0f172a"/><text x="${cx - 18}" y="52" text-anchor="middle" font-size="15" font-weight="900">M</text>
+          <!-- Rayo divisor LN -->
+          <line x1="${cx}" y1="${cy}" x2="${tipN.x.toFixed(1)}" y2="${tipN.y.toFixed(1)}" stroke="#dc2626" stroke-width="3"/>
+          <circle cx="${ptN.x.toFixed(1)}" cy="${ptN.y.toFixed(1)}" r="4.5" fill="#dc2626"/>
+          <text x="${(ptN.x + 18).toFixed(1)}" y="${(ptN.y + 4).toFixed(1)}" font-size="15" font-weight="900" fill="#dc2626">N</text>
           <!-- Vértice L -->
           <circle cx="${cx}" cy="${cy}" r="5.5" fill="#dc2626"/>
           <text x="${cx - 16}" y="${cy + 18}" font-size="15" font-weight="900" fill="#dc2626">L</text>
           <!-- Etiquetas de medida -->
-          <text x="${cx + 62}" y="${cy - 10}" font-size="13" font-weight="900" fill="#15803d">${givenDeg}°</text>
-          <text x="${cx + 34}" y="${cy - 54}" font-size="13" font-weight="900" fill="#1e40af">∡MLN = ?°</text>
-          <text x="245" y="34" text-anchor="middle" font-size="12" font-weight="800" fill="#1e40af">KL ⊥ LN (90°)</text>
+          <text x="${cx + 62}" y="${cy - 10}" font-size="13" font-weight="900" fill="#15803d">∡KLN = ${givenDeg}°</text>
+          <text x="${cx + 34}" y="${cy - 54}" font-size="13" font-weight="900" fill="#1e40af">∡NLM = ?°</text>
+          <text x="245" y="34" text-anchor="middle" font-size="12" font-weight="800" fill="#1e40af">∡KLM = 90° (⦜)</text>
         </svg>`;
       }
 
       case "diff_geodreieck_20_130":
-        // Geodreieck donde QP está en 20° y QR está en 130° (resta 130° - 20° = 110°)
-        return `<svg viewBox="0 0 340 190" aria-label="Winkel PQR zwischen 20 Grad und 130 Grad auf dem Geodreieck">
+        // pc_5: Vértice B en el 0 del Geodreieck, rayo BA en 20° y rayo BC en 130° (∡ABC = 130° - 20° = 110°)
+        return `<svg viewBox="0 0 340 190" aria-label="Winkel ABC zwischen 20 Grad und 130 Grad auf dem Geodreieck">
           <rect x="2" y="2" width="336" height="186" rx="10" fill="#ffffff" stroke="#e2e8f0"/>
-          <!-- Silueta Geodreieck en Q(170, 150) -->
+          <!-- Silueta Geodreieck en B(170, 150) -->
           <polygon points="40,150 300,150 170,20" fill="rgba(254, 249, 195, 0.65)" stroke="#ca8a04" stroke-width="1.8"/>
           <path d="M 82 150 A 88 88 0 0 1 258 150" fill="none" stroke="#a16207" stroke-width="1.5"/>
           <!-- Arco entre 20° y 130° -->
           <path d="M 209.5 135.6 A 42 42 0 0 0 143 117.8" fill="rgba(147, 51, 234, 0.2)" stroke="#7e22ce" stroke-width="2.5"/>
-          <!-- Rayo QP a 20° -->
+          <!-- 1. Schenkel BA a 20° -->
           <line x1="170" y1="150" x2="278" y2="110.7" stroke="#0f172a" stroke-width="3"/>
           <circle cx="248" cy="121.6" r="4.5" fill="#0f172a"/>
-          <text x="260" y="138" font-size="15" font-weight="900" fill="#0f172a">P</text>
+          <text x="260" y="138" font-size="15" font-weight="900" fill="#0f172a">A</text>
           <rect x="276" y="92" width="42" height="20" rx="5" fill="#dcfce7" stroke="#16a34a"/>
           <text x="297" y="106" text-anchor="middle" font-size="12" font-weight="900" fill="#166534">20°</text>
-          <!-- Rayo QR a 130° -->
+          <!-- 2. Schenkel BC a 130° -->
           <line x1="170" y1="150" x2="96" y2="61.8" stroke="#0f172a" stroke-width="3"/>
           <circle cx="116" cy="85.6" r="4.5" fill="#0f172a"/>
-          <text x="98" y="92" font-size="15" font-weight="900" fill="#0f172a">R</text>
+          <text x="98" y="92" font-size="15" font-weight="900" fill="#0f172a">C</text>
           <rect x="46" y="38" width="48" height="20" rx="5" fill="#ffedd5" stroke="#ea580c"/>
           <text x="70" y="52" text-anchor="middle" font-size="12" font-weight="900" fill="#9a3412">130°</text>
-          <!-- Vértice Q -->
+          <!-- Vértice B -->
           <circle cx="170" cy="150" r="5.5" fill="#dc2626"/>
-          <text x="170" y="173" text-anchor="middle" font-size="15" font-weight="900" fill="#dc2626">Q</text>
-          <text x="175" y="96" text-anchor="middle" font-size="13" font-weight="900" fill="#6b21a8">∡PQR = ?°</text>
+          <text x="170" y="173" text-anchor="middle" font-size="15" font-weight="900" fill="#dc2626">B</text>
+          <text x="175" y="96" text-anchor="middle" font-size="13" font-weight="900" fill="#6b21a8">∡ABC = ?°</text>
         </svg>`;
 
       case "three_rays_360":
-        // Tres rayos SA (0°), SB (110°), SC (250°) desde el vértice S que suman 360°
+        // pc_6: Tres rayos SA (0°), SB (110°), SC (240°) desde el vértice S: ∡ASB = 110°, ∡BSC = 130°, ∡CSA = ?° (120°)
         return `<svg viewBox="0 0 340 190" aria-label="Drei Strahlen SA, SB, SC ab Scheitelpunkt S (360 Grad)">
           <rect x="2" y="2" width="336" height="186" rx="10" fill="#ffffff" stroke="#e2e8f0"/>
           <!-- Rayo SA (0°, derecha) -->
@@ -1969,15 +2009,15 @@
           <!-- Rayo SB (110°, arriba-izquierda) -->
           <line x1="170" y1="98" x2="140" y2="16" stroke="#0f172a" stroke-width="3"/>
           <circle cx="147" cy="36" r="4.5" fill="#0f172a"/><text x="128" y="36" text-anchor="middle" font-size="15" font-weight="900">B</text>
-          <!-- Rayo SC (250°, abajo-izquierda) -->
-          <line x1="170" y1="98" x2="140" y2="180" stroke="#0f172a" stroke-width="3"/>
-          <circle cx="147" cy="160" r="4.5" fill="#0f172a"/><text x="128" y="168" text-anchor="middle" font-size="15" font-weight="900">C</text>
+          <!-- Rayo SC (240°, abajo-izquierda) -->
+          <line x1="170" y1="98" x2="126" y2="174" stroke="#0f172a" stroke-width="3"/>
+          <circle cx="137" cy="155" r="4.5" fill="#0f172a"/><text x="118" y="165" text-anchor="middle" font-size="15" font-weight="900">C</text>
           <!-- Vértice S -->
           <circle cx="170" cy="98" r="5.5" fill="#dc2626"/>
           <text x="184" y="115" font-size="15" font-weight="900" fill="#dc2626">S</text>
           <!-- Etiquetas de los 3 sectores -->
           <text x="215" y="56" font-size="13" font-weight="900" fill="#15803d">∡ASB = 110° ↺</text>
-          <text x="78" y="102" font-size="13" font-weight="900" fill="#0369a1">∡BSC = 140° ↺</text>
+          <text x="78" y="102" font-size="13" font-weight="900" fill="#0369a1">∡BSC = 130° ↺</text>
           <text x="225" y="152" font-size="13" font-weight="900" fill="#dc2626">∡CSA = ?° ↺</text>
         </svg>`;
 
@@ -2001,24 +2041,24 @@
         </svg>`;
 
       case "add_angles_48_45":
-        // Vértice V con rayos VA (0°), VB (48°), VC (93°): 48° + 45° = 93° (Stumpfer Winkel)
-        return `<svg viewBox="0 0 340 175" aria-label="Winkeladdition AVB = 48 Grad und BVC = 45 Grad">
+        // pc_10: Vértice M con rayos MK (0°), ML (48°), MN (93°): ∡KML = 48° + ∡LMN = 45° => ∡KMN = 93°
+        return `<svg viewBox="0 0 340 175" aria-label="Winkeladdition KML = 48 Grad und LMN = 45 Grad am Scheitelpunkt M">
           <rect x="2" y="2" width="336" height="171" rx="10" fill="#ffffff" stroke="#e2e8f0"/>
-          <!-- Rayo VA (0°) -->
+          <!-- Rayo MK (0°) -->
           <line x1="135" y1="142" x2="275" y2="142" stroke="#0f172a" stroke-width="3"/>
-          <circle cx="245" cy="142" r="4.5" fill="#0f172a"/><text x="245" y="162" text-anchor="middle" font-size="15" font-weight="900">A</text>
-          <!-- Rayo VB (48°) -->
+          <circle cx="245" cy="142" r="4.5" fill="#0f172a"/><text x="245" y="162" text-anchor="middle" font-size="15" font-weight="900">K</text>
+          <!-- Rayo ML (48°) -->
           <line x1="135" y1="142" x2="218" y2="50" stroke="#0284c7" stroke-width="3"/>
-          <circle cx="198" cy="72" r="4.5" fill="#0284c7"/><text x="216" y="75" font-size="15" font-weight="900" fill="#0284c7">B</text>
-          <!-- Rayo VC (93°, ligeramente pasado de 90°) -->
+          <circle cx="198" cy="72" r="4.5" fill="#0284c7"/><text x="216" y="75" font-size="15" font-weight="900" fill="#0284c7">L</text>
+          <!-- Rayo MN (93°, ligeramente pasado de 90°) -->
           <line x1="135" y1="142" x2="129" y2="20" stroke="#dc2626" stroke-width="3"/>
-          <circle cx="131" cy="48" r="4.5" fill="#dc2626"/><text x="112" y="52" font-size="15" font-weight="900" fill="#dc2626">C</text>
-          <!-- Vértice V -->
-          <circle cx="135" cy="142" r="5.5" fill="#0f172a"/><text x="118" y="158" font-size="15" font-weight="900">V</text>
+          <circle cx="131" cy="48" r="4.5" fill="#dc2626"/><text x="112" y="52" font-size="15" font-weight="900" fill="#dc2626">N</text>
+          <!-- Vértice M -->
+          <circle cx="135" cy="142" r="5.5" fill="#0f172a"/><text x="118" y="158" font-size="15" font-weight="900">M</text>
           <!-- Etiquetas -->
           <text x="205" y="124" font-size="13" font-weight="900" fill="#15803d">48°</text>
           <text x="158" y="78" font-size="13" font-weight="900" fill="#0369a1">45°</text>
-          <text x="255" y="36" text-anchor="middle" font-size="12" font-weight="900" fill="#7c2d12">∡AVC = 48° + 45° = ?°</text>
+          <text x="255" y="36" text-anchor="middle" font-size="12" font-weight="900" fill="#7c2d12">∡KMN = 48° + 45° = ?°</text>
         </svg>`;
 
       case "street_map_ghs":
@@ -2136,14 +2176,14 @@
       {
         id: "pd_dyn_4",
         topicDe: "Rechter Winkel geteilt (90°)",
-        questionDe: `Die Strahlen LK und LN stehen senkrecht aufeinander (KL ⊥ LN, also 90°). Wenn ∡KLM = ${compDeg}° ist, wie groß ist der Restwinkel ∡MLN?`,
-        questionEs: `Los rayos LK y LN son perpendiculares (KL ⊥ LN = 90°). Si ∡KLM = ${compDeg}°, ¿cuánto mide el ángulo restante ∡MLN?`,
+        questionDe: `Die Strahlen LK und LM stehen senkrecht aufeinander (∡KLM = 90°). Wenn ∡KLN = ${compDeg}° ist, wie groß ist der Restwinkel ∡NLM?`,
+        questionEs: `Los rayos LK y LM son perpendiculares (∡KLM = 90°). Si ∡KLN = ${compDeg}°, ¿cuánto mide el ángulo restante ∡NLM?`,
         svgSpec: { type: "split_90_klmn", givenDeg: compDeg },
         options: [
-          { textDe: `∡MLN = ${90 - compDeg}° (Spitzer Winkel)`, textEs: `${90 - compDeg}° (Ángulo agudo)`, correct: true },
-          { textDe: `∡MLN = ${180 - compDeg}° (Stumpfer Winkel)`, textEs: `${180 - compDeg}° (Ángulo obtuso)`, correct: false },
-          { textDe: `∡MLN = 90° (Rechter Winkel)`, textEs: `90° (Ángulo recto)`, correct: false },
-          { textDe: `∡MLN = ${360 - compDeg}° (Überstumpfer Winkel)`, textEs: `${360 - compDeg}°`, correct: false }
+          { textDe: `∡NLM = ${90 - compDeg}° (Spitzer Winkel)`, textEs: `${90 - compDeg}° (Ángulo agudo)`, correct: true },
+          { textDe: `∡NLM = ${180 - compDeg}° (Stumpfer Winkel)`, textEs: `${180 - compDeg}° (Ángulo obtuso)`, correct: false },
+          { textDe: `∡NLM = 90° (Rechter Winkel)`, textEs: `90° (Ángulo recto)`, correct: false },
+          { textDe: `∡NLM = ${360 - compDeg}° (Überstumpfer Winkel)`, textEs: `${360 - compDeg}°`, correct: false }
         ],
         explanationDe: `Rechter Winkel = 90°: 90° − ${compDeg}° = ${90 - compDeg}° (Spitzer Winkel).`,
         explanationEs: `Ángulo recto = 90°: 90° − ${compDeg}° = ${90 - compDeg}°.`
