@@ -83,7 +83,14 @@
         <span class="tab-icon">🏆</span>
         <span class="tab-text">
           <strong>5. Prozessnote-Test</strong>
-          <small class="es-sub">Simulacro de prueba</small>
+          <small class="es-sub">Simulacro base</small>
+        </span>
+      </button>
+      <button type="button" class="tab-btn" data-tab="tab-neueproben" aria-selected="false">
+        <span class="tab-icon">📝</span>
+        <span class="tab-text">
+          <strong>6. Neue Proben (Note)</strong>
+          <small class="es-sub">Pruebas por nivel + Nota</small>
         </span>
       </button>
     </nav>
@@ -682,6 +689,57 @@
       <div class="quiz-submit-bar">
         <button type="button" id="btn-quiz-evaluate-all" class="btn-primary btn-lg">
           ✓ Ganze Probe auswerten (Corregir prueba completa)
+        </button>
+      </div>
+    </section>
+
+    <!-- ===================================================================
+         TAB 6: NEUE PROBEN MIT NOTE (3 SCHWIERIGKEITSSTUFEN + ZUFALLS-PROBE)
+    ==================================================================== -->
+    <section id="tab-neueproben" class="tab-panel" hidden aria-label="Neue Proben nach Schwierigkeitsgrad mit Benotung">
+      <div class="section-intro-bar">
+        <div>
+          <h2>📝 Neue Geometrie-Proben mit Benotung (Note 1,0 – 7,0 &amp; Deutsche Note 1 – 6)</h2>
+          <p class="es-sub">Pruebas nuevas creadas especialmente con distintos niveles de dificultad (Básico, Intermedio con trampas de examen, Experto y Generador Aleatorio) para aplicar nota real.</p>
+        </div>
+        <div class="subview-pills" id="np-exam-selector">
+          <button type="button" class="pill-btn active" data-exam-id="probe_a">🟢 Probe A: Niveau 1 (Basis)</button>
+          <button type="button" class="pill-btn" data-exam-id="probe_b">🟡 Probe B: Niveau 2 (Mittelschwer)</button>
+          <button type="button" class="pill-btn" data-exam-id="probe_c">🔴 Probe C: Niveau 3 (Experten)</button>
+          <button type="button" class="pill-btn" data-exam-id="probe_d">🎲 Probe D: Zufalls-Probe (Nueva al azar)</button>
+        </div>
+      </div>
+
+      <!-- Tarjeta de información de la prueba seleccionada y controles -->
+      <div class="np-meta-banner" id="np-exam-header-card">
+        <div class="np-meta-info">
+          <span class="np-level-badge level-easy" id="np-level-badge">🟢 Niveau 1 · Basis</span>
+          <h3 id="np-exam-title">Probe A — Niveau 1: Basis-Training</h3>
+          <p id="np-exam-desc">12 neue Aufgaben zum sicheren Einstieg.</p>
+          <p id="np-exam-desc-es" class="es-sub"></p>
+        </div>
+        <div class="actions-right">
+          <button type="button" id="btn-np-retry-errors" class="btn-warning" hidden>
+            🔁 Nur Fehler üben (<span id="np-error-count">0</span>)
+          </button>
+          <button type="button" id="btn-np-restart" class="btn-secondary">
+            🔄 Probe neu starten / mischen
+          </button>
+        </div>
+      </div>
+
+      <!-- Historial de notas de la sesión -->
+      <div id="np-history-bar" class="np-history-bar" hidden></div>
+
+      <!-- Certificado de Nota (aparece al evaluar la prueba) -->
+      <div id="np-summary-banner" class="np-grade-certificate" hidden></div>
+
+      <!-- Lista de 12 preguntas de la prueba activa -->
+      <div id="np-questions-container" class="quiz-list"></div>
+
+      <div class="quiz-submit-bar">
+        <button type="button" id="btn-np-evaluate-all" class="btn-primary btn-lg">
+          📝 Ganze Probe benoten &amp; Note berechnen (Calcular Nota 1.0 a 7.0)
         </button>
       </div>
     </section>

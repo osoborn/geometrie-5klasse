@@ -950,5 +950,572 @@ window.GEOMETRY_DATA = {
       explanationDe: "Wichtiger Trick für die Probe: Prüfe zuerst mit dem Auge, ob der Winkel spitz (< 90°) oder stumpf (> 90°) ist. Da er spitz ist, muss es 50° sein!",
       explanationEs: "Truco clave para la prueba: mira primero si el ángulo es más cerrado que una esquina de 90° (spitz). Como es agudo, ¡tiene que ser 50° y no 130°!"
     }
-  ]
+  ],
+
+  // 6. Nuevas Pruebas Completas por Nivel (Tab 6: Neue Proben mit Note)
+  extraExams: {
+    probe_a: {
+      id: "probe_a",
+      titleDe: "🟢 Probe A — Niveau 1: Basis-Training (Wie im Heft)",
+      titleEs: "Prueba A — Nivel 1: Entrenamiento Base (Mismo nivel del cuaderno, ejercicios nuevos)",
+      questions: [
+        {
+          id: "pa_1",
+          topicDe: "Linien & Symbole",
+          questionDe: "Betrachte in der Figur die rot markierte Linie von P über Q: Bei P ist ein Querstrich (Start), hinter Q geht ein Pfeil weiter. Wie heißt sie?",
+          questionEs: "Observa en la figura la línea marcada en rojo desde P pasando por Q: en P tiene tope de inicio y después de Q sigue con flecha. ¿Cómo se llama?",
+          svgSpec: { type: "fig_pqrs", highlight: "PQ" },
+          options: [
+            { textDe: "⟼ PQ — der Strahl (beginnt bei P)", textEs: "El rayo PQ (empieza en P)", correct: true },
+            { textDe: "I—I PQ — die Strecke", textEs: "El segmento PQ", correct: false },
+            { textDe: "⟷ PQ — die Gerade", textEs: "La recta PQ", correct: false },
+            { textDe: "⟼ QP — der Strahl (beginnt bei Q)", textEs: "El rayo QP (empieza en Q)", correct: false }
+          ],
+          explanationDe: "Bei P ist der Anfangspunkt (Querstrich) und hinter Q der Pfeil → der Strahl ⟼ PQ.",
+          explanationEs: "En P está el tope de inicio y tras Q la flecha → es el rayo (der Strahl) ⟼ PQ."
+        },
+        {
+          id: "pa_2",
+          topicDe: "Linien & Symbole",
+          questionDe: "In derselben Figur hat die rot markierte Linie zwischen Q und R an beiden Enden einen Begrenzungsstrich. Wie schreibt man sie?",
+          questionEs: "En la misma figura, la línea marcada en rojo entre Q y R tiene tope en ambos extremos. ¿Cómo se escribe?",
+          svgSpec: { type: "fig_pqrs", highlight: "QR" },
+          options: [
+            { textDe: "I—I QR — die Strecke", textEs: "El segmento QR", correct: true },
+            { textDe: "⟷ QR — die Gerade", textEs: "La recta QR", correct: false },
+            { textDe: "⟼ QR — der Strahl", textEs: "El rayo QR", correct: false },
+            { textDe: "die Kurve QR", textEs: "La curva QR", correct: false }
+          ],
+          explanationDe: "Anfangspunkt Q und Endpunkt R → die Strecke (I—I QR).",
+          explanationEs: "Punto inicial Q y punto final R → el segmento (die Strecke I—I QR)."
+        },
+        {
+          id: "pa_3",
+          topicDe: "Linien & Symbole",
+          questionDe: "Die rot markierte Linie durch R und S hat an beiden Enden einen Pfeil. Wie heißt sie auf Deutsch?",
+          questionEs: "La línea marcada en rojo que pasa por R y S tiene flecha en ambos extremos. ¿Cómo se llama en alemán?",
+          svgSpec: { type: "fig_pqrs", highlight: "RS" },
+          options: [
+            { textDe: "⟷ RS — die Gerade (unendlich in beide Richtungen)", textEs: "La recta RS (infinita en ambos sentidos)", correct: true },
+            { textDe: "⟼ RS — der Strahl", textEs: "El rayo RS", correct: false },
+            { textDe: "I—I RS — die Strecke", textEs: "El segmento RS", correct: false },
+            { textDe: "geschlossene Linie", textEs: "Línea cerrada", correct: false }
+          ],
+          explanationDe: "Zwei Pfeile = kein Anfang und kein Ende → die Gerade (⟷ RS).",
+          explanationEs: "Dos flechas = sin principio ni fin → die Gerade (la recta RS)."
+        },
+        {
+          id: "pa_4",
+          topicDe: "Geschlossene Linie",
+          questionDe: "Schau dir die geschlossene Linie mit den Punkten X, Y und Z an. Wo liegen X, Y und Z?",
+          questionEs: "Mira la línea cerrada con los puntos X, Y y Z. ¿Dónde están ubicados X, Y y Z?",
+          svgSpec: { type: "closed_xyz" },
+          options: [
+            { textDe: "X im Innenbereich · Y auf dem Rand (Grenze) · Z im Außenbereich", textEs: "X en región interior · Y en la frontera · Z en región exterior", correct: true },
+            { textDe: "X im Außenbereich · Y im Innenbereich · Z auf dem Rand", textEs: "X exterior · Y interior · Z en la frontera", correct: false },
+            { textDe: "Alle drei Punkte liegen im Innenbereich", textEs: "Los tres puntos están en el interior", correct: false },
+            { textDe: "X ist der Scheitelpunkt und Z ist der Schenkel", textEs: "X es el vértice y Z es el lado", correct: false }
+          ],
+          explanationDe: "X liegt drinnen (Innenbereich), Y genau auf der Linie (Rand/Grenze) und Z draußen (Außenbereich).",
+          explanationEs: "X está adentro (Innenbereich), Y sobre la línea (Rand/Grenze = frontera) y Z afuera (Außenbereich)."
+        },
+        {
+          id: "pa_5",
+          topicDe: "Lage zum Boden",
+          questionDe: "Der Fahnenmast TU steht im 90°-Winkel aufrecht auf dem Boden. Welche Lage zum Boden hat die Strecke TU?",
+          questionEs: "El mástil TU está parado formando 90° con el suelo. ¿Qué posición respecto al suelo tiene el segmento TU?",
+          svgSpec: { type: "flagpole_tu" },
+          options: [
+            { textDe: "senkrecht / vertikal zum Boden", textEs: "vertical (perpendicular al suelo)", correct: true },
+            { textDe: "waagerecht / horizontal zum Boden", textEs: "horizontal respecto al suelo", correct: false },
+            { textDe: "schräg zum Boden", textEs: "oblicua respecto al suelo", correct: false },
+            { textDe: "gekrümmt (Spirale)", textEs: "curva (espiral)", correct: false }
+          ],
+          explanationDe: "Aufrecht im 90°-Winkel zum Boden heißt auf Deutsch: senkrecht (oder vertikal).",
+          explanationEs: "Derecho a 90° respecto al suelo se llama en alemán senkrecht (o vertikal)."
+        },
+        {
+          id: "pa_6",
+          topicDe: "Beziehung zwischen Linien",
+          questionDe: "Im Rechteck ABCD: Welche Beziehung haben die obere Seite AB und die untere Seite DC zueinander?",
+          questionEs: "En el rectángulo ABCD: ¿Qué relación tienen el lado superior AB y el lado inferior DC entre sí?",
+          svgSpec: { type: "rect_abcd", highlight: "parallel" },
+          options: [
+            { textDe: "Sie sind parallel zueinander (AB ∥ DC)", textEs: "Son paralelos entre sí (AB ∥ DC)", correct: true },
+            { textDe: "Sie sind senkrecht zueinander (AB ⊥ DC)", textEs: "Son perpendiculares entre sí (AB ⊥ DC)", correct: false },
+            { textDe: "Sie sind Sekanten mit Schnittpunkt B", textEs: "Son secantes que se cortan en B", correct: false },
+            { textDe: "Sie bilden einen spitzen Winkel", textEs: "Forman un ángulo agudo", correct: false }
+          ],
+          explanationDe: "Gegenüberliegende Seiten im Rechteck haben immer denselben Abstand und schneiden sich nie → Parallelen (AB ∥ DC).",
+          explanationEs: "Los lados opuestos de un rectángulo mantienen la misma distancia y nunca se cortan → Parallelen (AB ∥ DC)."
+        },
+        {
+          id: "pa_7",
+          topicDe: "Beziehung zwischen Linien",
+          questionDe: "Im selben Rechteck ABCD: Welche Beziehung haben die linke Seite AD und die untere Seite DC bei Punkt D?",
+          questionEs: "En el mismo rectángulo ABCD: ¿Qué relación tienen el lado izquierdo AD y el lado inferior DC en el punto D?",
+          svgSpec: { type: "rect_abcd", highlight: "perp" },
+          options: [
+            { textDe: "Sie stehen senkrecht aufeinander (AD ⊥ DC, rechter Winkel 90°)", textEs: "Son perpendiculares entre sí (AD ⊥ DC, ángulo recto 90°)", correct: true },
+            { textDe: "Sie sind parallel zueinander (AD ∥ DC)", textEs: "Son paralelos entre sí (AD ∥ DC)", correct: false },
+            { textDe: "Sie berühren sich nicht", textEs: "No se tocan", correct: false },
+            { textDe: "Sie bilden einen stumpfen Winkel von 120°", textEs: "Forman un ángulo obtuso de 120°", correct: false }
+          ],
+          explanationDe: "Im Punkt D treffen sich AD und DC im rechten Winkel (90° ⦜) → senkrechte Linien (AD ⊥ DC).",
+          explanationEs: "En el punto D se cortan AD y DC en ángulo recto (90° ⦜) → senkrechte Linien (AD ⊥ DC)."
+        },
+        {
+          id: "pa_8",
+          topicDe: "Winkel 360° & Sortierung",
+          questionDe: "Gegeben ist der Winkel ∡PQR = 70°. Wie groß ist der Außenwinkel ∡RQP und welche Winkelart ist ∡PQR?",
+          questionEs: "Se da el ángulo ∡PQR = 70°. ¿Cuánto mide el ángulo exterior ∡RQP y qué tipo de ángulo es ∡PQR?",
+          svgSpec: { type: "angle_pair", vertex: "Q", p1: "P", p2: "R", d1: 70, d2: 290, given: 1 },
+          options: [
+            { textDe: "∡RQP = 290° · ∡PQR ist ein Spitzer Winkel (1°–89°)", textEs: "∡RQP = 290° · ∡PQR es un ángulo agudo", correct: true },
+            { textDe: "∡RQP = 110° · ∡PQR ist ein Stumpfer Winkel", textEs: "∡RQP = 110° · ∡PQR es un ángulo obtuso", correct: false },
+            { textDe: "∡RQP = 290° · ∡PQR ist ein Rechter Winkel", textEs: "∡RQP = 290° · ∡PQR es un ángulo recto", correct: false },
+            { textDe: "∡RQP = 270° · ∡PQR ist ein Überstumpfer Winkel", textEs: "∡RQP = 270° · ∡PQR es un ángulo mayor de 180°", correct: false }
+          ],
+          explanationDe: "360° − 70° = 290°. Da 70° zwischen 1° und 89° liegt, ist ∡PQR ein Spitzer Winkel!",
+          explanationEs: "360° − 70° = 290°. Como 70° está entre 1° y 89°, ¡∡PQR es un Spitzer Winkel!"
+        },
+        {
+          id: "pa_9",
+          topicDe: "Winkel 360° & Sortierung",
+          questionDe: "Gegeben ist ∡XYZ = 140°. Wie groß ist der Gegenwinkel ∡ZYX und wie heißt die Winkelart von ∡XYZ?",
+          questionEs: "Se da ∡XYZ = 140°. ¿Cuánto mide el ángulo inverso ∡ZYX y cómo se clasifica ∡XYZ?",
+          svgSpec: { type: "angle_pair", vertex: "Y", p1: "X", p2: "Z", d1: 140, d2: 220, given: 1 },
+          options: [
+            { textDe: "∡ZYX = 220° · ∡XYZ ist ein Stumpfer Winkel (91°–179°)", textEs: "∡ZYX = 220° · ∡XYZ es un ángulo obtuso", correct: true },
+            { textDe: "∡ZYX = 40° · ∡XYZ ist ein Spitzer Winkel", textEs: "∡ZYX = 40° · ∡XYZ es un ángulo agudo", correct: false },
+            { textDe: "∡ZYX = 220° · ∡XYZ ist ein Überstumpfer Winkel", textEs: "∡ZYX = 220° · ∡XYZ es mayor de 180°", correct: false },
+            { textDe: "∡ZYX = 240° · ∡XYZ ist ein Gestreckter Winkel", textEs: "∡ZYX = 240° · ∡XYZ es extendido", correct: false }
+          ],
+          explanationDe: "360° − 140° = 220°. Und 140° liegt zwischen 91° und 179° → Stumpfer Winkel.",
+          explanationEs: "360° − 140° = 220°. Y 140° está entre 91° y 179° → Stumpfer Winkel (obtuso)."
+        },
+        {
+          id: "pa_10",
+          topicDe: "Scheitelpunkt & Rechter Winkel",
+          questionDe: "Beim Winkel ∡KLM = 90°: Welcher Buchstabe ist der Scheitelpunkt und wie groß ist der Außenwinkel ∡MLK?",
+          questionEs: "En el ángulo ∡KLM = 90°: ¿Cuál letra es el vértice (Scheitelpunkt) y cuánto mide el ángulo exterior ∡MLK?",
+          svgSpec: { type: "angle_pair", vertex: "L", p1: "K", p2: "M", d1: 90, d2: 270, given: 1 },
+          options: [
+            { textDe: "Scheitelpunkt ist L (in der Mitte) · ∡MLK = 270°", textEs: "El vértice es L (al medio) · ∡MLK = 270°", correct: true },
+            { textDe: "Scheitelpunkt ist K · ∡MLK = 90°", textEs: "El vértice es K · ∡MLK = 90°", correct: false },
+            { textDe: "Scheitelpunkt ist M · ∡MLK = 180°", textEs: "El vértice es M · ∡MLK = 180°", correct: false },
+            { textDe: "Scheitelpunkt ist L · ∡MLK = 190°", textEs: "El vértice es L · ∡MLK = 190°", correct: false }
+          ],
+          explanationDe: "Bei ∡KLM steht L in der Mitte (Scheitelpunkt). Und 360° − 90° = 270°!",
+          explanationEs: "En ∡KLM la letra L va al medio (vértice). Y 360° − 90° = 270°."
+        },
+        {
+          id: "pa_11",
+          topicDe: "Winkel Sortierung",
+          questionDe: "Schau dir den Winkel ∡DEF = 215° an. Wie heißt diese Winkelart auf Deutsch?",
+          questionEs: "Observa el ángulo ∡DEF = 215°. ¿Cómo se llama este tipo de ángulo en alemán?",
+          svgSpec: { type: "angle_pair", vertex: "E", p1: "D", p2: "F", d1: 215, d2: 145, given: 1 },
+          options: [
+            { textDe: "Überstumpfer Winkel (181° – 359°)", textEs: "Überstumpfer Winkel (entre 181° y 359°)", correct: true },
+            { textDe: "Stumpfer Winkel (91° – 179°)", textEs: "Stumpfer Winkel (obtuso)", correct: false },
+            { textDe: "Gestreckter Winkel (180°)", textEs: "Gestreckter Winkel (extendido)", correct: false },
+            { textDe: "Voller Winkel (360°)", textEs: "Voller Winkel (completo)", correct: false }
+          ],
+          explanationDe: "Alle Winkel zwischen 181° und 359° heißen Überstumpfer Winkel!",
+          explanationEs: "Todos los ángulos entre 181° y 359° se llaman Überstumpfer Winkel."
+        },
+        {
+          id: "pa_12",
+          topicDe: "Besondere Winkel (0° & 360°)",
+          questionDe: "Wie heißen der Winkel von genau 0° und der Winkel einer kompletten Drehung von 360°?",
+          questionEs: "¿Cómo se llaman en alemán el ángulo de exactamente 0° y el ángulo de una vuelta completa de 360°?",
+          svgSpec: { type: "angle_0_360" },
+          options: [
+            { textDe: "0° = Nullwinkel (0-Winkel) · 360° = Voller Winkel (Vollwinkel)", textEs: "0° = Nullwinkel · 360° = Voller Winkel", correct: true },
+            { textDe: "0° = Spitzer Winkel · 360° = Gestreckter Winkel", textEs: "0° = Agudo · 360° = Extendido", correct: false },
+            { textDe: "0° = Rechter Winkel · 360° = Überstumpfer Winkel", textEs: "0° = Recto · 360° = Mayor de 180°", correct: false },
+            { textDe: "0° = Kleiner Winkel · 360° = Großer Winkel", textEs: "0° = Ángulo pequeño · 360° = Ángulo grande", correct: false }
+          ],
+          explanationDe: "Genau wie im Schema vom 19. Oktober: 0° ist der Nullwinkel (0-Winkel) und 360° ist der Volle Winkel!",
+          explanationEs: "Exactamente como en el esquema del 19 de octubre: 0° es Nullwinkel y 360° es Voller Winkel."
+        }
+      ]
+    },
+
+    probe_b: {
+      id: "probe_b",
+      titleDe: "🟡 Probe B — Niveau 2: Mittelschwer & Prüfungsfallen",
+      titleEs: "Prueba B — Nivel 2: Intermedio con Trampas Clásicas de Prueba",
+      questions: [
+        {
+          id: "pb_1",
+          topicDe: "★ Bonus-Falle: Strahl nennen",
+          questionDe: "Achtung Falle! Der Strahl beginnt beim Punkt T (rechts oben mit Querstrich) und geht schräg nach links unten durch Punkt K weiter. Wie MUSS man sein Symbol schreiben?",
+          questionEs: "¡Cuidado con la trampa! El rayo empieza en el punto T (arriba a la derecha con tope) y baja pasando por K con flecha. ¿Cómo DEBE escribirse su símbolo?",
+          svgSpec: { type: "ray_tk_trap" },
+          options: [
+            { textDe: "⟼ TK (weil T der Anfangspunkt ist!)", textEs: "⟼ TK (¡porque T es el punto de inicio!)", correct: true },
+            { textDe: "⟼ KT (weil K weiter links liegt und im Alphabet vor T kommt)", textEs: "⟼ KT (porque K está a la izquierda y va antes en el abecedario)", correct: false },
+            { textDe: "I—I TK (Strecke TK)", textEs: "I—I TK (Segmento TK)", correct: false },
+            { textDe: "⟷ KT (Gerade KT)", textEs: "⟷ KT (Recta KT)", correct: false }
+          ],
+          explanationDe: "Merke dir den ★ Bonus aus dem Heft: Egal wohin der Pfeil in der Zeichnung zeigt, im Symbol ⟼ steht IMMER der Startpunkt (T) an erster Stelle → ⟼ TK!",
+          explanationEs: "Recuerda el ★ Bonus del cuaderno: sin importar hacia dónde apunte la flecha en el dibujo, en el símbolo ⟼ SIEMPRE va primero el punto de inicio (T) → ⟼ TK."
+        },
+        {
+          id: "pb_2",
+          topicDe: "Die Linie (3 Eigenschaften)",
+          questionDe: "Betrachte die Linie durch E und F mit zwei Pfeilen, die geneigt zum Boden verläuft. Welche 3 Begriffe beschreiben sie komplett richtig?",
+          questionEs: "Observa la línea que pasa por E y F con dos flechas, inclinada respecto al suelo. ¿Cuáles 3 conceptos la describen correctamente?",
+          svgSpec: { type: "slanted_gerade_ef" },
+          options: [
+            { textDe: "offene Linie · die Gerade (⟷ EF) · schräg zum Boden", textEs: "línea abierta · la recta (⟷ EF) · oblicua al suelo", correct: true },
+            { textDe: "offene Linie · der Strahl (⟼ EF) · schräg zum Boden", textEs: "línea abierta · el rayo (⟼ EF) · oblicua al suelo", correct: false },
+            { textDe: "geschlossene Linie · die Gerade · waagerecht", textEs: "línea cerrada · la recta · horizontal", correct: false },
+            { textDe: "offene Linie · die Strecke (I—I EF) · senkrecht", textEs: "línea abierta · el segmento · vertical", correct: false }
+          ],
+          explanationDe: "Zwei Pfeile = die Gerade (⟷ EF); Enden treffen sich nicht = offene Linie; geneigt zum Boden = schräg!",
+          explanationEs: "Dos flechas = la recta (die Gerade); extremos no se unen = abierta (offene Linie); inclinada = oblicua (schräg)."
+        },
+        {
+          id: "pb_3",
+          topicDe: "Senkrechte auf schräger Gerade",
+          questionDe: "Auf der schrägen Gerade h kreuzen zwei Linien: Linie m zeigt senkrecht zum unteren Blattrand (60° zu h), Linie n bildet genau 90° (⦜) mit der schrägen Gerade h. Welche Aussage stimmt?",
+          questionEs: "Sobre la recta inclinada h cruzan dos líneas: la línea m va vertical al borde de la hoja (60° con h), y la línea n forma 90° (⦜) con la recta inclinada h. ¿Qué afirmación es correcta?",
+          svgSpec: { type: "trap_slanted_perp" },
+          options: [
+            { textDe: "Nur Linie n ist senkrecht zu h (n ⊥ h), weil sie mit h einen 90°-Winkel bildet!", textEs: "¡Solo la línea n es perpendicular a h (n ⊥ h), porque forma 90° con h!", correct: true },
+            { textDe: "Nur Linie m ist senkrecht zu h, weil sie gerade nach oben zeigt", textEs: "Solo la línea m es perpendicular a h porque va hacia arriba", correct: false },
+            { textDe: "Beide Linien m und n sind senkrecht zu h", textEs: "Ambas líneas m y n son perpendiculares a h", correct: false },
+            { textDe: "Linie m und Linie n sind parallel zueinander (m ∥ n)", textEs: "Las líneas m y n son paralelas entre sí", correct: false }
+          ],
+          explanationDe: "Senkrecht zu einer Gerade h bedeutet immer: 90°-Winkel zu DIESER Gerade h (also n ⊥ h). Linie m ist nur eine normale Sekante zu h!",
+          explanationEs: "Perpendicular a una recta h significa siempre formar 90° con ESA recta h (n ⊥ h). ¡La línea m es solo una secante común respecto a h!"
+        },
+        {
+          id: "pb_4",
+          topicDe: "89°-Falle (Spitz vs. Recht)",
+          questionDe: "Aufgepasst beim Rechnen! Gegeben ist der große Außenwinkel ∡CBA = 271°. Wie groß ist ∡ABC und zu welcher Winkelart gehört er?",
+          questionEs: "¡Cuidado al calcular! Se da el ángulo exterior grande ∡CBA = 271°. ¿Cuánto mide ∡ABC y a qué tipo de ángulo pertenece?",
+          svgSpec: { type: "angle_pair", vertex: "B", p1: "A", p2: "C", d1: 89, d2: 271, given: 2 },
+          options: [
+            { textDe: "∡ABC = 89° → Spitzer Winkel (weil 89° knapp kleiner als 90° ist!)", textEs: "∡ABC = 89° → Ángulo agudo (¡porque 89° es menor que 90°!)", correct: true },
+            { textDe: "∡ABC = 89° → Rechter Winkel (weil es fast 90° ist)", textEs: "∡ABC = 89° → Ángulo recto (porque es casi 90°)", correct: false },
+            { textDe: "∡ABC = 91° → Stumpfer Winkel", textEs: "∡ABC = 91° → Ángulo obtuso", correct: false },
+            { textDe: "∡ABC = 99° → Stumpfer Winkel", textEs: "∡ABC = 99° → Ángulo obtuso", correct: false }
+          ],
+          explanationDe: "360° − 271° = 89°. Ein Rechter Winkel muss GENAU 90° haben. 89° gehört noch zu 1°–89° → Spitzer Winkel!",
+          explanationEs: "360° − 271° = 89°. Un ángulo recto debe medir EXACTAMENTE 90°. ¡89° sigue estando entre 1° y 89°, así que es Spitzer Winkel!"
+        },
+        {
+          id: "pb_5",
+          topicDe: "91°-Falle (Recht vs. Stumpf)",
+          questionDe: "Gegeben ist der Außenwinkel ∡NML = 269°. Berechne ∡LMN und bestimme die genaue Sortierung von ∡LMN:",
+          questionEs: "Se da el ángulo exterior ∡NML = 269°. Calcula ∡LMN y determina su clasificación exacta:",
+          svgSpec: { type: "angle_pair", vertex: "M", p1: "L", p2: "N", d1: 91, d2: 269, given: 2 },
+          options: [
+            { textDe: "∡LMN = 91° → Stumpfer Winkel (91° – 179°)", textEs: "∡LMN = 91° → Ángulo obtuso (91° – 179°)", correct: true },
+            { textDe: "∡LMN = 91° → Rechter Winkel", textEs: "∡LMN = 91° → Ángulo recto", correct: false },
+            { textDe: "∡LMN = 89° → Spitzer Winkel", textEs: "∡LMN = 89° → Ángulo agudo", correct: false },
+            { textDe: "∡LMN = 101° → Überstumpfer Winkel", textEs: "∡LMN = 101° → Ángulo mayor de 180°", correct: false }
+          ],
+          explanationDe: "360° − 269° = 91°. Ab 91° bis 179° heißt der Winkel Stumpfer Winkel!",
+          explanationEs: "360° − 269° = 91°. Desde 91° hasta 179° el ángulo se llama Stumpfer Winkel (obtuso)."
+        },
+        {
+          id: "pb_6",
+          topicDe: "181°-Falle (Gestreckt vs. Überstumpf)",
+          questionDe: "Gegeben ist ∡PQR = 179° (Stumpfer Winkel). Wie groß ist der Gegenwinkel ∡RQP und wie wird ∡RQP sortiert?",
+          questionEs: "Se da ∡PQR = 179° (obtuso). ¿Cuánto mide el ángulo conjugado ∡RQP y cómo se clasifica ∡RQP?",
+          svgSpec: { type: "angle_pair", vertex: "Q", p1: "P", p2: "R", d1: 179, d2: 181, given: 1 },
+          options: [
+            { textDe: "∡RQP = 181° → Überstumpfer Winkel (181° – 359°)", textEs: "∡RQP = 181° → Überstumpfer Winkel (181° – 359°)", correct: true },
+            { textDe: "∡RQP = 181° → Gestreckter Winkel", textEs: "∡RQP = 181° → Ángulo extendido", correct: false },
+            { textDe: "∡RQP = 180° → Gestreckter Winkel", textEs: "∡RQP = 180° → Ángulo extendido", correct: false },
+            { textDe: "∡RQP = 181° → Stumpfer Winkel", textEs: "∡RQP = 181° → Ángulo obtuso", correct: false }
+          ],
+          explanationDe: "360° − 179° = 181°. Da 181° größer als 180° ist, ist es bereits ein Überstumpfer Winkel!",
+          explanationEs: "360° − 179° = 181°. Como 181° ya pasa de 180°, ¡es un Überstumpfer Winkel!"
+        },
+        {
+          id: "pb_7",
+          topicDe: "Richtungs-Falle (Gegen den Uhrzeigersinn ↺)",
+          questionDe: "Wie bei Übung #3 im Heft (21. Okt): Von Strahl AB gegen den Uhrzeigersinn (↺ oben herum) bis AC sind es ∡BAC = 210°. Wie groß ist ∡CAB (unten herum ↺) und welche Winkelart ist ∡CAB?",
+          questionEs: "Como en el ejercicio #3 del cuaderno (21 oct): Del rayo AB en sentido antihorario (↺ por arriba) hasta AC hay ∡BAC = 210°. ¿Cuánto mide ∡CAB (por abajo ↺) y qué tipo de ángulo es ∡CAB?",
+          svgSpec: { type: "angle_pair", vertex: "A", p1: "B", p2: "C", d1: 210, d2: 150, given: 1 },
+          options: [
+            { textDe: "∡CAB = 150° → Stumpfer Winkel", textEs: "∡CAB = 150° → Ángulo obtuso (Stumpfer Winkel)", correct: true },
+            { textDe: "∡CAB = 150° → Überstumpfer Winkel", textEs: "∡CAB = 150° → Mayor de 180°", correct: false },
+            { textDe: "∡CAB = 50° → Spitzer Winkel", textEs: "∡CAB = 50° → Ángulo agudo", correct: false },
+            { textDe: "∡CAB = 210° → Überstumpfer Winkel", textEs: "∡CAB = 210° → Mayor de 180°", correct: false }
+          ],
+          explanationDe: "360° − 210° = 150°. Und 150° liegt zwischen 91° und 179°, also ist ∡CAB ein Stumpfer Winkel!",
+          explanationEs: "360° − 210° = 150°. Y 150° está entre 91° y 179°, por lo tanto ∡CAB es un Stumpfer Winkel."
+        },
+        {
+          id: "pb_8",
+          topicDe: "Geodreieck-Skala (Stumpfer Winkel)",
+          questionDe: "Du misst den deutlich geöffneten Winkel ∡MNO (größer als 90°!). Der Strahl NO geht auf dem Geodreieck durch die Zahlen 65° und 115°. Welches Maß hat ∡MNO und wie groß ist ∡ONM?",
+          questionEs: "Mides el ángulo claramente abierto ∡MNO (¡mayor que 90°!). El rayo NO pasa en el Geodreieck por los números 65° y 115°. ¿Cuánto mide ∡MNO y cuánto mide ∡ONM?",
+          svgSpec: { type: "geodreieck_115_mno" },
+          options: [
+            { textDe: "∡MNO = 115° (Stumpfer Winkel) · Außenwinkel ∡ONM = 245°", textEs: "∡MNO = 115° (obtuso) · ángulo exterior ∡ONM = 245°", correct: true },
+            { textDe: "∡MNO = 65° (Spitzer Winkel) · Außenwinkel ∡ONM = 295°", textEs: "∡MNO = 65° (agudo) · ángulo exterior ∡ONM = 295°", correct: false },
+            { textDe: "∡MNO = 115° · Außenwinkel ∡ONM = 65°", textEs: "∡MNO = 115° · ángulo exterior ∡ONM = 65°", correct: false },
+            { textDe: "∡MNO = 180° · Außenwinkel ∡ONM = 180°", textEs: "∡MNO = 180° · ángulo exterior ∡ONM = 180°", correct: false }
+          ],
+          explanationDe: "Da der Winkel weiter geöffnet ist als die 90°-Linie (stumpf), musst du die Zahl über 90° ablesen: 115°! Und 360° − 115° = 245°.",
+          explanationEs: "Como el ángulo es más abierto que la línea de 90° (obtuso), debes leer el número mayor que 90°: ¡115°! Y 360° − 115° = 245°."
+        },
+        {
+          id: "pb_9",
+          topicDe: "Figuren-Analyse (Trapez ABCD)",
+          questionDe: "Schau dir das Trapez ABCD an: Bei A und D sind rechte Winkel (90° ⦜), die Seite BC rechts ist schräg. Welche Aussage über die Seiten stimmt?",
+          questionEs: "Mira el trapecio ABCD: en A y D hay ángulos rectos (90° ⦜) y el lado derecho BC es inclinado. ¿Qué afirmación sobre sus lados es verdadera?",
+          svgSpec: { type: "trapez_abcd" },
+          options: [
+            { textDe: "AB ∥ DC (parallel) und AD ⊥ AB (senkrecht)", textEs: "AB ∥ DC (paralelos) y AD ⊥ AB (perpendiculares)", correct: true },
+            { textDe: "AD ∥ BC (parallel) und AB ⊥ DC (senkrecht)", textEs: "AD ∥ BC (paralelos) y AB ⊥ DC (perpendiculares)", correct: false },
+            { textDe: "BC ⊥ AB (senkrecht bei B)", textEs: "BC ⊥ AB (perpendiculares en B)", correct: false },
+            { textDe: "Keine Seite ist parallel zu einer anderen", textEs: "Ningún lado es paralelo a otro", correct: false }
+          ],
+          explanationDe: "Oben (DC) und unten (AB) laufen waagerecht im gleichen Abstand → AB ∥ DC. Links steht AD im 90°-Winkel auf AB → AD ⊥ AB.",
+          explanationEs: "Arriba (DC) y abajo (AB) son paralelos → AB ∥ DC. A la izquierda AD forma 90° con AB → AD ⊥ AB."
+        },
+        {
+          id: "pb_10",
+          topicDe: "Bestandteile eines Winkels",
+          questionDe: "Wie heißen beim Winkel ∡WXY der Scheitelpunkt und die beiden Schenkel (Strahlen) mit richtiger Symbol-Schreibweise?",
+          questionEs: "En el ángulo ∡WXY, ¿cuáles son el vértice (Scheitelpunkt) y los dos lados (Schenkel) escritos con el símbolo correcto de rayo?",
+          svgSpec: { type: "angle_pair", vertex: "X", p1: "W", p2: "Y", d1: 65, d2: 295, given: 1 },
+          options: [
+            { textDe: "Scheitelpunkt: X · Schenkel: die Strahlen ⟼ XW und ⟼ XY (beide starten bei X!)", textEs: "Vértice: X · Lados: los rayos ⟼ XW y ⟼ XY (¡ambos nacen en X!)", correct: true },
+            { textDe: "Scheitelpunkt: W · Schenkel: ⟼ WX und ⟼ XY", textEs: "Vértice: W · Lados: ⟼ WX y ⟼ XY", correct: false },
+            { textDe: "Scheitelpunkt: X · Schenkel: ⟼ WX und ⟼ YX", textEs: "Vértice: X · Lados: ⟼ WX y ⟼ YX", correct: false },
+            { textDe: "Scheitelpunkt: Y · Schenkel: I—I XW und I—I XY", textEs: "Vértice: Y · Lados: segmentos XW y XY", correct: false }
+          ],
+          explanationDe: "Beide Schenkel eines Winkels sind Strahlen, die im Scheitelpunkt X beginnen! Deshalb steht X bei beiden Symbolen zuerst: ⟼ XW und ⟼ XY.",
+          explanationEs: "¡Ambos lados de un ángulo son rayos que nacen en el vértice X! Por eso la letra X va primero en ambos símbolos: ⟼ XW y ⟼ XY."
+        },
+        {
+          id: "pb_11",
+          topicDe: "Fast voller Kreis (342°)",
+          questionDe: "Gegeben ist der große Winkel ∡FCJ = 342°. Wie groß ist der kleine Winkel ∡JCF und wie werden beide sortiert?",
+          questionEs: "Se da el ángulo grande ∡FCJ = 342°. ¿Cuánto mide el ángulo pequeño ∡JCF y cómo se clasifican ambos?",
+          svgSpec: { type: "angle_pair", vertex: "C", p1: "F", p2: "J", d1: 342, d2: 18, given: 1 },
+          options: [
+            { textDe: "∡JCF = 18° (Spitzer Winkel) · ∡FCJ = 342° (Überstumpfer Winkel)", textEs: "∡JCF = 18° (agudo) · ∡FCJ = 342° (mayor de 180°)", correct: true },
+            { textDe: "∡JCF = 28° (Spitzer Winkel) · ∡FCJ = 342° (Voller Winkel)", textEs: "∡JCF = 28° (agudo) · ∡FCJ = 342° (completo)", correct: false },
+            { textDe: "∡JCF = 18° (Nullwinkel) · ∡FCJ = 342° (Stumpfer Winkel)", textEs: "∡JCF = 18° (nulo) · ∡FCJ = 342° (obtuso)", correct: false },
+            { textDe: "∡JCF = 38° (Spitzer Winkel) · ∡FCJ = 342° (Überstumpfer Winkel)", textEs: "∡JCF = 38° · ∡FCJ = 342°", correct: false }
+          ],
+          explanationDe: "360° − 342° = 18°. 18° ist ein Spitzer Winkel (1°–89°) und 342° ist ein Überstumpfer Winkel (181°–359°).",
+          explanationEs: "360° − 342° = 18°. 18° es Spitzer Winkel y 342° es Überstumpfer Winkel."
+        },
+        {
+          id: "pb_12",
+          topicDe: "Sekanten vs. Parallelen (Denkfrage)",
+          questionDe: "Zwei Geraden g (durch A, B) und h (durch C, D) laufen schräg aufeinander zu, berühren sich aber auf dem kurzen gezeichneten Stück noch nicht. Was sind g und h?",
+          questionEs: "Dos rectas g (por A, B) y h (por C, D) se van acercando entre sí, pero en el trozo dibujado aún no alcanzan a tocarse. ¿Qué son las rectas g y h?",
+          svgSpec: { type: "converging_secants" },
+          options: [
+            { textDe: "Sekanten! Weil Geraden (⟷) unendlich lang sind und sich weiter rechts schneiden werden", textEs: "¡Secantes! Porque las rectas (⟷) son infinitas y al prolongarlas se cortan", correct: true },
+            { textDe: "Parallelen, weil man auf dem Bild noch keinen Schnittpunkt sieht", textEs: "Paralelas, porque en el dibujo aún no se ve que se toquen", correct: false },
+            { textDe: "Senkrechte Linien (g ⊥ h)", textEs: "Líneas perpendiculares (g ⊥ h)", correct: false },
+            { textDe: "Geschlossene Kurven", textEs: "Curvas cerradas", correct: false }
+          ],
+          explanationDe: "Super mitgedacht! Geraden haben kein Ende. Da der Abstand zwischen g und h immer kleiner wird, schneiden sie sich → Sekanten!",
+          explanationEs: "¡Muy bien pensado! Las rectas no tienen fin. Como la distancia entre g y h disminuye, al prolongarlas se intersecan → ¡son Sekanten!"
+        }
+      ]
+    },
+
+    probe_c: {
+      id: "probe_c",
+      titleDe: "🔴 Probe C — Niveau 3: Experten-Probe (Für die Note 7,0)",
+      titleEs: "Prueba C — Nivel 3: Prueba Experta (Desafíos para el 7.0)",
+      questions: [
+        {
+          id: "pc_1",
+          topicDe: "Komplexe Figur (Alle Symbole)",
+          questionDe: "Betrachte die Figur mit den Punkten A, B, C, D: Zwischen A und B sind zwei Querstriche, von B über C geht ein Pfeil, und durch C und D gehen Pfeile an beiden Enden. Welche Liste stimmt?",
+          questionEs: "Observa la figura con los puntos A, B, C, D: entre A y B hay dos topes, de B pasando por C va una flecha, y por C y D hay flechas en ambos extremos. ¿Qué lista es correcta?",
+          svgSpec: { type: "fig_abcd_expert" },
+          options: [
+            { textDe: "I—I AB (Strecke) · ⟼ BC (Strahl) · ⟷ CD (Gerade)", textEs: "I—I AB (Segmento) · ⟼ BC (Rayo) · ⟷ CD (Recta)", correct: true },
+            { textDe: "⟼ AB (Strahl) · I—I BC (Strecke) · ⟷ CD (Gerade)", textEs: "⟼ AB (Rayo) · I—I BC (Segmento) · ⟷ CD (Recta)", correct: false },
+            { textDe: "I—I AB (Strecke) · ⟼ CB (Strahl) · I—I CD (Strecke)", textEs: "I—I AB (Segmento) · ⟼ CB (Rayo) · I—I CD (Segmento)", correct: false },
+            { textDe: "⟷ AB (Gerade) · ⟼ BC (Strahl) · I—I CD (Strecke)", textEs: "⟷ AB (Recta) · ⟼ BC (Rayo) · I—I CD (Segmento)", correct: false }
+          ],
+          explanationDe: "AB hat zwei Endpunkte → Strecke I—I AB. BC startet bei B mit Pfeil bei C → Strahl ⟼ BC. CD hat zwei Pfeile → Gerade ⟷ CD.",
+          explanationEs: "AB tiene dos topes → Strecke I—I AB. BC parte en B con flecha en C → Strahl ⟼ BC. CD tiene dos flechas → Gerade ⟷ CD."
+        },
+        {
+          id: "pc_2",
+          topicDe: "Doppelte Senkrechte (Denkaufgabe)",
+          questionDe: "Wie beim Leiter-Bild im Heft (13. Okt): Die Gerade a steht senkrecht auf g (a ⊥ g) und die Gerade b steht AUCH senkrecht auf derselben Gerade g (b ⊥ g). Welche Beziehung haben a und b zueinander?",
+          questionEs: "Como en el dibujo del cuaderno (13 oct): La recta a es perpendicular a g (a ⊥ g) y la recta b TAMBIÉN es perpendicular a la misma recta g (b ⊥ g). ¿Qué relación tienen a y b entre sí?",
+          svgSpec: { type: "double_perp_abg" },
+          options: [
+            { textDe: "a und b sind parallel zueinander (a ∥ b)!", textEs: "¡a y b son paralelas entre sí (a ∥ b)!", correct: true },
+            { textDe: "a und b sind senkrecht zueinander (a ⊥ b)", textEs: "a y b son perpendiculares entre sí (a ⊥ b)", correct: false },
+            { textDe: "a und b schneiden sich im 45°-Winkel", textEs: "a y b se cortan en un ángulo de 45°", correct: false },
+            { textDe: "a und b sind Kurven", textEs: "a y b son curvas", correct: false }
+          ],
+          explanationDe: "Genial! Zwei Geraden, die auf derselben Gerade g senkrecht (90°) stehen, laufen in genau dieselbe Richtung und schneiden sich nie → a ∥ b!",
+          explanationEs: "¡Brillante! Dos rectas que forman 90° con la misma recta g van exactamente en la misma dirección y nunca se cortan → ¡son paralelas (a ∥ b)!"
+        },
+        {
+          id: "pc_3",
+          topicDe: "Gestreckter Winkel teilen (180°)",
+          questionDe: "Die Punkte A, S und B liegen auf einer durchgehenden Gerade (Gestreckter Winkel ∡ASB = 180°). Der Strahl ⟼ SC teilt ihn so, dass ∡ASC = 55° ist. Wie groß ist ∡CSB und welche Winkelart ist ∡CSB?",
+          questionEs: "Los puntos A, S y B están sobre una línea recta (ángulo extendido ∡ASB = 180°). El rayo ⟼ SC lo divide de modo que ∡ASC = 55°. ¿Cuánto mide ∡CSB y qué tipo de ángulo es?",
+          svgSpec: { type: "split_180_asbc" },
+          options: [
+            { textDe: "∡CSB = 125° (denn 180° − 55° = 125°) → Stumpfer Winkel", textEs: "∡CSB = 125° (porque 180° − 55° = 125°) → Ángulo obtuso", correct: true },
+            { textDe: "∡CSB = 305° (denn 360° − 55° = 305°) → Überstumpfer Winkel", textEs: "∡CSB = 305° (porque 360° − 55° = 305°)", correct: false },
+            { textDe: "∡CSB = 35° (denn 90° − 55° = 35°) → Spitzer Winkel", textEs: "∡CSB = 35° (porque 90° − 55° = 35°)", correct: false },
+            { textDe: "∡CSB = 135° → Stumpfer Winkel", textEs: "∡CSB = 135° → Ángulo obtuso", correct: false }
+          ],
+          explanationDe: "Zusammen bilden ∡ASC und ∡CSB den gestreckten Winkel von 180°. Also: 180° − 55° = 125° (Stumpfer Winkel)!",
+          explanationEs: "Juntos ∡ASC y ∡CSB forman el ángulo extendido de 180°. Por lo tanto: 180° − 55° = 125° (Stumpfer Winkel)."
+        },
+        {
+          id: "pc_4",
+          topicDe: "Rechter Winkel teilen (90° & 360°)",
+          questionDe: "Der Winkel ∡KLM ist ein Rechter Winkel (90° ⦜). Ein Strahl ⟼ LN teilt ihn so, dass ∡KLN = 35° misst. Wie groß sind der zweite Teilwinkel ∡NLM und der große Außenwinkel ∡MLK?",
+          questionEs: "El ángulo ∡KLM es un ángulo recto (90° ⦜). Un rayo ⟼ LN lo divide de modo que ∡KLN = 35°. ¿Cuánto miden la otra parte ∡NLM y el ángulo exterior ∡MLK?",
+          svgSpec: { type: "split_90_klmn" },
+          options: [
+            { textDe: "∡NLM = 55° (90° − 35°) und Außenwinkel ∡MLK = 270° (360° − 90°)", textEs: "∡NLM = 55° (90° − 35°) y ángulo exterior ∡MLK = 270° (360° − 90°)", correct: true },
+            { textDe: "∡NLM = 65° und Außenwinkel ∡MLK = 270°", textEs: "∡NLM = 65° y ángulo exterior ∡MLK = 270°", correct: false },
+            { textDe: "∡NLM = 55° und Außenwinkel ∡MLK = 180°", textEs: "∡NLM = 55° y ángulo exterior ∡MLK = 180°", correct: false },
+            { textDe: "∡NLM = 45° und Außenwinkel ∡MLK = 325°", textEs: "∡NLM = 45° y ángulo exterior ∡MLK = 325°", correct: false }
+          ],
+          explanationDe: "Der rechte Winkel hat 90°: 90° − 35° = 55° für ∡NLM. Und außen herum um den rechten Winkel sind es 360° − 90° = 270° für ∡MLK!",
+          explanationEs: "El ángulo recto mide 90°: 90° − 35° = 55° para ∡NLM. Y por fuera del ángulo recto son 360° − 90° = 270° para ∡MLK."
+        },
+        {
+          id: "pc_5",
+          topicDe: "Gedrehte Messung am Geodreieck",
+          questionDe: "Der Scheitelpunkt B liegt auf der 0 des Geodreiecks, aber der 1. Schenkel BA zeigt auf 20° und der 2. Schenkel BC zeigt auf 130°. Wie groß ist der Winkel ∡ABC zwischen den beiden Schenkeln?",
+          questionEs: "El vértice B está en el 0 del Geodreieck, pero el 1er rayo BA apunta a 20° y el 2do rayo BC apunta a 130°. ¿Cuánto mide el ángulo ∡ABC entre ambos rayos?",
+          svgSpec: { type: "diff_geodreieck_20_130" },
+          options: [
+            { textDe: "∡ABC = 110° (denn 130° − 20° = 110°, Stumpfer Winkel)", textEs: "∡ABC = 110° (porque 130° − 20° = 110°, ángulo obtuso)", correct: true },
+            { textDe: "∡ABC = 130° (man liest nur den zweiten Schenkel ab)", textEs: "∡ABC = 130° (solo se lee el segundo rayo)", correct: false },
+            { textDe: "∡ABC = 150° (denn 130° + 20° = 150°)", textEs: "∡ABC = 150° (porque 130° + 20° = 150°)", correct: false },
+            { textDe: "∡ABC = 70° (Spitzer Winkel)", textEs: "∡ABC = 70° (ángulo agudo)", correct: false }
+          ],
+          explanationDe: "Von 20° bis 130° dreht sich der Winkel um die Differenz: 130° − 20° = 110° (Stumpfer Winkel)!",
+          explanationEs: "Desde 20° hasta 130° la abertura entre los dos rayos es la resta: 130° − 20° = 110° (Stumpfer Winkel)."
+        },
+        {
+          id: "pc_6",
+          topicDe: "3 Strahlen um einen Punkt (360°)",
+          questionDe: "Vom Scheitelpunkt S gehen drei Strahlen aus: ⟼ SA, ⟼ SB und ⟼ SC. Gegeben sind ∡ASB = 110° und ∡BSC = 130°. Wie groß muss der dritte Winkel ∡CSA sein, damit der Kreis (360°) voll wird?",
+          questionEs: "Desde el vértice S salen tres rayos: ⟼ SA, ⟼ SB y ⟼ SC. Si ∡ASB = 110° y ∡BSC = 130°, ¿cuánto debe medir el tercer ángulo ∡CSA para completar la vuelta de 360°?",
+          svgSpec: { type: "three_rays_360" },
+          options: [
+            { textDe: "∡CSA = 120° (denn 110° + 130° = 240° und 360° − 240° = 120°)", textEs: "∡CSA = 120° (porque 110° + 130° = 240° y 360° − 240° = 120°)", correct: true },
+            { textDe: "∡CSA = 140°", textEs: "∡CSA = 140°", correct: false },
+            { textDe: "∡CSA = 60° (denn 180° − 120° = 60°)", textEs: "∡CSA = 60°", correct: false },
+            { textDe: "∡CSA = 240°", textEs: "∡CSA = 240°", correct: false }
+          ],
+          explanationDe: "Alle Winkel rund um einen Punkt S ergeben zusammen einen Vollen Winkel (360°): 360° − 110° − 130° = 120°!",
+          explanationEs: "Todos los ángulos alrededor de un punto S suman un Voller Winkel (360°): 360° − 110° − 130° = 120°."
+        },
+        {
+          id: "pc_7",
+          topicDe: "Gedrehtes Quadrat (Raute EFGH)",
+          questionDe: "Wie auf der Heftseite vom 6./8. Oktober: Ein Quadrat EFGH wurde um 45° gedreht, sodass alle vier Seiten schräg zum Blattrand liegen. Stehen die Seiten EF und FG trotzdem noch senkrecht (⊥, 90°) aufeinander?",
+          questionEs: "Como en la página del 6/8 de octubre del cuaderno: Un cuadrado EFGH se giró en 45° de modo que sus 4 lados quedaron oblicuos a la hoja. ¿Siguen siendo perpendiculares (⊥, 90°) entre sí los lados EF y FG?",
+          svgSpec: { type: "rotated_square_efgh" },
+          options: [
+            { textDe: "Ja! Sie sind schräg zum Boden, aber der Winkel ∡EFG zwischen ihnen bleibt genau 90° (EF ⊥ FG)!", textEs: "¡Sí! Están oblicuos al suelo, pero el ángulo ∡EFG entre ellos sigue siendo exactamente 90° (EF ⊥ FG)", correct: true },
+            { textDe: "Nein, senkrechte Linien müssen immer vertikal zum Blattrand sein", textEs: "No, las líneas perpendiculares deben ser siempre verticales a la hoja", correct: false },
+            { textDe: "Nein, durch das Drehen wird der Winkel zu 45° (spitzer Winkel)", textEs: "No, al girarlo el ángulo cambia a 45°", correct: false },
+            { textDe: "EF und FG sind jetzt parallel zueinander", textEs: "EF y FG ahora son paralelos entre sí", correct: false }
+          ],
+          explanationDe: "Wichtige Erkenntnis aus dem Heft: Wenn man eine Figur dreht, ändern sich die Winkel IN der Figur nicht! Im Quadrat bleibt jede Ecke 90° (EF ⊥ FG).",
+          explanationEs: "Concepto clave del cuaderno: al girar una figura, los ángulos ENTRE sus lados no cambian. En el cuadrado cada esquina sigue siendo 90° (EF ⊥ FG)."
+        },
+        {
+          id: "pc_8",
+          topicDe: "Gedrehter Winkel nennen (↺)",
+          questionDe: "In der Zeichnung zeigt Strahl QP nach links oben (140°) und Strahl QR nach links unten (205°). Wenn man gegen den Uhrzeigersinn (↺) von P über Q nach R geht, sind es 65°. Welches Winkelpaar stimmt?",
+          questionEs: "En el dibujo, el rayo QP apunta arriba-izquierda (140°) y el rayo QR apunta abajo-izquierda (205°). Yendo en sentido antihorario (↺) de P a R hay 65°. ¿Qué par de ángulos es el correcto?",
+          svgSpec: { type: "angle_pair", vertex: "Q", p1: "P", p2: "R", startDeg: 140, d1: 65, d2: 295, given: 1 },
+          options: [
+            { textDe: "∡PQR = 65° (Spitzer Winkel) und ∡RQP = 295° (Überstumpfer Winkel)", textEs: "∡PQR = 65° (agudo) y ∡RQP = 295° (mayor de 180°)", correct: true },
+            { textDe: "∡RQP = 65° und ∡PQR = 295°", textEs: "∡RQP = 65° y ∡PQR = 295°", correct: false },
+            { textDe: "∡PQR = 65° und ∡RQP = 115°", textEs: "∡PQR = 65° y ∡RQP = 115°", correct: false },
+            { textDe: "∡PRQ = 65° und ∡QRP = 295° (Scheitelpunkt R)", textEs: "∡PRQ = 65° y ∡QRP = 295° (vértice R)", correct: false }
+          ],
+          explanationDe: "Gegen den Uhrzeigersinn von P nach R ist der kleine Bogen (65°), also ∡PQR = 65°. Von R gegen den Uhrzeigersinn zurück nach P sind es 360° − 65° = 295° (∡RQP)!",
+          explanationEs: "En sentido antihorario de P a R es el arco pequeño (65°), es decir ∡PQR = 65°. Y de R a P en sentido antihorario son 360° − 65° = 295° (∡RQP)."
+        },
+        {
+          id: "pc_9",
+          topicDe: "Winkel-Rätsel (3 × Rechter Winkel)",
+          questionDe: "Der Winkel ∡DEF ist genau dreimal so groß wie ein Rechter Winkel (3 × 90°). Wie groß ist ∡DEF, welche Winkelart ist er, und wie groß ist sein Gegenwinkel ∡FED?",
+          questionEs: "El ángulo ∡DEF mide exactamente el triple de un ángulo recto (3 × 90°). ¿Cuánto mide ∡DEF, qué tipo de ángulo es y cuánto mide su ángulo inverso ∡FED?",
+          svgSpec: { type: "angle_pair", vertex: "E", p1: "D", p2: "F", d1: 270, d2: 90, given: 2 },
+          options: [
+            { textDe: "∡DEF = 270° (Überstumpfer Winkel) · Gegenwinkel ∡FED = 90° (Rechter Winkel)", textEs: "∡DEF = 270° (Überstumpfer) · ángulo inverso ∡FED = 90° (Rechter Winkel)", correct: true },
+            { textDe: "∡DEF = 180° (Gestreckter Winkel) · Gegenwinkel ∡FED = 180°", textEs: "∡DEF = 180° · ángulo inverso ∡FED = 180°", correct: false },
+            { textDe: "∡DEF = 270° (Stumpfer Winkel) · Gegenwinkel ∡FED = 90°", textEs: "∡DEF = 270° (obtuso) · ángulo inverso ∡FED = 90°", correct: false },
+            { textDe: "∡DEF = 360° (Voller Winkel) · Gegenwinkel ∡FED = 0°", textEs: "∡DEF = 360° · ángulo inverso ∡FED = 0°", correct: false }
+          ],
+          explanationDe: "3 × 90° = 270° (liegt zwischen 181° und 359° → Überstumpfer Winkel). Und 360° − 270° = 90° (Rechter Winkel)!",
+          explanationEs: "3 × 90° = 270° (está entre 181° y 359° → Überstumpfer Winkel). Y 360° − 270° = 90° (Rechter Winkel)."
+        },
+        {
+          id: "pc_10",
+          topicDe: "Zwei Spitze Winkel addieren",
+          questionDe: "Am Scheitelpunkt M liegen zwei spitze Winkel direkt nebeneinander: ∡KML = 48° und ∡LMN = 45°. Wie groß ist der gesamte Winkel ∡KMN und zu welcher Winkelart gehört er?",
+          questionEs: "En el vértice M hay dos ángulos agudos seguidos: ∡KML = 48° y ∡LMN = 45°. ¿Cuánto mide el ángulo total ∡KMN y a qué clasificación pertenece?",
+          svgSpec: { type: "add_angles_48_45" },
+          options: [
+            { textDe: "∡KMN = 93° (48° + 45°) → Stumpfer Winkel (weil 93° größer als 90° ist!)", textEs: "∡KMN = 93° (48° + 45°) → Ángulo obtuso (¡porque 93° es mayor que 90°!)", correct: true },
+            { textDe: "∡KMN = 93° → Spitzer Winkel (weil beide Teile spitz waren)", textEs: "∡KMN = 93° → Ángulo agudo", correct: false },
+            { textDe: "∡KMN = 90° → Rechter Winkel", textEs: "∡KMN = 90° → Ángulo recto", correct: false },
+            { textDe: "∡KMN = 83° → Spitzer Winkel", textEs: "∡KMN = 83° → Ángulo agudo", correct: false }
+          ],
+          explanationDe: "48° + 45° = 93°. Da 93° zwischen 91° und 179° liegt, entsteht zusammen ein Stumpfer Winkel!",
+          explanationEs: "48° + 45° = 93°. Como 93° está entre 91° y 179°, ¡la suma forma un Stumpfer Winkel (obtuso)!"
+        },
+        {
+          id: "pc_11",
+          topicDe: "Parallelen & Senkrechte im Stadtplan",
+          questionDe: "Im Plan läuft die Hauptstraße (Gerade g) von A nach B. Die Parkstraße (h) ist parallel zu g (h ∥ g). Die Schulstraße (s) steht senkrecht auf der Hauptstraße (s ⊥ g). Wie steht die Schulstraße s dann zur Parkstraße h?",
+          questionEs: "En el plano, la calle principal (recta g) va de A a B. La calle del Parque (h) es paralela a g (h ∥ g). La calle del Colegio (s) es perpendicular a g (s ⊥ g). ¿Cómo es entonces la calle s respecto a la calle h?",
+          svgSpec: { type: "street_map_ghs" },
+          options: [
+            { textDe: "Auch senkrecht (s ⊥ h, 90°)! Wenn g ∥ h ist und s ⊥ g steht, schneidet s auch h im 90°-Winkel", textEs: "¡También perpendicular (s ⊥ h, 90°)! Si g ∥ h y s ⊥ g, entonces s también corta a h en 90°", correct: true },
+            { textDe: "Parallel zu h (s ∥ h)", textEs: "Paralela a h (s ∥ h)", correct: false },
+            { textDe: "Sie schneiden sich überhaupt nicht", textEs: "No se cortan nunca", correct: false },
+            { textDe: "Im 30°-Winkel (Spitzer Winkel)", textEs: "En un ángulo de 30°", correct: false }
+          ],
+          explanationDe: "Wenn zwei Straßen g und h parallel sind (g ∥ h), dann schneidet jede Querstraße s, die zu g im 90°-Winkel steht, auch h genau im 90°-Winkel (s ⊥ h)!",
+          explanationEs: "Si dos calles g y h son paralelas (g ∥ h), cualquier calle transversal s que sea perpendicular a g también cortará a h en 90° (s ⊥ h)."
+        },
+        {
+          id: "pc_12",
+          topicDe: "Meister-Check (Alle Regeln)",
+          questionDe: "Welche Aussage über das Bild mit den Punkten B, K und M (∡MKB = 105° und ∡BKM = 255°) ist komplett richtig?",
+          questionEs: "¿Cuál afirmación sobre la figura con los puntos B, K y M (∡MKB = 105° y ∡BKM = 255°) es completamente verdadera?",
+          svgSpec: { type: "angle_pair", vertex: "K", p1: "M", p2: "B", d1: 105, d2: 255, given: 1 },
+          options: [
+            { textDe: "K ist der Scheitelpunkt, ⟼ KM und ⟼ KB sind die Schenkel, 105° ist ein Stumpfer Winkel, 255° ein Überstumpfer Winkel und 105° + 255° = 360°", textEs: "K es el vértice, ⟼ KM y ⟼ KB son los rayos, 105° es obtuso, 255° es mayor de 180° y suman 360°", correct: true },
+            { textDe: "M ist der Scheitelpunkt, 105° ist ein Spitzer Winkel und 255° ein Stumpfer Winkel", textEs: "M es el vértice, 105° es agudo y 255° es obtuso", correct: false },
+            { textDe: "K ist der Scheitelpunkt, aber beide Winkel müssen zusammen 180° ergeben", textEs: "K es el vértice, pero ambos ángulos deben sumar 180°", correct: false },
+            { textDe: "Die Schenkel sind die Strecken I—I MB und I—I BK", textEs: "Los lados son los segmentos MB y BK", correct: false }
+          ],
+          explanationDe: "Perfekt zusammengefasst! Scheitelpunkt K in der Mitte, Strahlen ⟼ KM und ⟼ KB als Schenkel, 105° = Stumpfer Winkel, 255° = Überstumpfer Winkel, Summe = 360°!",
+          explanationEs: "¡Resumen perfecto! Vértice K al medio, rayos ⟼ KM y ⟼ KB como lados, 105° = Stumpfer Winkel, 255° = Überstumpfer Winkel, suma = 360°."
+        }
+      ]
+    }
+  }
 };

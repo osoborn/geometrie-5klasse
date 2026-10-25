@@ -188,8 +188,8 @@ body:not(.show-es) .es-inline {
   margin-inline: auto;
   padding-inline: 1.25rem;
   display: grid;
-  grid-template-columns: repeat(5, 1fr);
-  gap: 0.4rem;
+  grid-template-columns: repeat(6, 1fr);
+  gap: 0.35rem;
 }
 
 .tab-btn {
@@ -1038,6 +1038,147 @@ body:not(.show-es) .es-inline {
   padding: 1.25rem;
   margin-block-end: 1.25rem;
   text-align: center;
+}
+
+/* Tab 6: Neue Proben mit Note */
+.np-meta-banner {
+  background: var(--bg-card);
+  border: 2px solid #bae6fd;
+  border-radius: 0.85rem;
+  padding: 1rem 1.25rem;
+  margin-block-end: 1rem;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+}
+
+.np-meta-info h3 {
+  margin: 0.3rem 0 0.2rem;
+  font-size: 1.12rem;
+  color: #0f172a;
+}
+
+.np-meta-info p {
+  margin: 0;
+  font-size: 0.92rem;
+  color: var(--text-muted);
+}
+
+.np-level-badge {
+  display: inline-block;
+  font-size: 0.78rem;
+  font-weight: 800;
+  padding: 0.2rem 0.65rem;
+  border-radius: 999px;
+}
+
+.np-level-badge.level-easy {
+  background: #dcfce7;
+  color: #166534;
+  border: 1px solid #86efac;
+}
+
+.np-level-badge.level-medium {
+  background: #fef9c3;
+  color: #854d0e;
+  border: 1px solid #fde047;
+}
+
+.np-level-badge.level-hard {
+  background: #fee2e2;
+  color: #991b1b;
+  border: 1px solid #fca5a5;
+}
+
+.np-level-badge.level-random {
+  background: #f3e8ff;
+  color: #6b21a8;
+  border: 1px solid #d8b4fe;
+}
+
+.np-history-bar {
+  background: #f8fafc;
+  border: 1px solid #cbd5e1;
+  border-radius: 0.75rem;
+  padding: 0.65rem 1rem;
+  margin-block-end: 1rem;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.6rem;
+  font-size: 0.86rem;
+}
+
+.np-history-pill {
+  background: #ffffff;
+  border: 1px solid #94a3b8;
+  border-radius: 999px;
+  padding: 0.22rem 0.7rem;
+  font-weight: 700;
+}
+
+.np-grade-certificate {
+  background: linear-gradient(135deg, #f0f9ff 0%, #f0fdf4 100%);
+  border: 2px solid #0284c7;
+  border-radius: 0.95rem;
+  padding: 1.35rem;
+  margin-block-end: 1.25rem;
+  box-shadow: 0 4px 12px rgba(2, 132, 199, 0.12);
+}
+
+.grade-boxes-row {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+  gap: 0.85rem;
+  margin-block: 1rem;
+}
+
+.grade-big-box {
+  background: #ffffff;
+  border: 2px solid #cbd5e1;
+  border-radius: 0.75rem;
+  padding: 0.85rem;
+  text-align: center;
+}
+
+.grade-big-box.grade-excellent {
+  border-color: #16a34a;
+  background: #f0fdf4;
+}
+
+.grade-big-box.grade-good {
+  border-color: #0284c7;
+  background: #f0f9ff;
+}
+
+.grade-big-box.grade-warn {
+  border-color: #d97706;
+  background: #fffbeb;
+}
+
+.grade-big-box .grade-label {
+  display: block;
+  font-size: 0.78rem;
+  font-weight: 800;
+  text-transform: uppercase;
+  color: var(--text-muted);
+}
+
+.grade-big-box .grade-number {
+  display: block;
+  font-size: 2.1rem;
+  font-weight: 900;
+  color: #0f172a;
+  line-height: 1.15;
+  margin-block: 0.2rem;
+}
+
+.grade-big-box .grade-sub {
+  font-size: 0.82rem;
+  font-weight: 700;
+  color: #334155;
 }
 
 /* Responsive (iPad & Mobile) */
