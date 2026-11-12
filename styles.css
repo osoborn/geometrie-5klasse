@@ -101,6 +101,16 @@ body:not(.show-es) .es-inline {
   border-radius: 999px;
 }
 
+.badge-new-nov13 {
+  background: linear-gradient(135deg, #ec4899 0%, #8b5cf6 100%);
+  color: #ffffff;
+  font-size: 0.76rem;
+  font-weight: 800;
+  padding: 0.2rem 0.75rem;
+  border-radius: 999px;
+  box-shadow: 0 2px 8px rgba(236, 72, 153, 0.45);
+}
+
 .title-group h1 {
   margin: 0;
   font-size: 1.5rem;
@@ -182,58 +192,78 @@ body:not(.show-es) .es-inline {
   font-weight: 800;
 }
 
-/* Tabs Navigation */
+/* Tabs Navigation (Modern Web Guidance `tabs`: single-row horizontal scroll + aria-selected pseudo-element border) */
 .tabs-nav {
   max-inline-size: 1280px;
   margin-inline: auto;
   padding-inline: 1.25rem;
-  display: grid;
-  grid-template-columns: repeat(6, 1fr);
+  display: flex;
+  overflow-x: auto;
+  scroll-snap-type: inline proximity;
   gap: 0.35rem;
+  scrollbar-width: none;
+}
+
+.tabs-nav::-webkit-scrollbar {
+  display: none;
 }
 
 .tab-btn {
+  position: relative;
+  flex: 1 0 auto;
+  scroll-snap-align: start;
   background: rgba(255, 255, 255, 0.08);
   color: #cbd5e1;
   border: 1px solid rgba(255, 255, 255, 0.14);
   border-block-end: none;
   border-radius: 0.65rem 0.65rem 0 0;
-  padding: 0.65rem 0.75rem;
+  padding: 0.6rem 0.7rem;
   display: flex;
   align-items: center;
-  gap: 0.55rem;
+  gap: 0.5rem;
   text-align: left;
   cursor: pointer;
-  transition: background 0.15s, color 0.15s;
+  transition: background-color 0.15s, color 0.15s;
+}
+
+.tab-btn-mika {
+  background: linear-gradient(135deg, rgba(236, 72, 153, 0.25) 0%, rgba(139, 92, 246, 0.28) 100%);
+  border-color: rgba(244, 114, 182, 0.55);
 }
 
 .tab-btn:hover {
-  background: rgba(255, 255, 255, 0.15);
+  background: rgba(255, 255, 255, 0.16);
   color: #ffffff;
 }
 
-.tab-btn.active {
+.tab-btn[aria-selected="true"] {
   background: var(--bg-page);
   color: var(--text-main);
   border-color: #38bdf8;
-  font-weight: 700;
+}
+
+.tab-btn[aria-selected="true"]::after {
+  content: "";
+  position: absolute;
+  inset: auto 0 0;
+  border-block-end: 3px solid var(--accent-primary);
 }
 
 .tab-icon {
-  font-size: 1.35rem;
+  font-size: 1.3rem;
 }
 
 .tab-text strong {
   display: block;
-  font-size: 0.9rem;
+  font-size: 0.86rem;
 }
 
 .tab-text small {
-  font-size: 0.75rem;
+  font-size: 0.73rem;
   opacity: 0.85;
 }
 
-.tab-btn:not(.active) .es-sub {
+.tab-btn:not([aria-selected="true"]) .es-sub {
   color: #93c5fd;
 }
 
@@ -1181,15 +1211,484 @@ body:not(.show-es) .es-inline {
   color: #334155;
 }
 
+/* =========================================================================
+   TAB 7: MIKA-ARENA — PROBE 13. NOVEMBER (GAMIFIED QUIZ & SPICKZETTEL)
+========================================================================= */
+.mika-arena-hero {
+  background: linear-gradient(135deg, #1e1b4b 0%, #312e81 48%, #4c1d95 100%);
+  color: #ffffff;
+  border-radius: 1rem;
+  padding: 1.15rem 1.35rem;
+  margin-block-end: 1rem;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  border: 2px solid #a855f7;
+  box-shadow: 0 6px 18px rgba(76, 29, 149, 0.2);
+}
+
+.mika-rank-row {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.5rem;
+  margin-block-end: 0.35rem;
+}
+
+.mika-rank-badge {
+  background: linear-gradient(135deg, #f59e0b 0%, #eab308 100%);
+  color: #0f172a;
+  font-size: 0.82rem;
+  font-weight: 900;
+  padding: 0.25rem 0.75rem;
+  border-radius: 999px;
+}
+
+.mika-date-pill {
+  background: rgba(255, 255, 255, 0.16);
+  color: #e9d5ff;
+  font-size: 0.78rem;
+  font-weight: 800;
+  padding: 0.22rem 0.7rem;
+  border-radius: 999px;
+}
+
+.mika-arena-hero h2 {
+  margin: 0;
+  font-size: 1.32rem;
+  font-weight: 900;
+  color: #ffffff;
+}
+
+.mika-arena-hero .es-sub {
+  color: #bae6fd;
+  margin-block-start: 0.25rem;
+}
+
+.mika-hero-stats {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 0.6rem;
+}
+
+.mika-stat-box {
+  background: rgba(255, 255, 255, 0.12);
+  border: 1px solid rgba(255, 255, 255, 0.24);
+  border-radius: 0.7rem;
+  padding: 0.4rem 0.8rem;
+  text-align: center;
+  min-inline-size: 92px;
+}
+
+.mika-stat-label {
+  display: block;
+  font-size: 0.7rem;
+  text-transform: uppercase;
+  font-weight: 800;
+  color: #e9d5ff;
+}
+
+.mika-stat-box strong {
+  font-size: 1.2rem;
+  font-weight: 900;
+  color: #fde047;
+}
+
+.mika-sound-btn {
+  background: rgba(255, 255, 255, 0.16);
+  color: #ffffff;
+  border: 1.5px solid rgba(255, 255, 255, 0.4);
+  border-radius: 0.7rem;
+  padding: 0.55rem 0.85rem;
+  font-size: 0.84rem;
+  font-weight: 800;
+  cursor: pointer;
+  transition: background-color 0.15s;
+}
+
+.mika-sound-btn:hover {
+  background: rgba(255, 255, 255, 0.25);
+}
+
+.mika-sound-btn[aria-pressed="false"] {
+  opacity: 0.65;
+}
+
+.mika-controls-card {
+  background: var(--bg-card);
+  border: 1px solid var(--border-color);
+  border-radius: 0.9rem;
+  padding: 0.95rem 1.15rem;
+  margin-block-end: 1rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.8rem;
+  box-shadow: 0 2px 6px rgba(15, 23, 42, 0.05);
+}
+
+.mika-mode-row {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.75rem;
+}
+
+.mika-view-switcher {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.45rem;
+}
+
+.mika-mode-btn {
+  background: #f1f5f9;
+  color: #334155;
+  border: 1.5px solid #cbd5e1;
+  border-radius: 0.65rem;
+  padding: 0.5rem 0.9rem;
+  font-size: 0.86rem;
+  font-weight: 800;
+  cursor: pointer;
+  transition: background-color 0.15s, color 0.15s, border-color 0.15s;
+}
+
+.mika-mode-btn:hover {
+  background: #e2e8f0;
+}
+
+.mika-mode-btn.active {
+  background: #4f46e5;
+  color: #ffffff;
+  border-color: #4338ca;
+}
+
+.mika-action-buttons {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+}
+
+.mika-worlds-bar {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.45rem;
+  padding-block-start: 0.65rem;
+  border-block-start: 1px solid #e2e8f0;
+}
+
+.mika-world-pill {
+  background: #f8fafc;
+  color: #1e293b;
+  border: 1.5px solid #cbd5e1;
+  border-radius: 999px;
+  padding: 0.42rem 0.85rem;
+  font-size: 0.84rem;
+  font-weight: 800;
+  cursor: pointer;
+  transition: background-color 0.15s, color 0.15s, border-color 0.15s;
+}
+
+.mika-world-pill:hover {
+  background: #e0f2fe;
+  border-color: #38bdf8;
+}
+
+.mika-world-pill.active {
+  background: var(--accent-primary);
+  color: #ffffff;
+  border-color: #0369a1;
+}
+
+.mika-world-random {
+  border-color: #c084fc;
+  background: #faf5ff;
+  color: #6b21a8;
+}
+
+.mika-world-random.active {
+  background: #7c3aed;
+  border-color: #6d28d9;
+  color: #ffffff;
+}
+
+/* Progress Strip */
+.mika-progress-strip {
+  background: var(--bg-card);
+  border: 1px solid var(--border-color);
+  border-radius: 0.8rem;
+  padding: 0.65rem 1rem;
+  margin-block-end: 1rem;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+}
+
+.mika-progress-info {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  flex-shrink: 0;
+}
+
+.mika-progress-track {
+  flex: 1;
+  block-size: 12px;
+  background: #e2e8f0;
+  border-radius: 999px;
+  overflow: hidden;
+}
+
+.mika-progress-fill {
+  block-size: 100%;
+  background: linear-gradient(90deg, #0284c7 0%, #8b5cf6 50%, #ec4899 100%);
+  border-radius: 999px;
+  transition: width 0.25s ease-out;
+}
+
+.mika-score-mini {
+  font-size: 0.86rem;
+  font-weight: 800;
+  color: #15803d;
+  background: #dcfce7;
+  padding: 0.25rem 0.7rem;
+  border-radius: 999px;
+  flex-shrink: 0;
+}
+
+/* Arcade Stage (2 Columns) */
+.mika-arcade-stage {
+  display: grid;
+  grid-template-columns: 1.05fr 1.15fr;
+  gap: 1.15rem;
+  align-items: start;
+}
+
+.mika-figure-card,
+.mika-question-card {
+  position: relative;
+  background: var(--bg-card);
+  border: 2px solid #cbd5e1;
+  border-radius: 1rem;
+  padding: 1.15rem;
+  box-shadow: 0 3px 10px rgba(15, 23, 42, 0.06);
+  overflow: hidden;
+}
+
+.mika-svg-stage {
+  min-block-size: 270px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: #f8fafc;
+  border: 1.5px solid #e2e8f0;
+  border-radius: 0.8rem;
+  padding: 0.65rem;
+}
+
+.mika-svg-stage svg {
+  inline-size: 100%;
+  max-block-size: 280px;
+}
+
+.mika-hint-area {
+  margin-block-start: 0.8rem;
+}
+
+.btn-mika-hint {
+  background: #fffbeb;
+  color: #92400e;
+  border: 1.5px dashed #f59e0b;
+  border-radius: 0.65rem;
+  padding: 0.45rem 0.85rem;
+  font-size: 0.85rem;
+  font-weight: 800;
+  cursor: pointer;
+  inline-size: 100%;
+  text-align: center;
+  transition: background-color 0.15s;
+}
+
+.btn-mika-hint:hover {
+  background: #fef3c7;
+}
+
+.mika-hint-box {
+  margin-block-start: 0.55rem;
+  background: #fffbeb;
+  border: 1.5px solid #fcd34d;
+  border-radius: 0.65rem;
+  padding: 0.65rem 0.85rem;
+  font-size: 0.88rem;
+  color: #78350f;
+}
+
+.mika-q-title {
+  margin: 0 0 0.4rem;
+  font-size: 1.16rem;
+  line-height: 1.38;
+  color: #0f172a;
+}
+
+.mika-options-grid {
+  display: flex;
+  flex-direction: column;
+  gap: 0.6rem;
+  margin-block: 0.9rem;
+}
+
+.mika-opt-btn {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.75rem;
+  text-align: left;
+  background: #f8fafc;
+  border: 2px solid #cbd5e1;
+  border-radius: 0.8rem;
+  padding: 0.75rem 0.9rem;
+  cursor: pointer;
+  transition: background-color 0.15s, border-color 0.15s, transform 0.12s;
+}
+
+.mika-opt-btn:hover {
+  background: #f0f9ff;
+  border-color: #38bdf8;
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .mika-opt-btn:active {
+    transform: scale(0.99);
+  }
+}
+
+.mika-opt-letter {
+  flex-shrink: 0;
+  inline-size: 30px;
+  block-size: 30px;
+  border-radius: 0.5rem;
+  background: #e2e8f0;
+  color: #1e293b;
+  font-weight: 900;
+  font-size: 0.9rem;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.mika-opt-btn.correct-choice {
+  background: var(--correct-bg);
+  border-color: var(--correct-border);
+  color: var(--correct-text);
+}
+
+.mika-opt-btn.correct-choice .mika-opt-letter {
+  background: #16a34a;
+  color: #ffffff;
+}
+
+.mika-opt-btn.wrong-choice {
+  background: var(--wrong-bg);
+  border-color: var(--wrong-border);
+  color: var(--wrong-text);
+}
+
+.mika-opt-btn.wrong-choice .mika-opt-letter {
+  background: #dc2626;
+  color: #ffffff;
+}
+
+/* Confetti Animation (Compositor-only transform & opacity inside prefers-reduced-motion: no-preference) */
+.mika-confetti-layer {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  overflow: hidden;
+  z-index: 5;
+}
+
+.mika-confetti-dot {
+  position: absolute;
+  inline-size: 10px;
+  block-size: 10px;
+  border-radius: 2px;
+  opacity: 0;
+  @media (prefers-reduced-motion: no-preference) {
+    animation: mikaConfettiPop 0.9s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+  }
+}
+
+@keyframes mikaConfettiPop {
+  0% {
+    opacity: 1;
+    transform: translate(0, 0) scale(0.5) rotate(0deg);
+  }
+  100% {
+    opacity: 0;
+    transform: translate(var(--dx, 40px), var(--dy, -90px)) scale(1.15) rotate(220deg);
+  }
+}
+
+/* Spickzettel 13. Nov Chips */
+.mika-spick-lead {
+  margin-block-start: 0;
+  font-size: 0.92rem;
+}
+
+.mika-poly-mini-table {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(195px, 1fr));
+  gap: 0.45rem;
+}
+
+.mika-poly-chip {
+  background: #f8fafc;
+  border: 1px solid #cbd5e1;
+  border-radius: 0.55rem;
+  padding: 0.4rem 0.65rem;
+  font-size: 0.86rem;
+}
+
+.mika-sub-chips {
+  display: flex;
+  flex-direction: column;
+  gap: 0.3rem;
+  margin-block: 0.35rem 0.65rem;
+  font-size: 0.85rem;
+  background: #f8fafc;
+  padding: 0.55rem 0.75rem;
+  border-radius: 0.55rem;
+  border: 1px solid #e2e8f0;
+}
+
+.mika-traps-alert {
+  margin-block-start: 0.75rem;
+  background: #fffbeb;
+  border: 2px solid #f59e0b;
+  border-radius: 0.7rem;
+  padding: 0.75rem 0.95rem;
+  font-size: 0.86rem;
+  color: #78350f;
+}
+
+.mika-traps-alert ol {
+  margin: 0.4rem 0 0;
+  padding-inline-start: 1.25rem;
+}
+
+.mika-traps-alert li {
+  margin-block-end: 0.25rem;
+}
+
 /* Responsive (iPad & Mobile) */
 @media (max-width: 980px) {
-  .tabs-nav {
-    grid-template-columns: repeat(3, 1fr);
-  }
   .posters-grid,
   .detektiv-workspace,
   .wp-workspace,
   .lab-workspace,
+  .mika-arcade-stage,
   .quiz-list {
     grid-template-columns: 1fr;
   }
@@ -1202,9 +1701,6 @@ body:not(.show-es) .es-inline {
 }
 
 @media (max-width: 600px) {
-  .tabs-nav {
-    grid-template-columns: repeat(2, 1fr);
-  }
   .angles-showcase-grid {
     grid-template-columns: repeat(2, 1fr);
   }

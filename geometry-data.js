@@ -1529,5 +1529,856 @@ window.GEOMETRY_DATA = {
         }
       ]
     }
+  },
+
+  // ===========================================================================
+  // TAB 7: MIKA-ARENA — PROBE FREITAG, 13. NOVEMBER
+  // (Polygone, Dreiecke, Vierecke, Symmetrie, Koordinatensystem & Vektoren)
+  // ===========================================================================
+  mikaNov13Arena: {
+    worlds: [
+      {
+        id: "all",
+        icon: "🌟",
+        titleDe: "Alle Themen (38 Fragen)",
+        titleEs: "Todos los temas de la prueba del 13 de nov."
+      },
+      {
+        id: "polygone",
+        icon: "🔷",
+        titleDe: "1. Polygone (3–20 Ecken)",
+        titleEs: "Polígonos: Dreieck hasta Zwanzigeck"
+      },
+      {
+        id: "dreiecke",
+        icon: "🔺",
+        titleDe: "2. Dreiecke & Rätsel",
+        titleEs: "Triángulos por lados/ángulos y palabras secretas"
+      },
+      {
+        id: "vierecke",
+        icon: "💎",
+        titleDe: "3. Vierecke & Symmetrie",
+        titleEs: "Las 3 familias de cuadriláteros, trampas y acertijos"
+      },
+      {
+        id: "koordinaten",
+        icon: "🧭",
+        titleDe: "4. Koordinaten & Vektoren",
+        titleEs: "Puntos (x|y), vectores de desplazamiento y simetría"
+      },
+      {
+        id: "random_mix",
+        icon: "🎲",
+        titleDe: "5. Zufalls-Arena (Neu!)",
+        titleEs: "Generador infinito de preguntas nuevas"
+      }
+    ],
+
+    questions: [
+      // =======================================================================
+      // WELT 1: POLYGONE (Heft: Montag, 26. Oktober & S. 11)
+      // =======================================================================
+      {
+        id: "m13_poly_1",
+        world: "polygone",
+        topicDe: "Polygone · Heft 26. Oktober",
+        questionDe: "Zähle die Ecken, Seiten und Winkel dieser gelb leuchtenden Figur! Wie heißt dieses Polygon auf Deutsch?",
+        questionEs: "¡Cuenta los vértices, lados y ángulos de esta figura! ¿Cómo se llama este polígono de 6 lados en alemán?",
+        hintDe: "Achtung Heft-Falle: Auf Spanisch heißt es Hexágono (6). Auf Deutsch schreibt man „Sechs“ + „eck“!",
+        hintEs: "Ojo con la ortografía en alemán: viene del número 6 (sechs) + eck.",
+        svgSpec: { type: "polygon_regular", sides: 6, color: "#eab308", fill: "#fef9c3", labelCenter: "6 Ecken" },
+        options: [
+          { textDe: "Das Sechseck (6 Ecken, 6 Seiten, 6 Winkel)", textEs: "Sechseck (Hexágono: 6 vértices, 6 lados, 6 ángulos)", correct: true },
+          { textDe: "Das Fünfeck (5 Ecken, 5 Seiten, 5 Winkel)", textEs: "Fünfeck (Pentágono: 5 lados)", correct: false },
+          { textDe: "Das Siebeneck (7 Ecken, 7 Seiten, 7 Winkel)", textEs: "Siebeneck (Heptágono: 7 lados)", correct: false },
+          { textDe: "Das Achteck (8 Ecken, 8 Seiten, 8 Winkel)", textEs: "Achteck (Octágono: 8 lados)", correct: false }
+        ],
+        explanationDe: "Super! Ein Polygon mit 6 Ecken, 6 Seiten und 6 Winkeln heißt auf Deutsch das Sechseck (mit „chs“ geschrieben, von sechs = 6!).",
+        explanationEs: "¡Excelente! Un polígono de 6 lados se escribe «Sechseck» en alemán (de sechs = 6)."
+      },
+      {
+        id: "m13_poly_2",
+        world: "polygone",
+        topicDe: "Polygone · Heft 26. Oktober",
+        questionDe: "Welches Polygon aus deiner Hefttabelle vom 26. Oktober hat genau 5 Ecken, 5 Seiten und 5 Winkel?",
+        questionEs: "¿Qué polígono de tu tabla del 26 de octubre tiene exactamente 5 vértices (Ecken), 5 lados (Seiten) y 5 ángulos (Winkel)?",
+        hintDe: "5 = fünf → Fünf + eck!",
+        hintEs: "5 en alemán es «fünf».",
+        svgSpec: { type: "polygon_regular", sides: 5, color: "#ec4899", fill: "#fce7f3", labelCenter: "5 Ecken" },
+        options: [
+          { textDe: "Das Fünfeck (Pentágono)", textEs: "El Fünfeck (pentágono)", correct: true },
+          { textDe: "Das Viereck (Cuadrilátero)", textEs: "El Viereck (cuadrilátero)", correct: false },
+          { textDe: "Das Neuneck (Eneágono)", textEs: "El Neuneck (nonágono / eneágono)", correct: false },
+          { textDe: "Das Zehneck (Decágono)", textEs: "El Zehneck (decágono)", correct: false }
+        ],
+        explanationDe: "Genau! 5 Ecken, 5 Seiten und 5 Winkel = das Fünfeck (auf Spanisch: Pentágono).",
+        explanationEs: "¡Exacto! 5 vértices, 5 lados y 5 ángulos = das Fünfeck (pentágono)."
+      },
+      {
+        id: "m13_poly_3",
+        world: "polygone",
+        topicDe: "Polygone · Heft 26. Oktober",
+        questionDe: "Ein Stoppschild auf der Straße hat 8 Ecken, 8 gerade Seiten und 8 Winkel. Wie heißt dieses Polygon?",
+        questionEs: "Una señal de PARE (STOP) tiene 8 vértices, 8 lados rectos y 8 ángulos. ¿Cómo se llama este polígono en alemán?",
+        hintDe: "8 auf Deutsch ist „acht“.",
+        hintEs: "8 en alemán es «acht».",
+        svgSpec: { type: "polygon_regular", sides: 8, color: "#dc2626", fill: "#fee2e2", labelCenter: "8 Ecken" },
+        options: [
+          { textDe: "Das Achteck (Octágono / Octógono)", textEs: "Das Achteck (octágono)", correct: true },
+          { textDe: "Das Siebeneck (Heptágono)", textEs: "Das Siebeneck (heptágono)", correct: false },
+          { textDe: "Das Neuneck (Nonágono)", textEs: "Das Neuneck (nonágono)", correct: false },
+          { textDe: "Das Zwanzigeck (Icoságono)", textEs: "Das Zwanzigeck (icoságono)", correct: false }
+        ],
+        explanationDe: "Richtig! 8 Ecken, 8 Seiten und 8 Winkel = das Achteck.",
+        explanationEs: "¡Correcto! 8 vértices, 8 lados y 8 ángulos = das Achteck."
+      },
+      {
+        id: "m13_poly_4",
+        world: "polygone",
+        topicDe: "Polygone · Heft 26. Oktober",
+        questionDe: "Ganz unten in deiner Hefttabelle vom 26. Oktober steht der Rekord-Champion mit 20 Ecken, 20 Seiten und 20 Winkeln (Icoságono). Wie heißt er auf Deutsch?",
+        questionEs: "Al final de tu tabla del 26 de octubre está el campeón con 20 vértices, 20 lados y 20 ángulos (icoságono). ¿Cómo se llama en alemán?",
+        hintDe: "20 auf Deutsch heißt „zwanzig“!",
+        hintEs: "20 en alemán se dice «zwanzig».",
+        svgSpec: { type: "polygon_regular", sides: 20, color: "#7c3aed", fill: "#ede9fe", labelCenter: "20 Ecken!" },
+        options: [
+          { textDe: "Das Zwanzigeck (20 Ecken, 20 Seiten, 20 Winkel)", textEs: "Das Zwanzigeck (20 vértices, 20 lados, 20 ángulos)", correct: true },
+          { textDe: "Das Zehneck (10 Ecken, 10 Seiten, 10 Winkel)", textEs: "Das Zehneck (10 lados)", correct: false },
+          { textDe: "Das Zweieck (2 Ecken)", textEs: "Das Zweieck (2 esquinas)", correct: false },
+          { textDe: "Das Neuneck (9 Ecken, 9 Seiten, 9 Winkel)", textEs: "Das Neuneck (9 lados)", correct: false }
+        ],
+        explanationDe: "Spitze! 20 = zwanzig → das Zwanzigeck (auf Spanisch: Icoságono) hat 20 Ecken, 20 Seiten und 20 Winkel.",
+        explanationEs: "¡Genial! 20 = zwanzig → das Zwanzigeck (icoságono) tiene 20 vértices, 20 lados y 20 ángulos."
+      },
+      {
+        id: "m13_poly_5",
+        world: "polygone",
+        topicDe: "Polygone · Heft 26. Oktober",
+        questionDe: "Welche Reihe ordnet diese vier Polygone richtig nach der Anzahl ihrer Ecken von KLEIN nach GROSS?",
+        questionEs: "¿Qué alternativa ordena estos cuatro polígonos correctamente según su número de vértices de MENOR a MAYOR?",
+        hintDe: "Sieben (7), Acht (8), Neun (9), Zehn (10)!",
+        hintEs: "Recuerda los números: sieben (7), acht (8), neun (9), zehn (10).",
+        svgSpec: { type: "polygon_regular", sides: 7, color: "#0284c7", fill: "#e0f2fe", labelCenter: "7 → 8 → 9 → 10" },
+        options: [
+          { textDe: "Siebeneck (7) → Achteck (8) → Neuneck (9) → Zehneck (10)", textEs: "Siebeneck (7) → Achteck (8) → Neuneck (9) → Zehneck (10)", correct: true },
+          { textDe: "Sechseck (6) → Neuneck (9) → Achteck (8) → Siebeneck (7)", textEs: "Sechseck (6) → Neuneck (9) → Achteck (8) → Siebeneck (7)", correct: false },
+          { textDe: "Zehneck (10) → Neuneck (9) → Achteck (8) → Siebeneck (7)", textEs: "Zehneck (10) → Neuneck (9) → Achteck (8) → Siebeneck (7)", correct: false },
+          { textDe: "Dreieck (3) → Fünfeck (5) → Viereck (4) → Sechseck (6)", textEs: "Dreieck (3) → Fünfeck (5) → Viereck (4) → Sechseck (6)", correct: false }
+        ],
+        explanationDe: "Perfekt! Siebeneck (7 Ecken) < Achteck (8 Ecken) < Neuneck (9 Ecken) < Zehneck (10 Ecken).",
+        explanationEs: "¡Perfecto! Siebeneck (7) < Achteck (8) < Neuneck (9) < Zehneck (10)."
+      },
+      {
+        id: "m13_poly_6",
+        world: "polygone",
+        topicDe: "Vierecke erkennen · Arbeitsblatt S. 11",
+        questionDe: "Schau dir die 4 Figuren A, B, C und D genau an (wie auf Seite 11 „Kreise die Vierecke ein“). Welche Figur ist ein echtes Viereck?",
+        questionEs: "Mira con atención las 4 figuras A, B, C y D (como en la página 11 «Kreise die Vierecke ein»). ¿Cuál de ellas es un verdadero Viereck (cuadrilátero)?",
+        hintDe: "Ein Viereck muss geschlossen sein, nur gerade Strecken haben und genau 4 Ecken besitzen!",
+        hintEs: "Un Viereck debe ser cerrado, tener solo lados rectos y tener exactamente 4 esquinas.",
+        svgSpec: { type: "not_a_viereck_lineup" },
+        options: [
+          { textDe: "Nur Figur D (gedrehtes Quadrat mit 4 geraden Seiten und 4 Ecken)", textEs: "Solo la figura D (cuadrado girado con 4 lados rectos y 4 vértices)", correct: true },
+          { textDe: "Figur B (sie hat zwar eine Öffnung, aber 4 Seiten-Teile)", textEs: "La figura B (aunque está abierta)", correct: false },
+          { textDe: "Figur C (das Fenster mit dem runden Bogen oben)", textEs: "La figura C (la ventana con arco curvo arriba)", correct: false },
+          { textDe: "Figur A (das graue Fünfeck)", textEs: "La figura A (el pentágono gris)", correct: false }
+        ],
+        explanationDe: "Genau wie auf deinem Arbeitsblatt S. 11! A hat 5 Ecken (Fünfeck), B ist eine offene Linie, C hat oben eine runde Kurve. Nur D ist ein geschlossenes Viereck!",
+        explanationEs: "¡Tal como en tu guía de la pág. 11! A tiene 5 esquinas (Fünfeck), B es una línea abierta y C tiene una curva. ¡Solo D es un Viereck cerrado!"
+      },
+      {
+        id: "m13_poly_7",
+        world: "polygone",
+        topicDe: "Polygone · Grundregel",
+        questionDe: "Ein Neuneck (Eneágono / Nonágono) hat 9 Ecken. Wie viele Seiten und wie viele Innenwinkel hat es dann?",
+        questionEs: "Un Neuneck (nonágono / eneágono) tiene 9 vértices (Ecken). ¿Cuántos lados (Seiten) y cuántos ángulos (Winkel) tiene entonces?",
+        hintDe: "Schau in die drei Spalten deiner Hefttabelle vom 26. Oktober: Ecken, Seiten, Winkel!",
+        hintEs: "Mira las 3 columnas de tu tabla del 26 de octubre: Ecken, Seiten, Winkel.",
+        svgSpec: { type: "polygon_regular", sides: 9, color: "#0d9488", fill: "#ccfbf1", labelCenter: "9 Ecken" },
+        options: [
+          { textDe: "Genau 9 Seiten und 9 Winkel (bei jedem Polygon sind Ecken = Seiten = Winkel!)", textEs: "Exactamente 9 lados y 9 ángulos (¡en todo polígono Ecken = Seiten = Winkel!)", correct: true },
+          { textDe: "9 Seiten, aber 18 Winkel", textEs: "9 lados, pero 18 ángulos", correct: false },
+          { textDe: "8 Seiten und 9 Winkel", textEs: "8 lados y 9 ángulos", correct: false },
+          { textDe: "10 Seiten und 9 Winkel", textEs: "10 lados y 9 ángulos", correct: false }
+        ],
+        explanationDe: "Goldene Regel aus deiner Tabelle vom 26. Oktober: Jedes Polygon hat immer genau gleich viele Ecken, Seiten und Winkel (9 Ecken, 9 Seiten, 9 Winkel)!",
+        explanationEs: "Regla de oro de tu tabla del 26 de octubre: todo polígono tiene siempre la misma cantidad de vértices, lados y ángulos (9, 9 y 9)."
+      },
+      {
+        id: "m13_poly_8",
+        world: "polygone",
+        topicDe: "Polygone · Zehneck & Siebeneck",
+        questionDe: "Ein Polygon hat 10 Ecken (Decágono) und ein anderes hat 7 Ecken (Heptágono). Wie heißen die beiden auf Deutsch?",
+        questionEs: "Un polígono tiene 10 vértices (decágono) y otro tiene 7 vértices (heptágono). ¿Cómo se llaman ambos en alemán?",
+        hintDe: "10 = zehn → Zehneck · 7 = sieben → Siebeneck!",
+        hintEs: "10 = zehn → Zehneck · 7 = sieben → Siebeneck.",
+        svgSpec: { type: "polygon_regular", sides: 10, color: "#2563eb", fill: "#dbeafe", labelCenter: "10 & 7" },
+        options: [
+          { textDe: "10 Ecken = das Zehneck · 7 Ecken = das Siebeneck", textEs: "10 vértices = das Zehneck · 7 vértices = das Siebeneck", correct: true },
+          { textDe: "10 Ecken = das Zwanzigeck · 7 Ecken = das Sechseck", textEs: "10 vértices = Zwanzigeck · 7 vértices = Sechseck", correct: false },
+          { textDe: "10 Ecken = das Neuneck · 7 Ecken = das Achteck", textEs: "10 vértices = Neuneck · 7 vértices = Achteck", correct: false },
+          { textDe: "10 Ecken = das Viereck · 7 Ecken = das Dreieck", textEs: "10 vértices = Viereck · 7 vértices = Dreieck", correct: false }
+        ],
+        explanationDe: "Super! 10 Ecken = das Zehneck (Decágono) und 7 Ecken = das Siebeneck (Heptágono).",
+        explanationEs: "¡Muy bien! 10 vértices = das Zehneck (decágono) y 7 vértices = das Siebeneck (heptágono)."
+      },
+
+      // =======================================================================
+      // WELT 2: DREIECKE SORTIEREN & RÄTSEL (Heft: 27. Okt, S. 2, 3, 17–20)
+      // =======================================================================
+      {
+        id: "m13_tri_1",
+        world: "dreiecke",
+        topicDe: "Dreiecke nach Seiten · Heft 27. Okt",
+        questionDe: "An diesem Dreieck haben alle 3 Seiten denselben kleinen Strich (|). Das bedeutet: Alle 3 Seiten sind gleich lang! Wie heißt es auf Deutsch?",
+        questionEs: "En este triángulo los 3 lados tienen la misma marquita (|). Eso significa que los 3 lados miden lo mismo (equilátero). ¿Cómo se llama en alemán?",
+        hintDe: "3 Seiten gleich lang → gleich + seitig!",
+        hintEs: "3 lados iguales → gleich (igual) + seitig (lados).",
+        svgSpec: { type: "triangle_classified", kind: "equilateral" },
+        options: [
+          { textDe: "gleichseitiges Dreieck (3 Seiten gleich lang — equilátero)", textEs: "gleichseitiges Dreieck (3 lados iguales — equilátero)", correct: true },
+          { textDe: "gleichschenkliges Dreieck (nur 2 Seiten gleich lang — isósceles)", textEs: "gleichschenkliges Dreieck (solo 2 lados iguales — isósceles)", correct: false },
+          { textDe: "allgemeines / ungleichseitiges Dreieck (escaleno)", textEs: "allgemeines / ungleichseitiges Dreieck (escaleno)", correct: false },
+          { textDe: "rechtwinkliges Dreieck (mit 90°-Winkel)", textEs: "rechtwinkliges Dreieck (con ángulo de 90°)", correct: false }
+        ],
+        explanationDe: "Perfekt! Wenn alle 3 Seiten gleich lang sind, heißt das Dreieck „gleichseitig“ (auf Spanisch: equilátero).",
+        explanationEs: "¡Perfecto! Cuando los 3 lados miden lo mismo, el triángulo se llama «gleichseitig» (equilátero)."
+      },
+      {
+        id: "m13_tri_2",
+        world: "dreiecke",
+        topicDe: "Dreiecke nach Seiten · Heft 27. Okt",
+        questionDe: "Dieses hohe Dreieck hat zwei gleich lange Seiten links und rechts (|) und eine kürzere Seite unten (||). Wie heißt es nach seinen Seiten?",
+        questionEs: "Este triángulo alto tiene dos lados iguales a la izquierda y derecha (|) y un lado distinto abajo (||). ¿Cómo se clasifica según sus lados (isósceles)?",
+        hintDe: "Die zwei gleich langen Seiten heißen „Schenkel“ → gleich + schenklig!",
+        hintEs: "Los dos lados iguales se llaman «Schenkel» → gleichschenklig.",
+        svgSpec: { type: "triangle_classified", kind: "isosceles_acute" },
+        options: [
+          { textDe: "gleichschenkliges Dreieck (2 Seiten gleich lang — isósceles)", textEs: "gleichschenkliges Dreieck (2 lados iguales — isósceles)", correct: true },
+          { textDe: "gleichseitiges Dreieck (3 Seiten gleich lang — equilátero)", textEs: "gleichseitiges Dreieck (3 lados iguales — equilátero)", correct: false },
+          { textDe: "ungleichseitiges / allgemeines Dreieck (escaleno)", textEs: "ungleichseitiges / allgemeines Dreieck (escaleno)", correct: false },
+          { textDe: "stumpfwinkliges Viereck", textEs: "stumpfwinkliges Viereck", correct: false }
+        ],
+        explanationDe: "Genau! 2 gleich lange Seiten (Schenkel) = gleichschenkliges Dreieck (isósceles).",
+        explanationEs: "¡Exacto! 2 lados iguales = gleichschenkliges Dreieck (isósceles)."
+      },
+      {
+        id: "m13_tri_3",
+        world: "dreiecke",
+        topicDe: "Dreiecke nach Seiten · S. 3 & S. 20",
+        questionDe: "Bei diesem Dreieck sind alle 3 Seiten unterschiedlich lang (markiert mit |, || und |||). Welche BEIDEN deutschen Wörter aus deinen Blättern bedeuten „escaleno“?",
+        questionEs: "En este triángulo los 3 lados tienen distinta medida (marcados con |, || y |||). ¿Cuáles DOS palabras en alemán de tus guías significan «escaleno»?",
+        hintDe: "Auf Seite 3 steht „allgemein“ und auf Seite 20 steht „ungleichseitig“!",
+        hintEs: "En la página 3 aparece «allgemein» y en la página 20 aparece «ungleichseitig».",
+        svgSpec: { type: "triangle_classified", kind: "scalene_acute" },
+        options: [
+          { textDe: "allgemeines Dreieck ODER ungleichseitiges Dreieck (3 Seiten unterschiedlich lang)", textEs: "allgemeines Dreieck O ungleichseitiges Dreieck (3 lados diferentes)", correct: true },
+          { textDe: "gleichseitiges Dreieck ODER gleichschenkliges Dreieck", textEs: "gleichseitiges O gleichschenkliges Dreieck", correct: false },
+          { textDe: "rechtwinkliges Dreieck ODER spitzwinkliges Dreieck", textEs: "rechtwinkliges O spitzwinkliges Dreieck", correct: false },
+          { textDe: "Parallelogramm ODER Trapezoid", textEs: "Parallelogramm O Trapezoid", correct: false }
+        ],
+        explanationDe: "Super gemerkt! Auf dem Tabellenblatt (S. 3) heißt es „allgemeines Dreieck“ und auf den Übungsblättern (S. 17–20) „ungleichseitiges Dreieck“. Beides bedeutet: alle 3 Seiten sind unterschiedlich lang (escaleno)!",
+        explanationEs: "¡Muy bien! En la tabla de la pág. 3 se llama «allgemeines Dreieck» y en las guías de las págs. 17–20 «ungleichseitiges Dreieck». Ambos significan escaleno."
+      },
+      {
+        id: "m13_tri_4",
+        world: "dreiecke",
+        topicDe: "Dreiecke nach Winkeln · Heft 27. Okt",
+        questionDe: "Dieses Dreieck hat oben einen sehr weiten Winkel, der größer als 90° ist (markiert mit „st“ wie auf Seite 3). Wie heißt es nach seiner Winkelart?",
+        questionEs: "Este triángulo tiene arriba un ángulo muy abierto, mayor que 90° (marcado con «st» como en la página 3). ¿Cómo se clasifica según sus ángulos?",
+        hintDe: "1 Winkel > 90° (stumpfer Winkel) → stumpfwinklig!",
+        hintEs: "Tiene 1 ángulo obtuso (stumpfer Winkel > 90°).",
+        svgSpec: { type: "triangle_classified", kind: "isosceles_obtuse" },
+        options: [
+          { textDe: "stumpfwinkliges Dreieck (hat 1 stumpfen Winkel > 90°)", textEs: "stumpfwinkliges Dreieck (tiene 1 ángulo obtuso > 90°)", correct: true },
+          { textDe: "spitzwinkliges Dreieck (alle 3 Winkel < 90°)", textEs: "spitzwinkliges Dreieck (los 3 ángulos < 90°)", correct: false },
+          { textDe: "rechtwinkliges Dreieck (hat 1 rechten Winkel = 90°)", textEs: "rechtwinkliges Dreieck (tiene 1 ángulo recto = 90°)", correct: false },
+          { textDe: "überstumpfwinkliges Dreieck (Winkel > 180°)", textEs: "überstumpfwinkliges Dreieck (> 180°)", correct: false }
+        ],
+        explanationDe: "Richtig! Sobald ein Dreieck einen stumpfen Winkel (> 90°) hat, heißt es „stumpfwinkliges Dreieck“.",
+        explanationEs: "¡Correcto! Basta con que un triángulo tenga 1 ángulo obtuso (> 90°) para llamarse «stumpfwinkliges Dreieck»."
+      },
+      {
+        id: "m13_tri_5",
+        world: "dreiecke",
+        topicDe: "Dreiecke kombinieren · S. 3 & S. 18",
+        questionDe: "Schau dir dieses Dreieck genau an: Es hat einen rechten Winkel (90° ⦜) UND die zwei Seiten am rechten Winkel sind gleich lang (|). Wie heißt es mit BEIDEN Eigenschaften (Winkelart + Seitenlänge)?",
+        questionEs: "Mira bien este triángulo: tiene un ángulo recto (90° ⦜) Y los dos lados que forman el ángulo recto miden lo mismo (|). ¿Cómo se llama combinando AMBAS características?",
+        hintDe: "90° = rechtwinklig · 2 Seiten gleich lang = gleichschenklig (genau wie dein Geodreieck!).",
+        hintEs: "90° = rechtwinklig · 2 lados iguales = gleichschenklig (¡igual que tu Geodreieck!).",
+        svgSpec: { type: "triangle_classified", kind: "isosceles_right" },
+        options: [
+          { textDe: "Rechtwinklig-gleichschenkliges Dreieck (1 Winkel = 90° und 2 Seiten gleich lang)", textEs: "Rechtwinklig-gleichschenkliges Dreieck (rectángulo e isósceles)", correct: true },
+          { textDe: "Spitzwinklig-gleichseitiges Dreieck (alle Winkel < 90° und 3 Seiten gleich lang)", textEs: "Spitzwinklig-gleichseitiges Dreieck (acutángulo y equilátero)", correct: false },
+          { textDe: "Stumpfwinklig-ungleichseitiges Dreieck", textEs: "Stumpfwinklig-ungleichseitiges Dreieck (obtusángulo y escaleno)", correct: false },
+          { textDe: "Rechtwinklig-gleichseitiges Dreieck", textEs: "Rechtwinklig-gleichseitiges Dreieck (rectángulo y equilátero)", correct: false }
+        ],
+        explanationDe: "Klasse! Es hat 1 rechten Winkel (rechtwinklig) und 2 gleich lange Seiten (gleichschenklig) → ein rechtwinklig-gleichschenkliges Dreieck!",
+        explanationEs: "¡Brillante! Tiene 1 ángulo recto (rechtwinklig) y 2 lados iguales (gleichschenklig)."
+      },
+      {
+        id: "m13_tri_6",
+        world: "dreiecke",
+        topicDe: "Die 3×3-Tabelle verstehen · S. 3",
+        questionDe: "Auf Seite 3 in deiner Tabelle sind in der ersten Zeile („gleichseitig — 3 Seiten gleich lang“) die beiden Kästchen für „rechtwinklig“ und „stumpfwinklig“ LEER! Warum?",
+        questionEs: "En la tabla de la página 3, en la primera fila («gleichseitig — 3 lados iguales»), las casillas de «rechtwinklig» y «stumpfwinklig» están VACÍAS. ¿Por qué?",
+        hintDe: "In einem gleichseitigen Dreieck sind alle 3 Winkel genau gleich groß (60°).",
+        hintEs: "En un triángulo equilátero los 3 ángulos miden siempre 60° (menores de 90°).",
+        svgSpec: { type: "triangle_matrix_3x3" },
+        options: [
+          { textDe: "Weil ein gleichseitiges Dreieck IMMER 3 spitze Winkel (je 60°) hat — es kann niemals einen 90°- oder stumpfen Winkel haben!", textEs: "¡Porque un triángulo equilátero SIEMPRE tiene 3 ángulos agudos (60°) y jamás puede tener un ángulo de 90° ni obtuso!", correct: true },
+          { textDe: "Weil die Lehrerin vergessen hat, sie einzuzeichnen", textEs: "Porque a la profesora se le olvidó dibujarlos", correct: false },
+          { textDe: "Weil ein gleichseitiges Dreieck 4 Ecken braucht", textEs: "Porque un triángulo equilátero necesita 4 esquinas", correct: false },
+          { textDe: "Weil gleichseitige Dreiecke immer stumpfwinklig sind", textEs: "Porque los triángulos equiláteros son siempre obtusángulos", correct: false }
+        ],
+        explanationDe: "Geniale Erkenntnis! Wenn alle 3 Seiten gleich lang sind (gleichseitig), sind auch alle 3 Winkel gleich groß (60° < 90°). Darum ist jedes gleichseitige Dreieck automatisch spitzwinklig!",
+        explanationEs: "¡Gran razonamiento! Si los 3 lados son iguales (gleichseitig), sus 3 ángulos también son iguales (60° < 90°), por lo que SIEMPRE es spitzwinklig."
+      },
+      {
+        id: "m13_tri_7",
+        world: "dreiecke",
+        topicDe: "Lösungswort-Rätsel · Arbeitsblatt S. 19 #1",
+        questionDe: "Auf Seite 19 Aufgabe 1: „Welche Dreiecke sind rechtwinklig?“ Du hast die Buchstaben der Dreiecke mit einem 90°-Winkel (⦜) gesammelt. Welches Lösungswort kam heraus?",
+        questionEs: "En la página 19 ejercicio 1: «Welche Dreiecke sind rechtwinklig?». Juntaste las letras de los triángulos que tienen un ángulo recto (90° ⦜). ¿Qué palabra secreta se formó?",
+        hintDe: "Die Dreiecke H, A, U und S haben alle einen rechten Winkel (90°)!",
+        hintEs: "Los triángulos H, A, U y S tienen todos un ángulo recto (90°).",
+        svgSpec: { type: "triangle_word_puzzle", puzzle: "HAUS" },
+        options: [
+          { textDe: "H - A - U - S (die 4 rechtwinkligen Dreiecke)", textEs: "H - A - U - S (los 4 triángulos rectángulos)", correct: true },
+          { textDe: "H - E - F - T", textEs: "H - E - F - T", correct: false },
+          { textDe: "A - U - T - O", textEs: "A - U - T - O", correct: false },
+          { textDe: "H - U - N - D", textEs: "H - U - N - D", correct: false }
+        ],
+        explanationDe: "Volltreffer! Nur die Dreiecke H, A, U und S haben eine 90°-Ecke → Lösungswort: HAUS!",
+        explanationEs: "¡Exacto! Solo los triángulos H, A, U y S tienen una esquina de 90° → palabra secreta: HAUS."
+      },
+      {
+        id: "m13_tri_8",
+        world: "dreiecke",
+        topicDe: "Lösungswort-Rätsel · Arbeitsblatt S. 19 #2 & #3",
+        questionDe: "Auf Seite 19 Aufgabe 2 & 3: Bei #2 sucht man alle GLEICHSEITIGEN Dreiecke (alle 3 Seiten gleich lang: B, A, U, M) und bei #3 alle GLEICHSCHENKLIGEN Dreiecke (2 Seiten gleich lang: A, U, T, O). Welche zwei Lösungswörter entstehen?",
+        questionEs: "En la página 19 ejercicios 2 y 3: En el #2 se buscan todos los triángulos EQUILÁTEROS (3 lados iguales: B, A, U, M) y en el #3 todos los ISÓSCELES (2 lados iguales: A, U, T, O). ¿Qué dos palabras secretas se forman?",
+        hintDe: "B-A-U-M (der Baum 🌳) und A-U-T-O (das Auto 🚗)!",
+        hintEs: "B-A-U-M (árbol 🌳) y A-U-T-O (auto 🚗).",
+        svgSpec: { type: "triangle_word_puzzle", puzzle: "BAUM_AUTO" },
+        options: [
+          { textDe: "#2: B - A - U - M (gleichseitig) und #3: A - U - T - O (gleichschenklig)", textEs: "#2: B - A - U - M (equiláteros) y #3: A - U - T - O (isósceles)", correct: true },
+          { textDe: "#2: B - M und #3: A - R - G", textEs: "#2: B - M y #3: A - R - G", correct: false },
+          { textDe: "#2: B - A - L - L und #3: T - O - R", textEs: "#2: B - A - L - L y #3: T - O - R", correct: false },
+          { textDe: "#2: S - T - U - M und #3: R - O - T", textEs: "#2: S - T - U - M y #3: R - O - T", correct: false }
+        ],
+        explanationDe: "Super! Bei Aufgabe 2 sind B, A, U und M gleichseitig (Lösungswort: BAUM 🌳) und bei Aufgabe 3 sind A, U, T und O gleichschenklig (Lösungswort: AUTO 🚗)!",
+        explanationEs: "¡Genial! En la #2 los triángulos B, A, U y M tienen sus 3 lados iguales (BAUM 🌳) y en la #3 los triángulos A, U, T y O tienen 2 lados iguales (AUTO 🚗)."
+      },
+      {
+        id: "m13_tri_9",
+        world: "dreiecke",
+        topicDe: "Dreiecke kombinieren · S. 3 & S. 18",
+        questionDe: "Dieses Dreieck hat 1 rechten Winkel (90° ⦜) und alle 3 Seiten sind unterschiedlich lang (|, ||, |||). Wie heißt es vollständig?",
+        questionEs: "Este triángulo tiene 1 ángulo recto (90° ⦜) y sus 3 lados tienen distinto largo (|, ||, |||). ¿Cómo se llama de forma completa?",
+        hintDe: "90° = rechtwinklig · 3 verschiedene Seiten = allgemein / ungleichseitig!",
+        hintEs: "90° = rechtwinklig · 3 lados distintos = allgemein / ungleichseitig.",
+        svgSpec: { type: "triangle_classified", kind: "scalene_right" },
+        options: [
+          { textDe: "Rechtwinklig-ungleichseitiges (allgemeines) Dreieck", textEs: "Rechtwinklig-ungleichseitiges (allgemeines) Dreieck (rectángulo y escaleno)", correct: true },
+          { textDe: "Spitzwinklig-gleichseitiges Dreieck", textEs: "Spitzwinklig-gleichseitiges Dreieck", correct: false },
+          { textDe: "Stumpfwinklig-gleichschenkliges Dreieck", textEs: "Stumpfwinklig-gleichschenkliges Dreieck", correct: false },
+          { textDe: "Gleichseitiges Rechteck", textEs: "Gleichseitiges Rechteck", correct: false }
+        ],
+        explanationDe: "Genau! Es hat 1 rechten Winkel (rechtwinklig) und 3 unterschiedlich lange Seiten (ungleichseitig / allgemein).",
+        explanationEs: "¡Exacto! Tiene 1 ángulo recto (rechtwinklig) y 3 lados de distinta longitud (ungleichseitig / allgemein)."
+      },
+
+      // =======================================================================
+      // WELT 3: VIERECKE — DIE 3 GRUPPEN, EIGENSCHAFTEN & RÄTSEL (S. 4–5, 11–16)
+      // =======================================================================
+      {
+        id: "m13_vier_1",
+        world: "vierecke",
+        topicDe: "Vierecke in 3 Gruppen · Heft 2. & 3. Nov",
+        questionDe: "Im Heft (2. & 3. November) sortieren wir alle Vierecke nach ihren PARALLELEN Seiten (∥) in 3 große Gruppen. Welche Zuordnung stimmt genau?",
+        questionEs: "En el cuaderno (2 y 3 de noviembre) clasificamos todos los cuadriláteros según sus pares de lados PARALELOS (∥) en 3 grandes grupos. ¿Cuál relación es la correcta?",
+        hintDe: "Zähle die Paare paralleler Seiten: 2 Paar ∥, 1 Paar ∥ oder 0 Paar ∥!",
+        hintEs: "Cuenta los pares de lados paralelos: 2 pares ∥, 1 par ∥ o 0 pares ∥.",
+        svgSpec: { type: "viereck_three_groups" },
+        options: [
+          { textDe: "Parallelogramm = 2 Paar ∥ Seiten · Trapez = 1 Paar ∥ Seiten · Trapezoid = 0 Paar ∥ (keine parallelen Seiten)", textEs: "Parallelogramm = 2 pares ∥ · Trapez = 1 par ∥ · Trapezoid = 0 pares ∥ (ningún lado paralelo)", correct: true },
+          { textDe: "Parallelogramm = 1 Paar ∥ · Trapez = 2 Paar ∥ · Trapezoid = 4 Paar ∥", textEs: "Parallelogramm = 1 par ∥ · Trapez = 2 pares ∥ · Trapezoid = 4 pares ∥", correct: false },
+          { textDe: "Parallelogramm = 0 Paar ∥ · Trapez = 1 Paar ∥ · Trapezoid = 2 Paar ∥", textEs: "Parallelogramm = 0 pares ∥ · Trapez = 1 par ∥ · Trapezoid = 2 pares ∥", correct: false },
+          { textDe: "Alle Vierecke haben immer 2 Paar parallele Seiten", textEs: "Todos los cuadriláteros tienen siempre 2 pares de lados paralelos", correct: false }
+        ],
+        explanationDe: "Perfekt! Das ist das Hauptschema vom 2. und 3. November: 1) Parallelogramm (2 Paar ∥), 2) Trapez (1 Paar ∥), 3) Trapezoid (0 Paar ∥, z. B. Drachen)!",
+        explanationEs: "¡Perfecto! Ese es el esquema central del 2 y 3 de noviembre: 1) Parallelogramm (2 pares ∥), 2) Trapez (1 par ∥), 3) Trapezoid (0 pares ∥, p. ej. Drachen)."
+      },
+      {
+        id: "m13_vier_2",
+        world: "vierecke",
+        topicDe: "Parallelogramm-Familie · Heft 3. Nov",
+        questionDe: "Welche 4 Vierecke gehören auf deinem Schema vom 3. November (blaue Spalte) alle zur Gruppe „Parallelogramm“ (Zwei Paar parallele Seiten)?",
+        questionEs: "¿Cuáles 4 cuadriláteros pertenecen en tu esquema del 3 de noviembre (columna azul) a la familia «Parallelogramm» (dos pares de lados paralelos)?",
+        hintDe: "Schau auf die 4 blauen Figuren: zwei mit 90°-Winkeln und zwei geschobene ohne 90°-Winkel!",
+        hintEs: "Son los 4 azules: dos con ángulos rectos (90°) y dos inclinados sin ángulos rectos.",
+        svgSpec: { type: "viereck_shape", kind: "parallelogramm_family" },
+        options: [
+          { textDe: "Quadrat, Rechteck, Raute und Romboid", textEs: "Quadrat (cuadrado), Rechteck (rectángulo), Raute (rombo) y Romboid (romboide)", correct: true },
+          { textDe: "Quadrat, Rechteck, Trapez und Drachen", textEs: "Quadrat, Rechteck, Trapez y Drachen", correct: false },
+          { textDe: "Rechtwinkliges Trapez, gleichschenkliges Trapez und ungleichseitiges Trapez", textEs: "Los tres tipos de Trapez", correct: false },
+          { textDe: "Drachen, Trapezoid, Dreieck und Fünfeck", textEs: "Drachen, Trapezoid, Dreieck y Fünfeck", correct: false }
+        ],
+        explanationDe: "Genau! Quadrat, Rechteck, Raute und Romboid haben alle 2 Paar parallele Seiten (gegenüberliegende Seiten sind parallel)!",
+        explanationEs: "¡Exacto! Quadrat, Rechteck, Raute y Romboid tienen todos 2 pares de lados paralelos."
+      },
+      {
+        id: "m13_vier_3",
+        world: "vierecke",
+        topicDe: "Quadrat vs. Raute (Prüfungs-Klassiker!)",
+        questionDe: "Beide Figuren — das Quadrat und die Raute — haben 4 gleich lange Seiten (|) und 2 Paar parallele Seiten. Worin unterscheidet sich die Raute vom Quadrat?",
+        questionEs: "Ambas figuras —el Quadrat (cuadrado) y la Raute (rombo)— tienen 4 lados iguales (|) y 2 pares de lados paralelos. ¿En qué se diferencia la Raute del Quadrat?",
+        hintDe: "Schau auf die Innenwinkel in den Ecken (S. 13 & S. 15)!",
+        hintEs: "Fíjate en los ángulos de las esquinas (págs. 13 y 15).",
+        svgSpec: { type: "viereck_shape", kind: "quadrat_vs_raute" },
+        options: [
+          { textDe: "Das Quadrat hat 4 rechte Winkel (90° ⦜). Die Raute ist „verschoben“ und hat 0 rechte Winkel (2 spitze + 2 stumpfe Winkel)!", textEs: "El Quadrat tiene 4 ángulos rectos (90° ⦜). ¡La Raute tiene 0 ángulos rectos (2 agudos + 2 obtusos)!", correct: true },
+          { textDe: "Die Raute hat keine parallelen Seiten (0 Paar ∥)", textEs: "La Raute no tiene lados paralelos (0 pares ∥)", correct: false },
+          { textDe: "Das Quadrat hat nur 1 Paar parallele Seiten", textEs: "El Quadrat tiene solo 1 par de lados paralelos", correct: false },
+          { textDe: "Es gibt gar keinen Unterschied, jede Raute hat immer 90°-Winkel", textEs: "No hay diferencia, toda Raute tiene ángulos de 90°", correct: false }
+        ],
+        explanationDe: "Wichtiger Unterschied! Wenn eine Figur auf der Spitze steht, prüfe mit dem Geodreieck die Ecke: Sind es 90° (⦜), ist es ein gedrehtes Quadrat! Sind es 2 spitze und 2 stumpfe Winkel (0 rechte Winkel), ist es eine Raute!",
+        explanationEs: "¡Diferencia clave! Si una figura está apoyada en una punta, revisa su esquina con el Geodreieck: si mide 90° (⦜), ¡es un Quadrat girado! Si tiene 2 ángulos agudos y 2 obtusos (0 rectos), es una Raute."
+      },
+      {
+        id: "m13_vier_4",
+        world: "vierecke",
+        topicDe: "Rechtwinkliges Trapez · Falle von S. 13 & S. 15!",
+        questionDe: "Aufgepasst bei dieser Figur (von Seite 13 oben links und Seite 15): Es ist ein rechtwinkliges Trapez. Wie viele Paare paralleler Seiten und wie viele RECHTE Winkel (90° ⦜) hat es wirklich?",
+        questionEs: "¡Mucha atención con esta figura (de la página 13 arriba a la izquierda y página 15)! Es un rechtwinkliges Trapez (trapecio rectángulo). ¿Cuántos pares de lados paralelos y cuántos ÁNGULOS RECTOS (90° ⦜) tiene en realidad?",
+        hintDe: "Oben und unten sind parallel (1 Paar ∥). Die linke Seite steht senkrecht auf BEIDEN parallelen Seiten!",
+        hintEs: "El lado de arriba y el de abajo son paralelos (1 par ∥). ¡El lado izquierdo es perpendicular tanto arriba como abajo!",
+        svgSpec: { type: "viereck_shape", kind: "trapez_recht" },
+        options: [
+          { textDe: "1 Paar parallele Seiten (∥) und genau 2 rechte Winkel (90° oben links UND 90° unten links)!", textEs: "¡1 par de lados paralelos (∥) y exactamente 2 ángulos rectos (90° arriba a la izquierda Y 90° abajo a la izquierda)!", correct: true },
+          { textDe: "2 Paar parallele Seiten und nur 1 rechter Winkel", textEs: "2 pares de lados paralelos y solo 1 ángulo recto", correct: false },
+          { textDe: "0 Paar parallele Seiten und 4 rechte Winkel", textEs: "0 pares de lados paralelos y 4 ángulos rectos", correct: false },
+          { textDe: "1 Paar parallele Seiten und 0 rechte Winkel", textEs: "1 par de lados paralelos y 0 ángulos rectos", correct: false }
+        ],
+        explanationDe: "Ganz wichtiger Merksatz für morgen: Ein rechtwinkliges Trapez ist ein Trapez → also hat es 1 Paar parallele Seiten! Und weil die gerade Wand auf BEIDEN parallelen Linien senkrecht steht, hat es immer ZWEI rechte Winkel (2 × 90°)!",
+        explanationEs: "¡Dato clave para mañana! En la pág. 13 habías puesto «2 Paar ∥ y 1 Rechter Winkel», pero como en la pág. 15: un trapecio rectángulo tiene 1 par de lados paralelos y SIEMPRE 2 ángulos rectos (uno arriba y otro abajo)."
+      },
+      {
+        id: "m13_vier_5",
+        world: "vierecke",
+        topicDe: "Schräges Romboid · Falle von S. 16 Aufgabe 1f!",
+        questionDe: "Schau dir dieses stark gekippte Viereck an (genau wie Aufgabe 1f auf Seite 16!). Die lange obere und untere Kante sind parallel (>) und die beiden schrägen Seiten sind AUCH parallel (>>). Wie heißt es?",
+        questionEs: "Mira este cuadrilátero muy inclinado (¡exactamente como el ejercicio 1f de la página 16!). El borde corto de arriba y el de abajo son paralelos (>) y los dos lados largos inclinados TAMBIÉN son paralelos (>>). ¿Cómo se llama?",
+        hintDe: "Es sieht zwar schräg aus, hat aber 2 Paar parallele Seiten und unterschiedlich lange Nachbarseiten!",
+        hintEs: "En la pág. 16 pusiste «Trapezoid» porque estaba muy inclinado, ¡pero fíjate que sus lados opuestos SÍ son paralelos (2 pares ∥)!",
+        svgSpec: { type: "viereck_shape", kind: "romboid_slanted_1f" },
+        options: [
+          { textDe: "Romboid / Parallelogramm (denn gegenüberliegende Seiten sind parallel: 2 Paar ∥!)", textEs: "Romboid / Parallelogramm (¡porque sus lados opuestos son paralelos: 2 pares ∥!)", correct: true },
+          { textDe: "Trapezoid (0 Paar parallele Seiten)", textEs: "Trapezoid (0 pares de lados paralelos)", correct: false },
+          { textDe: "Drachen / Deltoid", textEs: "Drachen / Deltoid (cometa)", correct: false },
+          { textDe: "Rechteck (4 rechte Winkel)", textEs: "Rechteck (4 ángulos rectos)", correct: false }
+        ],
+        explanationDe: "Super! Auf Seite 16 bei 1f war das eine gemeine optische Täuschung: Auch wenn ein Parallelogramm gedreht und schmal ist — solange beide gegenüberliegenden Seitenpaare parallel sind (2 Paar ∥), ist es ein Romboid / Parallelogramm und KEIN Trapezoid!",
+        explanationEs: "¡Excelente! En la pág. 16 (1f) era una trampa visual: aunque esté rotado y alargado, como ambos pares de lados opuestos son paralelos (2 pares ∥), es un Romboid / Parallelogramm y NO un Trapezoid."
+      },
+      {
+        id: "m13_vier_6",
+        world: "vierecke",
+        topicDe: "Drachen (Deltoid) · S. 4, 5, 13 & 16",
+        questionDe: "Welche 3 Eigenschaften beschreiben den Drachen (Deltoid) komplett richtig?",
+        questionEs: "¿Cuáles 3 características describen al Drachen (Deltoid / cometa) de forma completamente correcta?",
+        hintDe: "Gehört der Drachen auf Seite 4 & 5 zu Parallelogramm, Trapez oder Trapezoid?",
+        hintEs: "Mira la página 4 y 5: el Drachen sale de la rama Trapezoid (0 pares ∥).",
+        svgSpec: { type: "viereck_shape", kind: "drachen" },
+        options: [
+          { textDe: "Er gehört zur Gruppe Trapezoid (0 Paar ∥ Seiten), hat 2 Paare gleich langer Nachbarseiten und 1 Symmetrieachse", textEs: "Pertenece al grupo Trapezoid (0 pares ∥), tiene 2 pares de lados vecinos iguales y 1 eje de simetría", correct: true },
+          { textDe: "Er hat 2 Paar parallele Seiten wie eine Raute und 4 rechte Winkel", textEs: "Tiene 2 pares de lados paralelos como el rombo y 4 ángulos rectos", correct: false },
+          { textDe: "Er hat 1 Paar parallele Seiten und gehört zu den Trapezen", textEs: "Tiene 1 par de lados paralelos y pertenece a los trapecios", correct: false },
+          { textDe: "Er hat 3 Ecken und 3 Seiten", textEs: "Tiene 3 vértices y 3 lados", correct: false }
+        ],
+        explanationDe: "Richtig! Ein Drachen (Deltoid) hat 0 Paar parallele Seiten (deshalb Gruppe Trapezoid!), aber je 2 benachbarte Seiten sind gleich lang und er hat 1 Symmetrieachse von oben nach unten.",
+        explanationEs: "¡Correcto! Un Drachen (Deltoid) tiene 0 pares de lados paralelos (grupo Trapezoid), 2 pares de lados contiguos iguales y 1 eje de simetría."
+      },
+      {
+        id: "m13_vier_7",
+        world: "vierecke",
+        topicDe: "Mia & Jin Rätsel · Arbeitsblatt S. 12 #5",
+        questionDe: "Mia und Jin schauen sich ein Quadrat an (S. 12 Nr. 5). Mia sagt: „Dieses Viereck hat eine GERADE Anzahl rechte Winkel.“ Jin sagt: „Es hat eine UNGERADE Anzahl rechte Winkel.“ Wer hat recht und warum?",
+        questionEs: "Mia y Jin miran un cuadrado (pág. 12 N° 5). Mia dice: «Este cuadrilátero tiene una cantidad PAR (gerade) de ángulos rectos». Jin dice: «Tiene una cantidad IMPAR (ungerade)». ¿Quién tiene razón y por qué?",
+        hintDe: "Wie viele rechte Winkel hat ein Quadrat? Und ist diese Zahl gerade (par: 2, 4, 6...) oder ungerade (impar: 1, 3, 5...)?",
+        hintEs: "¿Cuántos ángulos rectos tiene un cuadrado? ¿Y el 4 es par (gerade Zahl) o impar (ungerade Zahl)?",
+        svgSpec: { type: "riddle_character", character: "mia_jin" },
+        options: [
+          { textDe: "Mia hat recht, weil das Quadrat 4 rechte Winkel hat und 4 eine gerade Zahl ist!", textEs: "¡Mia tiene razón, porque el cuadrado tiene 4 ángulos rectos y 4 es un número par (gerade Zahl)!", correct: true },
+          { textDe: "Jin hat recht, weil 4 eine ungerade Zahl ist", textEs: "Jin tiene razón, porque 4 es un número impar", correct: false },
+          { textDe: "Jin hat recht, weil ein Quadrat 3 rechte Winkel hat", textEs: "Jin tiene razón, porque un cuadrado tiene 3 ángulos rectos", correct: false },
+          { textDe: "Keiner hat recht, ein Quadrat hat 0 rechte Winkel", textEs: "Ninguno tiene razón, un cuadrado tiene 0 ángulos rectos", correct: false }
+        ],
+        explanationDe: "Genauso hast du es auf Seite 12 perfekt aufgeschrieben: „Mia hat recht, weil es 4 rechte Winkel sind und 4 eine gerade Zahl ist.“",
+        explanationEs: "¡Tal cual como lo escribiste perfecto en la página 12!: «Mia hat recht, weil es 4 rechte Winkel sind und 4 eine gerade Zahl ist.»"
+      },
+      {
+        id: "m13_vier_8",
+        world: "vierecke",
+        topicDe: "Ajanis Rätsel · Arbeitsblatt S. 13",
+        questionDe: "Ajani sagt (S. 13 unten): „Meine Figur hat 4 Seiten, MINDESTENS ein Paar paralleler Seiten (1 oder 2 Paar ∥) und KEINEN rechten Winkel (0 × 90°).“ An welche drei Vierecke kann Ajani denken?",
+        questionEs: "Ajani dice (pág. 13 abajo): «Mi figura tiene 4 lados, AL MENOS un par de lados paralelos (1 o 2 pares ∥) y NINGÚN ángulo recto (0 × 90°)». ¿En qué tres cuadriláteros puede estar pensando Ajani?",
+        hintDe: "Quadrat und Rechteck fallen weg (haben 90°). Drachen fällt weg (hat 0 Paar ∥)!",
+        hintEs: "Quadrat y Rechteck se descartan (tienen 90°). Drachen se descarta (tiene 0 pares ∥).",
+        svgSpec: { type: "riddle_character", character: "ajani" },
+        options: [
+          { textDe: "Romboid (Parallelogramm), Raute und gleichschenkliges Trapez!", textEs: "¡Romboid (paralelogramo), Raute (rombo) y gleichschenkliges Trapez (trapecio isósceles)!", correct: true },
+          { textDe: "Quadrat, Rechteck und rechtwinkliges Trapez", textEs: "Quadrat, Rechteck y rechtwinkliges Trapez", correct: false },
+          { textDe: "Drachen (Deltoid), Dreieck und Sechseck", textEs: "Drachen (Deltoid), Dreieck y Sechseck", correct: false },
+          { textDe: "Quadrat, Raute und Drachen", textEs: "Quadrat, Raute y Drachen", correct: false }
+        ],
+        explanationDe: "Volltreffer (genau deine Lösung von S. 13)! Romboid (2 Paar ∥), Raute (2 Paar ∥) und gleichschenkliges Trapez (1 Paar ∥) haben alle parallele Seiten und keinen einzigen rechten Winkel!",
+        explanationEs: "¡Exacto (la misma respuesta que anotaste en la pág. 13)! Romboid, Raute y gleichschenkliges Trapez tienen lados paralelos y ningún ángulo recto."
+      },
+      {
+        id: "m13_vier_9",
+        world: "vierecke",
+        topicDe: "Symmetrieachsen der Vierecke · S. 9 & 10",
+        questionDe: "Auf Seite 9 und 10 musst du die Symmetrieachsen (Spiegelachsen / ejes de simetría) der Vierecke zählen. Welche Anzahl von Symmetrieachsen stimmt?",
+        questionEs: "En las páginas 9 y 10 debes contar los ejes de simetría (Symmetrieachsen) de cada cuadrilátero. ¿Cuál cantidad de ejes de simetría es la correcta?",
+        hintDe: "Quadrat = 4 (längs, quer + 2 Diagonalen) · Rechteck = 2 · Raute = 2 · Drachen = 1 · Romboid = 0!",
+        hintEs: "Quadrat = 4 · Rechteck = 2 · Raute = 2 · Drachen = 1 · Gleichschenkliges Trapez = 1 · Romboid = 0.",
+        svgSpec: { type: "viereck_symmetry_showcase" },
+        options: [
+          { textDe: "Quadrat: 4 · Rechteck: 2 · Raute: 2 · Drachen: 1 · Gleichschenkliges Trapez: 1 · Romboid: 0", textEs: "Quadrat: 4 · Rechteck: 2 · Raute: 2 · Drachen: 1 · Trapecio isósceles: 1 · Romboid: 0", correct: true },
+          { textDe: "Quadrat: 2 · Rechteck: 4 · Raute: 4 · Drachen: 2 · Romboid: 2", textEs: "Quadrat: 2 · Rechteck: 4 · Raute: 4 · Drachen: 2 · Romboid: 2", correct: false },
+          { textDe: "Alle Vierecke haben immer genau 2 Symmetrieachsen", textEs: "Todos los cuadriláteros tienen siempre 2 ejes de simetría", correct: false },
+          { textDe: "Drachen hat 4 Symmetrieachsen und Quadrat hat 1 Symmetrieachse", textEs: "Drachen tiene 4 ejes y Quadrat tiene 1 eje", correct: false }
+        ],
+        explanationDe: "Merke dir für die Tabelle auf S. 9: Quadrat = 4 Symmetrieachsen, Rechteck = 2 (nur die Mittellinien, NICHT die Diagonalen!), Raute = 2 (die Diagonalen), Drachen = 1, gleichschenkliges Trapez = 1, allgemeines Parallelogramm (Romboid) = 0!",
+        explanationEs: "Para la tabla de la pág. 9: Quadrat = 4 ejes, Rechteck = 2, Raute = 2 (sus diagonales), Drachen = 1, gleichschenkliges Trapez = 1 y Romboid = 0."
+      },
+      {
+        id: "m13_vier_10",
+        world: "vierecke",
+        topicDe: "Drei Trapeze vergleichen · Arbeitsblatt S. 15",
+        questionDe: "Auf Seite 15 unten vergleichst du drei verschiedene Trapeze a, b und c. Was haben ALLE Trapeze immer gemeinsam?",
+        questionEs: "En la página 15 abajo comparas tres trapecios distintos (a, b y c). ¿Qué tienen TODOS los trapecios siempre en común?",
+        hintDe: "Warum heißen sie alle „Trapez“?",
+        hintEs: "¿Por qué pertenecen los tres a la familia «Trapez»?",
+        svgSpec: { type: "viereck_shape", kind: "three_trapeze_compare" },
+        options: [
+          { textDe: "Sie haben alle genau 1 Paar parallele Seiten (und 4 Ecken, 4 Seiten, 4 Winkel)!", textEs: "¡Todos tienen exactamente 1 par de lados paralelos (y 4 vértices, 4 lados, 4 ángulos)!", correct: true },
+          { textDe: "Sie haben alle 4 gleich lange Seiten", textEs: "Todos tienen 4 lados de igual longitud", correct: false },
+          { textDe: "Sie haben alle 2 Paare paralleler Seiten", textEs: "Todos tienen 2 pares de lados paralelos", correct: false },
+          { textDe: "Sie haben alle 4 rechte Winkel", textEs: "Todos tienen 4 ángulos rectos", correct: false }
+        ],
+        explanationDe: "Genau wie du auf Seite 15 geschrieben hast: Alle Trapeze haben 1 Paar parallele Linien (Seiten) gemeinsam, aber sie unterscheiden sich in ihren Seitenlängen und Winkeln!",
+        explanationEs: "¡Tal como escribiste en la página 15! Todos los trapecios comparten 1 par de lados paralelos, aunque se diferencien en el largo de sus lados y en sus ángulos."
+      },
+
+      // =======================================================================
+      // WELT 4: KOORDINATENSYSTEM & VEKTOREN (Heft: 9.–11. Nov, S. 6–10)
+      // =======================================================================
+      {
+        id: "m13_ks_1",
+        world: "koordinaten",
+        topicDe: "Koordinatensystem („KS Bauen“) · Heft 9. Nov (S. 6)",
+        questionDe: "Schau in das Koordinatensystem (wie am Montag, 9. November „KS Bauen“): Welche Koordinaten (x | y) haben die Punkte A, B und D?",
+        questionEs: "Mira el plano cartesiano (como el lunes 9 de noviembre «KS Bauen»): ¿Qué coordenadas (x | y) tienen los puntos A, B y D?",
+        hintDe: "Immer zuerst auf der x-Achse nach rechts lesen, dann auf der y-Achse nach oben!",
+        hintEs: "Siempre lee primero el eje horizontal x (derecha) y luego el eje vertical y (arriba).",
+        svgSpec: {
+          type: "coord_grid",
+          maxX: 11,
+          maxY: 10,
+          points: [
+            { label: "E", x: 1, y: 4, color: "#64748b" },
+            { label: "A", x: 3, y: 5, color: "#dc2626" },
+            { label: "D", x: 3, y: 7, color: "#0284c7" },
+            { label: "B", x: 6, y: 7, color: "#16a34a" },
+            { label: "F", x: 7, y: 7, color: "#9333ea" },
+            { label: "C", x: 10, y: 9, color: "#ea580c" }
+          ],
+          showGuides: true
+        },
+        options: [
+          { textDe: "A (3 | 5) · B (6 | 7) · D (3 | 7)", textEs: "A (3 | 5) · B (6 | 7) · D (3 | 7)", correct: true },
+          { textDe: "A (5 | 3) · B (7 | 6) · D (7 | 3) (x und y vertauscht!)", textEs: "A (5 | 3) · B (7 | 6) · D (7 | 3) (¡x e y al revés!)", correct: false },
+          { textDe: "A (3 | 4) · B (6 | 5) · D (3 | 6)", textEs: "A (3 | 4) · B (6 | 5) · D (3 | 6)", correct: false },
+          { textDe: "A (1 | 4) · B (10 | 9) · D (7 | 7)", textEs: "A (1 | 4) · B (10 | 9) · D (7 | 7)", correct: false }
+        ],
+        explanationDe: "Perfekt abgelesen! Zuerst die x-Achse (Rechtsachse), dann die y-Achse (Hochachse): A ist bei 3 rechts und 5 oben → A(3|5), B(6|7) und D(3|7)!",
+        explanationEs: "¡Leído a la perfección! Primero el eje x (derecha) y luego el eje y (arriba): A(3|5), B(6|7) y D(3|7)."
+      },
+      {
+        id: "m13_ks_2",
+        world: "koordinaten",
+        topicDe: "Punkt vs. Vektor · Heft S. 7",
+        questionDe: "Auf Seite 7 in deinem Heft steht nebeneinander: (3, 4) und darüber mit einem Pfeil →(3, 4). Was ist der Unterschied und was bedeutet „+ → man schreibt nicht“?",
+        questionEs: "En la página 7 de tu cuaderno aparece (3, 4) al lado de →(3, 4) con una flecha arriba. ¿Cuál es la diferencia y qué significa «+ → man schreibt nicht»?",
+        hintDe: "Ohne Pfeil = fester Ort (Punkt). Mit Pfeil = Bewegung/Verschiebung (Vektor)!",
+        hintEs: "Sin flecha = punto fijo. Con flecha arriba = vector de desplazamiento.",
+        svgSpec: {
+          type: "coord_grid",
+          maxX: 8,
+          maxY: 7,
+          points: [
+            { label: "Start (1|2)", x: 1, y: 2, color: "#0f172a" },
+            { label: "Ziel (4|6)", x: 4, y: 6, color: "#16a34a" }
+          ],
+          vector: { x1: 1, y1: 2, x2: 4, y2: 6, labelDe: "Vektor →(3, 4): 3 rechts, 4 oben" }
+        },
+        options: [
+          { textDe: "(3, 4) ist ein Punkt. →(3, 4) mit Pfeil ist ein Vektor (3 nach rechts, 4 nach oben) — und bei positiven Zahlen lässt man das „+“ einfach weg!", textEs: "(3, 4) es un punto. →(3, 4) con flecha es un vector (3 a la derecha, 4 arriba), ¡y el signo «+» no hace falta escribirlo!", correct: true },
+          { textDe: "Beides sind Geraden, und man darf niemals Minuszeichen schreiben", textEs: "Ambos son rectas y nunca se escriben signos menos", correct: false },
+          { textDe: "→(3, 4) bedeutet 3 nach oben und 4 nach links", textEs: "→(3, 4) significa 3 arriba y 4 a la izquierda", correct: false },
+          { textDe: "(3, 4) ist ein Dreieck und →(3, 4) ist ein Viereck", textEs: "(3, 4) es un triángulo y →(3, 4) es un cuadrilátero", correct: false }
+        ],
+        explanationDe: "Genau wie auf deiner Heftseite 7: Ohne Pfeil ist (3,4) ein Punkt. Mit Pfeil darüber ist →(3,4) ein Vektor (Verschiebung: 3 rechts, 4 oben). Und das Pluszeichen (+) schreibt man vor positiven Zahlen nicht!",
+        explanationEs: "¡Exacto como en tu página 7! Sin flecha (3,4) es un punto; con flecha arriba →(3,4) es un vector de desplazamiento (3 derecha, 4 arriba) y el signo + no se escribe."
+      },
+      {
+        id: "m13_ks_3",
+        world: "koordinaten",
+        topicDe: "Vektor-Richtungen · Heft S. 7",
+        questionDe: "Wie übersetzt man die Vektoren →(−4, 3) und →(2, −2) aus deinem Heft (Seite 7) in Richtungen (rechts/links und oben/unten)?",
+        questionEs: "¿Cómo se traducen los vectores →(−4, 3) y →(2, −2) de tu cuaderno (página 7) en direcciones en alemán (rechts/links y oben/unten)?",
+        hintDe: "1. Zahl (x): + ist rechts, − ist links · 2. Zahl (y): + ist oben, − ist unten!",
+        hintEs: "1° número (x): + es rechts (derecha), − es links (izquierda) · 2° número (y): + es oben (arriba), − es unten (abajo).",
+        svgSpec: {
+          type: "coord_grid",
+          maxX: 9,
+          maxY: 8,
+          points: [
+            { label: "Start", x: 6, y: 3, color: "#0f172a" },
+            { label: "Ziel", x: 2, y: 6, color: "#dc2626" }
+          ],
+          vector: { x1: 6, y1: 3, x2: 2, y2: 6, labelDe: "→(−4, 3): 4 links, 3 oben" }
+        },
+        options: [
+          { textDe: "→(−4, 3) = 4 links, 3 oben · und · →(2, −2) = 2 rechts, 2 unten", textEs: "→(−4, 3) = 4 izquierda, 3 arriba · y · →(2, −2) = 2 derecha, 2 abajo", correct: true },
+          { textDe: "→(−4, 3) = 4 rechts, 3 unten · und · →(2, −2) = 2 links, 2 oben", textEs: "→(−4, 3) = 4 derecha, 3 abajo · y · →(2, −2) = 2 izquierda, 2 arriba", correct: false },
+          { textDe: "→(−4, 3) = 4 unten, 3 links · und · →(2, −2) = 2 oben, 2 rechts", textEs: "→(−4, 3) = 4 abajo, 3 izquierda · y · →(2, −2) = 2 arriba, 2 derecha", correct: false },
+          { textDe: "→(−4, 3) = 4 links, 3 unten · und · →(2, −2) = 2 rechts, 2 oben", textEs: "→(−4, 3) = 4 izquierda, 3 abajo · y · →(2, −2) = 2 derecha, 2 arriba", correct: false }
+        ],
+        explanationDe: "Super! Bei x bedeutet Minus (−) nach LINKS und Plus (+) nach RECHTS. Bei y bedeutet Plus (+) nach OBEN und Minus (−) nach UNTEN!",
+        explanationEs: "¡Excelente! En el primer número (x): + es rechts y − es links. En el segundo número (y): + es oben y − es unten."
+      },
+      {
+        id: "m13_ks_4",
+        world: "koordinaten",
+        topicDe: "Vektor mit Null · Heft S. 7",
+        questionDe: "Was bedeutet der letzte Vektor auf Seite 7 in deinem Heft: →(−3, 0) und der vorletzte →(−1, −5)?",
+        questionEs: "¿Qué significan los dos últimos vectores de la página 7 de tu cuaderno: →(−3, 0) y →(−1, −5)?",
+        hintDe: "Wenn die zweite Zahl 0 ist, geht man 0 nach oben/unten!",
+        hintEs: "Si el segundo número es 0, te mueves 0 arriba (0 oben).",
+        svgSpec: {
+          type: "coord_grid",
+          maxX: 8,
+          maxY: 7,
+          points: [
+            { label: "P(6|4)", x: 6, y: 4, color: "#0f172a" },
+            { label: "P'(3|4)", x: 3, y: 4, color: "#0284c7" }
+          ],
+          vector: { x1: 6, y1: 4, x2: 3, y2: 4, labelDe: "→(−3, 0): 3 links, 0 oben" }
+        },
+        options: [
+          { textDe: "→(−3, 0) = 3 links, 0 oben · und · →(−1, −5) = 1 links, 5 unten", textEs: "→(−3, 0) = 3 izquierda, 0 arriba · y · →(−1, −5) = 1 izquierda, 5 abajo", correct: true },
+          { textDe: "→(−3, 0) = 0 links, 3 unten · und · →(−1, −5) = 1 rechts, 5 unten", textEs: "→(−3, 0) = 0 izquierda, 3 abajo · y · →(−1, −5) = 1 derecha, 5 abajo", correct: false },
+          { textDe: "→(−3, 0) = 3 rechts, 0 oben · und · →(−1, −5) = 1 links, 5 oben", textEs: "→(−3, 0) = 3 derecha, 0 arriba · y · →(−1, −5) = 1 izquierda, 5 arriba", correct: false },
+          { textDe: "Man bleibt bei beiden Vektoren einfach stehen", textEs: "En ambos vectores te quedas en el mismo lugar", correct: false }
+        ],
+        explanationDe: "Genau wie in deinem Heft: →(−3, 0) heißt „3 links, 0 oben“ und →(−1, −5) heißt „1 links, 5 unten“!",
+        explanationEs: "¡Tal cual como en tu cuaderno!: →(−3, 0) es «3 links, 0 oben» y →(−1, −5) es «1 links, 5 unten»."
+      },
+      {
+        id: "m13_ks_5",
+        world: "koordinaten",
+        topicDe: "Punkt + Vektor · Mittwoch, 11. Nov (S. 8 a, d, g)",
+        questionDe: "Rechne wie in der Übung vom Mittwoch, 11. November (S. 8): Du startest beim Punkt (8 | 10) und gehst mit dem Vektor →(1 | −2). Und bei g) startest du bei (6 | 5) mit dem Vektor →(−1 | 2). Wo landest du?",
+        questionEs: "Calcula como en el ejercicio del miércoles 11 de noviembre (pág. 8): Partes en el punto (8 | 10) con el vector →(1 | −2). Y en g) partes en (6 | 5) con el vector →(−1 | 2). ¿A qué puntos llegas?",
+        hintDe: "Rechne x + Vektor_x und y + Vektor_y: (8+1 | 10−2) und (6−1 | 5+2)!",
+        hintEs: "Suma coordenada a coordenada: (8+1 | 10−2) y (6−1 | 5+2).",
+        svgSpec: {
+          type: "coord_grid",
+          maxX: 11,
+          maxY: 11,
+          points: [
+            { label: "Start (8|10)", x: 8, y: 10, color: "#0f172a" },
+            { label: "Ziel (9|8)", x: 9, y: 8, color: "#16a34a" }
+          ],
+          vector: { x1: 8, y1: 10, x2: 9, y2: 8, labelDe: "→(1 | −2)" }
+        },
+        options: [
+          { textDe: "Bei d) landet man auf (9 | 8) und bei g) landet man auf (5 | 7)", textEs: "En d) llegas a (9 | 8) y en g) llegas a (5 | 7)", correct: true },
+          { textDe: "Bei d) landet man auf (7 | 12) und bei g) auf (7 | 3)", textEs: "En d) llegas a (7 | 12) y en g) a (7 | 3)", correct: false },
+          { textDe: "Bei d) landet man auf (9 | 12) und bei g) auf (5 | 3)", textEs: "En d) llegas a (9 | 12) y en g) a (5 | 3)", correct: false },
+          { textDe: "Bei beiden landet man auf (0 | 0)", textEs: "En ambos llegas a (0 | 0)", correct: false }
+        ],
+        explanationDe: "Klasse! Bei d): 8 + 1 = 9 (1 rechts) und 10 − 2 = 8 (2 unten) → (9 | 8). Und bei g): 6 − 1 = 5 (1 links) und 5 + 2 = 7 (2 oben) → (5 | 7)!",
+        explanationEs: "¡Genial! En d): 8 + 1 = 9 y 10 − 2 = 8 → (9 | 8). Y en g): 6 − 1 = 5 y 5 + 2 = 7 → (5 | 7)."
+      },
+      {
+        id: "m13_ks_6",
+        world: "koordinaten",
+        topicDe: "Fehlenden Vektor finden · Falle von S. 8 Aufgabe e!",
+        questionDe: "Aufgepasst bei Aufgabe e) vom 11. November (S. 8): Du startest beim Punkt (5 | 8) und willst zum Zielpunkt (9 | 8). Welcher Vektor bringt dich von (5 | 8) nach (9 | 8)?",
+        questionEs: "¡Ojo con el ejercicio e) del 11 de noviembre (pág. 8)! Partes en el punto (5 | 8) y llegas al punto final (9 | 8). ¿Qué vector te lleva desde (5 | 8) hasta (9 | 8)?",
+        hintDe: "Von x = 5 bis x = 9 geht man nach RECHTS (+4, nicht −4!) und die Höhe y bleibt bei 8 (0 oben)!",
+        hintEs: "En la pág. 8 habías puesto (−4|0), pero para ir del 5 al 9 vas 4 hacia la DERECHA (+4) y 0 arriba.",
+        svgSpec: {
+          type: "coord_grid",
+          maxX: 11,
+          maxY: 10,
+          points: [
+            { label: "Start (5|8)", x: 5, y: 8, color: "#0f172a" },
+            { label: "Ziel (9|8)", x: 9, y: 8, color: "#dc2626" }
+          ],
+          vector: { x1: 5, y1: 8, x2: 9, y2: 8, labelDe: "Von 5 nach 9 = +4 rechts!" }
+        },
+        options: [
+          { textDe: "Vektor →(4 | 0) — denn von 5 nach 9 geht man 4 nach RECHTS (+4) und 0 nach oben!", textEs: "Vector →(4 | 0) — ¡porque de 5 a 9 vas 4 a la DERECHA (+4) y 0 arriba!", correct: true },
+          { textDe: "Vektor →(−4 | 0) — 4 nach links", textEs: "Vector →(−4 | 0) — 4 a la izquierda", correct: false },
+          { textDe: "Vektor →(0 | 4) — 4 nach oben", textEs: "Vector →(0 | 4) — 4 hacia arriba", correct: false },
+          { textDe: "Vektor →(14 | 16)", textEs: "Vector →(14 | 16)", correct: false }
+        ],
+        explanationDe: "Wichtiger Check für morgen: Von (5 | 8) nach (9 | 8) wird x größer (5 + 4 = 9, also 4 nach rechts = +4). Darum ist der Vektor →(4 | 0) ohne Minus! (Nur umgekehrt von 9 zurück nach 5 wäre es −4).",
+        explanationEs: "¡Corrección súper útil para mañana! Para ir de (5 | 8) a (9 | 8) avanzas hacia la derecha (5 + 4 = 9), así que el vector es positivo →(4 | 0)."
+      },
+      {
+        id: "m13_ks_7",
+        world: "koordinaten",
+        topicDe: "Vierecke im Koordinatensystem · S. 10 Aufgabe 1",
+        questionDe: "Auf Seite 10 Aufgabe 1 verbindest du die 4 Punkte A(2|1), B(4|3), C(2|5) und D(0|3). Die Figur steht auf der Spitze, hat 4 gleich lange Seiten UND 4 rechte Winkel (90° ⦜). Welches Viereck ist es?",
+        questionEs: "En la página 10 ejercicio 1 unes los 4 puntos A(2|1), B(4|3), C(2|5) y D(0|3). La figura queda apoyada en una punta, tiene 4 lados iguales Y 4 ángulos rectos (90° ⦜). ¿Qué cuadrilátero es?",
+        hintDe: "Schau auf deine Karte „Viereck 1“ auf Seite 10: „Ich bin ein ...“",
+        hintEs: "Mira tu tarjeta «Viereck 1» en la página 10: aunque esté en punta, sus ángulos miden 90°.",
+        svgSpec: {
+          type: "coord_grid",
+          maxX: 6,
+          maxY: 6,
+          polygon: [
+            { label: "A(2|1)", x: 2, y: 1 },
+            { label: "B(4|3)", x: 4, y: 3 },
+            { label: "C(2|5)", x: 2, y: 5 },
+            { label: "D(0|3)", x: 0, y: 3 }
+          ],
+          polyColor: "#16a34a"
+        },
+        options: [
+          { textDe: "Ein Quadrat (gedrehtes Quadrat mit 4 rechten Winkeln und 4 Symmetrieachsen)!", textEs: "¡Un Quadrat (cuadrado girado con 4 ángulos rectos y 4 ejes de simetría)!", correct: true },
+          { textDe: "Ein Trapez (nur 1 Paar parallele Seiten)", textEs: "Un Trapez (solo 1 par de lados paralelos)", correct: false },
+          { textDe: "Ein rechtwinkliges Dreieck", textEs: "Un triángulo rectángulo", correct: false },
+          { textDe: "Ein allgemeines Trapezoid ohne Symmetrieachse", textEs: "Un trapezoide sin ejes de simetría", correct: false }
+        ],
+        explanationDe: "Genau wie du auf Seite 10 bei „Viereck 1“ eingetragen hast: Obwohl es auf der Spitze steht, treffen sich die Diagonalen und Seiten im 90°-Winkel und alle 4 Seiten sind gleich lang → Ich bin ein Quadrat!",
+        explanationEs: "¡Tal como escribiste en «Viereck 1» de la página 10! Aunque esté apoyado en una esquina, sus 4 lados son iguales y sus 4 ángulos miden 90° → ¡Quadrat!"
+      },
+      {
+        id: "m13_ks_8",
+        world: "koordinaten",
+        topicDe: "4. Eckpunkt ergänzen · S. 10 Aufgabe 2b (Quadrat)",
+        questionDe: "Auf Seite 10 Aufgabe 2b sollst du ein QUADRAT EFGH fertig zeichnen. Gegeben sind 3 Eckpunkte: E(2 | 7), F(1 | 6) und G(2 | 5). Welche Koordinaten hat der fehlende 4. Eckpunkt H?",
+        questionEs: "En la página 10 ejercicio 2b debes completar un QUADRAT (cuadrado) EFGH. Te dan 3 vértices: E(2 | 7), F(1 | 6) y G(2 | 5). ¿Qué coordenadas tiene el 4° vértice H que falta?",
+        hintDe: "F(1|6) liegt um 1 links von der Mitte (2|6). Wo muss H auf der rechten Seite liegen?",
+        hintEs: "F(1|6) está 1 unidad a la izquierda del centro (2|6). ¿Dónde debe estar H a la derecha?",
+        svgSpec: {
+          type: "coord_grid",
+          maxX: 6,
+          maxY: 9,
+          polygon: [
+            { label: "E(2|7)", x: 2, y: 7 },
+            { label: "F(1|6)", x: 1, y: 6 },
+            { label: "G(2|5)", x: 2, y: 5 },
+            { label: "H(?|?)", x: 3, y: 6, isMissing: true }
+          ],
+          polyColor: "#0284c7"
+        },
+        options: [
+          { textDe: "H (3 | 6)", textEs: "H (3 | 6)", correct: true },
+          { textDe: "H (6 | 3)", textEs: "H (6 | 3)", correct: false },
+          { textDe: "H (4 | 7)", textEs: "H (4 | 7)", correct: false },
+          { textDe: "H (2 | 6)", textEs: "H (2 | 6)", correct: false }
+        ],
+        explanationDe: "Perfekt! E(2|7) ist oben, G(2|5) ist unten, F(1|6) ist links — also liegt der 4. Eckpunkt H genau gegenüber auf der rechten Seite bei H(3 | 6)!",
+        explanationEs: "¡Perfecto! E(2|7) está arriba, G(2|5) abajo y F(1|6) a la izquierda, por lo que el 4° vértice H está justo al frente a la derecha en H(3 | 6)."
+      },
+      {
+        id: "m13_ks_9",
+        world: "koordinaten",
+        topicDe: "4. Eckpunkt ergänzen · S. 10 Aufgabe 2a (Drachen)",
+        questionDe: "Auf Seite 10 Aufgabe 2a soll ein DRACHEN ABCD entstehen. Gegeben sind A(0 | 2), B(1,5 | 1) und C(5 | 2). Die Linie von A(0|2) nach C(5|2) auf der Höhe y = 2 ist die Symmetrieachse! Wo liegt der 4. Eckpunkt D?",
+        questionEs: "En la página 10 ejercicio 2a debes formar un DRACHEN (cometa) ABCD. Te dan A(0 | 2), B(1,5 | 1) y C(5 | 2). La línea horizontal entre A(0|2) y C(5|2) en y = 2 es el eje de simetría. ¿Dónde está el 4° vértice D?",
+        hintDe: "B(1,5 | 1) liegt 1 Einheit UNTER der Achse y = 2. Also muss D genau 1 Einheit ÜBER der Achse liegen!",
+        hintEs: "B(1,5 | 1) está 1 unidad DEBAJO del eje y = 2. ¡Entonces D debe estar 1 unidad ARRIBA del eje!",
+        svgSpec: {
+          type: "coord_grid",
+          maxX: 6,
+          maxY: 5,
+          polygon: [
+            { label: "A(0|2)", x: 0, y: 2 },
+            { label: "B(1,5|1)", x: 1.5, y: 1 },
+            { label: "C(5|2)", x: 5, y: 2 },
+            { label: "D(?|?)", x: 1.5, y: 3, isMissing: true }
+          ],
+          polyColor: "#9333ea"
+        },
+        options: [
+          { textDe: "D (1,5 | 3)", textEs: "D (1,5 | 3)", correct: true },
+          { textDe: "D (3 | 1,5)", textEs: "D (3 | 1,5)", correct: false },
+          { textDe: "D (5 | 4)", textEs: "D (5 | 4)", correct: false },
+          { textDe: "D (1,5 | 0)", textEs: "D (1,5 | 0)", correct: false }
+        ],
+        explanationDe: "Spitzenmäßig! Da die Symmetrieachse des Drachens auf y = 2 verläuft und B bei (1,5 | 1) liegt (1 nach unten), liegt der Spiegelpunkt D genau 1 nach oben bei D(1,5 | 3)!",
+        explanationEs: "¡Brillante! Como el eje de simetría del Drachen está en la altura y = 2 y B está en (1,5 | 1), el vértice simétrico D queda arriba en D(1,5 | 3)."
+      },
+      {
+        id: "m13_ks_10",
+        world: "koordinaten",
+        topicDe: "Spiegelung an der Geraden g · S. 9 Aufgabe 1b",
+        questionDe: "Auf Seite 9 Aufgabe 1b spiegelst du die Raute ABCD an der schrägen Spiegelgeraden g. Der Eckpunkt C(4 | 5) liegt GENAU AUF der Spiegelgeraden g, und D(2 | 6) liegt 1 Diagonalkästchen links darunter. Wo liegen die Bildpunkte C' und D'?",
+        questionEs: "En la página 9 ejercicio 1b reflejas el rombo ABCD respecto a la recta de simetría inclinada g. El vértice C(4 | 5) está JUSTO SOBRE la recta g, y D(2 | 6) está a 1 diagonal de distancia. ¿Dónde quedan los puntos reflejados C' y D'?",
+        hintDe: "Ein Punkt, der genau auf dem Spiegel g liegt, bewegt sich beim Spiegeln keinen Millimeter!",
+        hintEs: "Un punto que está justo encima del espejo g ¡queda exactamente en el mismo lugar al reflejarse!",
+        svgSpec: {
+          type: "coord_mirror_s9"
+        },
+        options: [
+          { textDe: "C' bleibt genau auf (4 | 5) und D(2 | 6) wird senkrecht über g zu D'(3 | 7) gespiegelt!", textEs: "¡C' se queda en (4 | 5) y D(2 | 6) se refleja al otro lado de g en D'(3 | 7)!", correct: true },
+          { textDe: "C' wandert zu (0 | 0) und D' bleibt bei (2 | 6)", textEs: "C' se va a (0 | 0) y D' se queda en (2 | 6)", correct: false },
+          { textDe: "C' liegt bei (5 | 4) und D' bei (6 | 2)", textEs: "C' queda en (5 | 4) y D' en (6 | 2)", correct: false },
+          { textDe: "Alle Bildpunkte verschwinden beim Spiegeln", textEs: "Todos los puntos desaparecen al reflejarse", correct: false }
+        ],
+        explanationDe: "Geniale Beobachtung für Seite 9: Da C(4|5) direkt auf der Geraden g liegt, gilt C' = (4|5)! Und von D(2|6) geht man im 90°-Winkel zur Achse g (durch (2,5|6,5)) genauso weit auf die andere Seite zu D'(3|7) (sowie A(0|5) → A'(4|9) und B(2|4) → B'(5|7))!",
+        explanationEs: "¡Gran observación para la página 9! Como C(4|5) está sobre la recta g, su reflejo es el mismo C'(4|5). Y al reflejar perpendicularmente respecto a g: D(2|6) → D'(3|7), A(0|5) → A'(4|9) y B(2|4) → B'(5|7)."
+      },
+      {
+        id: "m13_ks_11",
+        world: "koordinaten",
+        topicDe: "4. Eckpunkt ergänzen · S. 10 Aufgabe 2c & 2d",
+        questionDe: "Auf Seite 10 Aufgabe 2d soll eine RAUTE MNOP entstehen mit M(6,5 | 2,5), N(8 | 0,5) und O(9,5 | 2,5). Wo liegt der obere 4. Eckpunkt P?",
+        questionEs: "En la página 10 ejercicio 2d debes completar una RAUTE (rombo) MNOP con M(6,5 | 2,5), N(8 | 0,5) y O(9,5 | 2,5). ¿Dónde queda el 4° vértice superior P?",
+        hintDe: "Die Mitte liegt auf Höhe y = 2,5 bei x = 8. N(8 | 0,5) geht 2 nach unten → also geht P um 2 nach oben!",
+        hintEs: "El centro está en (8 | 2,5). Como N(8 | 0,5) baja 2 unidades, P sube 2 unidades desde 2,5.",
+        svgSpec: {
+          type: "coord_grid",
+          maxX: 11,
+          maxY: 6,
+          polygon: [
+            { label: "M(6,5|2,5)", x: 6.5, y: 2.5 },
+            { label: "N(8|0,5)", x: 8, y: 0.5 },
+            { label: "O(9,5|2,5)", x: 9.5, y: 2.5 },
+            { label: "P(?|?)", x: 8, y: 4.5, isMissing: true }
+          ],
+          polyColor: "#eab308"
+        },
+        options: [
+          { textDe: "P (8 | 4,5)", textEs: "P (8 | 4,5)", correct: true },
+          { textDe: "P (4,5 | 8)", textEs: "P (4,5 | 8)", correct: false },
+          { textDe: "P (8 | 3,5)", textEs: "P (8 | 3,5)", correct: false },
+          { textDe: "P (9,5 | 4,5)", textEs: "P (9,5 | 4,5)", correct: false }
+        ],
+        explanationDe: "Richtig! M und O liegen auf y = 2,5. N(8 | 0,5) liegt 2 Einheiten darunter, also liegt P genau 2 Einheiten darüber bei P(8 | 4,5)!",
+        explanationEs: "¡Correcto! M y O están en y = 2,5. Como N(8 | 0,5) está 2 unidades más abajo, P queda 2 unidades más arriba en P(8 | 4,5)."
+      }
+    ]
   }
 };

@@ -41,7 +41,18 @@
     npItems: [],
     npErrorIds: new Set(),
     npOnlyErrors: false,
-    npHistory: []
+    npHistory: [],
+
+    // Tab 7: Mika-Arena (Probe 13. November)
+    mikaView: "arcade", // "arcade" | "list" | "spickzettel"
+    mikaWorld: "all",
+    mikaItems: [],
+    mikaIndex: 0,
+    mikaCombo: 0,
+    mikaSolvedSet: new Set(),
+    mikaErrorIds: new Set(),
+    mikaOnlyErrors: false,
+    mikaSoundOn: true
   };
 
   // =========================================================================
@@ -151,6 +162,11 @@
           panel.classList.toggle("active", isMatch);
           panel.hidden = !isMatch;
         });
+        try {
+          btn.scrollIntoView({ block: "nearest", inline: "nearest", container: "nearest" });
+        } catch (_) {
+          btn.scrollIntoView({ block: "nearest", inline: "nearest" });
+        }
       });
     });
 
@@ -2454,6 +2470,1427 @@
   }
 
   // =========================================================================
+  // TAB 7: MIKA-ARENA — PROBE FREITAG, 13. NOVEMBER
+  // (Polygone, Dreiecke, Vierecke, Symmetrie, Koordinatensystem & Vektoren)
+  // =========================================================================
+  let mikaAudioCtx = null;
+
+  function playMikaChime(type) {
+    if (!state.mikaSoundOn) return;
+    try {
+      const AudioContextClass = window.AudioContext || window.webkitAudioContext;
+      if (!AudioContextClass) return;
+      if (!mikaAudioCtx) mikaAudioCtx = new AudioContextClass();
+      if (mikaAudioCtx.state === "suspended") mikaAudioCtx.resume();
+
+      const now = mikaAudioCtx.currentTime;
+      if (type === "ok") {
+        // Alegre acorde ascendente (Do - Mi - Sol)
+        [523.25, 659.25, 783.99].forEach((freq, idx) => {
+          const osc = mikaAudioCtx.createOscillator();
+          const gain = mikaAudioCtx.createGain();
+          osc.type = "triangle";
+          osc.frequency.setValueAtTime(freq, now + idx * 0.065);
+          gain.gain.setValueAtTime(0.11, now + idx * 0.065);
+          gain.gain.exponentialRampToValueAtTime(0.001, now + idx * 0.065 + 0.22);
+          osc.connect(gain);
+          gain.connect(mikaAudioCtx.destination);
+          osc.start(now + idx * 0.065);
+          osc.stop(now + idx * 0.065 + 0.23);
+        });
+      } else if (type === "err") {
+        // Suave tono grave de aviso
+        const osc = mikaAudioCtx.createOscillator();
+        const gain = mikaAudioCtx.createGain();
+        osc.type = "sine";
+        osc.frequency.setValueAtTime(240, now);
+        osc.frequency.linearRampToValueAtTime(185, now + 0.2);
+        gain.gain.setValueAtTime(0.1, now);
+        gain.gain.exponentialRampToValueAtTime(0.001, now + 0.22);
+        osc.connect(gain);
+        gain.connect(mikaAudioCtx.destination);
+        osc.start(now);
+        osc.stop(now + 0.23);
+      }
+    } catch (_) {
+      // Ignorar si el navegador bloquea AudioContext
+    }
+  }
+
+  function triggerMikaConfetti() {
+    const layer = document.getElementById("mika-confetti-layer");
+    if (!layer) return;
+    layer.innerHTML = "";
+    const colors = ["#ec4899", "#8b5cf6", "#0284c7", "#16a34a", "#eab308", "#f97316"];
+    for (let i = 0; i < 18; i += 1) {
+      const dot = document.createElement("span");
+      dot.className = "mika-confetti-dot";
+      dot.style.left = `${20 + Math.random() * 60}%`;
+      dot.style.top = `${25 + Math.random() * 40}%`;
+      dot.style.backgroundColor = colors[i % colors.length];
+      const dx = Math.round((Math.random() - 0.5) * 220);
+      const dy = Math.round(-40 - Math.random() * 120);
+      dot.style.setProperty("--dx", `${dx}px`);
+      dot.style.setProperty("--dy", `${dy}px`);
+      layer.appendChild(dot);
+    }
+  }
+
+  function updateMikaHeroStats() {
+    const solved = state.mikaSolvedSet.size;
+    const comboEl = document.getElementById("mika-combo-val");
+    const starsEl = document.getElementById("mika-stars-val");
+    const rankEl = document.getElementById("mika-rank-badge");
+
+    if (comboEl) comboEl.textContent = `${state.mikaCombo}x`;
+    if (starsEl) starsEl.textContent = `${solved} / 38`;
+
+    if (rankEl) {
+      if (solved >= 32) {
+        rankEl.textContent = "👑 Rang 5: Geometrie-Königin (Note 7,0!)";
+      } else if (solved >= 22) {
+        rankEl.textContent = "🧭 Rang 4: Koordinaten- & Vektor-Pilotin";
+      } else if (solved >= 12) {
+        rankEl.textContent = "💎 Rang 3: Vierecks-Meisterin";
+      } else if (solved >= 5) {
+        rankEl.textContent = "📐 Rang 2: Dreiecks-Detektivin";
+      } else {
+        rankEl.textContent = "🐣 Rang 1: Ecken-Entdeckerin";
+      }
+    }
+  }
+
+  // Helper para dibujar rayitas de lados iguales (|, ||, |||) sobre un segmento (x1,y1)-(x2,y2)
+  function svgTickMarks(x1, y1, x2, y2, count, color = "#0f172a") {
+    const mx = (x1 + x2) / 2;
+    const my = (y1 + y2) / 2;
+    const dx = x2 - x1;
+    const dy = y2 - y1;
+    const len = Math.hypot(dx, dy) || 1;
+    const ux = dx / len;
+    const uy = dy / len;
+    const nx = -uy;
+    const ny = ux;
+    const spacing = 5;
+    const halfTick = 6.5;
+    let out = "";
+    for (let i = 0; i < count; i += 1) {
+      const offset = (i - (count - 1) / 2) * spacing;
+      const cx = mx + ux * offset;
+      const cy = my + uy * offset;
+      out += `<line x1="${(cx - nx * halfTick).toFixed(1)}" y1="${(cy - ny * halfTick).toFixed(1)}" x2="${(cx + nx * halfTick).toFixed(1)}" y2="${(cy + ny * halfTick).toFixed(1)}" stroke="${color}" stroke-width="2.4" stroke-linecap="round"/>`;
+    }
+    return out;
+  }
+
+  // Helper para dibujar flechitas de lados paralelos (>, >>) sobre un segmento
+  function svgParallelArrows(x1, y1, x2, y2, count, color = "#dc2626") {
+    const mx = (x1 + x2) / 2;
+    const my = (y1 + y2) / 2;
+    const dx = x2 - x1;
+    const dy = y2 - y1;
+    const len = Math.hypot(dx, dy) || 1;
+    const ux = dx / len;
+    const uy = dy / len;
+    const nx = -uy;
+    const ny = ux;
+    const spacing = 7;
+    const size = 6;
+    let out = "";
+    for (let i = 0; i < count; i += 1) {
+      const offset = (i - (count - 1) / 2) * spacing;
+      const tipX = mx + ux * (offset + size * 0.5);
+      const tipY = my + uy * (offset + size * 0.5);
+      const w1x = tipX - ux * size + nx * (size * 0.75);
+      const w1y = tipY - uy * size + ny * (size * 0.75);
+      const w2x = tipX - ux * size - nx * (size * 0.75);
+      const w2y = tipY - uy * size - ny * (size * 0.75);
+      out += `<polyline points="${w1x.toFixed(1)},${w1y.toFixed(1)} ${tipX.toFixed(1)},${tipY.toFixed(1)} ${w2x.toFixed(1)},${w2y.toFixed(1)}" fill="none" stroke="${color}" stroke-width="2.3" stroke-linecap="round" stroke-linejoin="round"/>`;
+    }
+    return out;
+  }
+
+  // Renderizador SVG completo para la pestaña 7 (Mika-Arena 13. Nov)
+  function buildMikaNov13Svg(spec) {
+    if (!spec) return "";
+
+    switch (spec.type) {
+      // 1. POLÍGONOS REGULARES (3 a 20 lados)
+      case "polygon_regular": {
+        const n = spec.sides || 6;
+        const stroke = spec.color || "#0284c7";
+        const fill = spec.fill || "#e0f2fe";
+        const cx = 170;
+        const cy = 96;
+        const r = 64;
+        const pts = [];
+        for (let i = 0; i < n; i += 1) {
+          const ang = -Math.PI / 2 + (i * 2 * Math.PI) / n;
+          pts.push({
+            x: cx + r * Math.cos(ang),
+            y: cy + r * Math.sin(ang),
+            lx: cx + (r + 17) * Math.cos(ang),
+            ly: cy + (r + 17) * Math.sin(ang)
+          });
+        }
+        const polyPoints = pts.map((p) => `${p.x.toFixed(1)},${p.y.toFixed(1)}`).join(" ");
+        const dotsHtml = pts
+          .map((p, idx) => {
+            const showNum = n <= 10 || idx % 2 === 0;
+            return `<circle cx="${p.x.toFixed(1)}" cy="${p.y.toFixed(1)}" r="${n > 12 ? 3 : 4.5}" fill="#0f172a"/>
+              ${
+                showNum
+                  ? `<text x="${p.lx.toFixed(1)}" y="${(p.ly + 4).toFixed(1)}" text-anchor="middle" font-size="${n > 10 ? 9.5 : 11.5}" font-weight="900" fill="#334155">${idx + 1}</text>`
+                  : ""
+              }`;
+          })
+          .join("");
+
+        return `<svg viewBox="0 0 340 198" aria-label="Polygon mit ${n} Ecken">
+          <rect x="2" y="2" width="336" height="194" rx="12" fill="#ffffff" stroke="#e2e8f0"/>
+          <polygon points="${polyPoints}" fill="${fill}" stroke="${stroke}" stroke-width="3.5" stroke-linejoin="round"/>
+          ${dotsHtml}
+          <rect x="118" y="80" width="104" height="32" rx="8" fill="rgba(255,255,255,0.92)" stroke="${stroke}" stroke-width="1.5"/>
+          <text x="170" y="100" text-anchor="middle" font-size="13.5" font-weight="900" fill="#0f172a">${spec.labelCenter || n + " Ecken"}</text>
+          <text x="170" y="186" text-anchor="middle" font-size="11.5" font-weight="800" fill="#475569">Ecken = Seiten = Winkel</text>
+        </svg>`;
+      }
+
+      // 2. LINEUP S. 11: WELCHE FIGUR IST EIN VIERECK?
+      case "not_a_viereck_lineup":
+        return `<svg viewBox="0 0 350 185" aria-label="Vier Figuren A, B, C und D zum Vergleichen">
+          <rect x="2" y="2" width="346" height="181" rx="12" fill="#ffffff" stroke="#e2e8f0"/>
+          <!-- A: Fünfeck -->
+          <rect x="10" y="14" width="76" height="154" rx="8" fill="#f8fafc" stroke="#cbd5e1"/>
+          <text x="48" y="32" text-anchor="middle" font-size="13" font-weight="900" fill="#334155">Figur A</text>
+          <polygon points="48,52 74,72 64,108 32,108 22,72" fill="#94a3b8" stroke="#1e293b" stroke-width="2.5"/>
+          <text x="48" y="142" text-anchor="middle" font-size="10.5" font-weight="800" fill="#64748b">5 Ecken</text>
+
+          <!-- B: Offene Linie -->
+          <rect x="94" y="14" width="76" height="154" rx="8" fill="#f8fafc" stroke="#cbd5e1"/>
+          <text x="132" y="32" text-anchor="middle" font-size="13" font-weight="900" fill="#334155">Figur B</text>
+          <polyline points="154,60 108,60 108,108 156,108" fill="none" stroke="#1e293b" stroke-width="3"/>
+          <text x="132" y="142" text-anchor="middle" font-size="10.5" font-weight="800" fill="#dc2626">Offen!</text>
+
+          <!-- C: Rundbogen -->
+          <rect x="178" y="14" width="76" height="154" rx="8" fill="#f8fafc" stroke="#cbd5e1"/>
+          <text x="216" y="32" text-anchor="middle" font-size="13" font-weight="900" fill="#334155">Figur C</text>
+          <path d="M 192 108 L 192 76 A 24 24 0 0 1 240 76 L 240 108 Z" fill="#cbd5e1" stroke="#1e293b" stroke-width="2.5"/>
+          <text x="216" y="142" text-anchor="middle" font-size="10.5" font-weight="800" fill="#dc2626">Mit Kurve!</text>
+
+          <!-- D: Echtes Viereck (gedrehtes Quadrat) -->
+          <rect x="262" y="14" width="78" height="154" rx="8" fill="#f0fdf4" stroke="#86efac" stroke-width="2"/>
+          <text x="301" y="32" text-anchor="middle" font-size="13" font-weight="900" fill="#166534">Figur D</text>
+          <polygon points="301,52 329,80 301,108 273,80" fill="#86efac" stroke="#15803d" stroke-width="2.8"/>
+          <text x="301" y="142" text-anchor="middle" font-size="10.5" font-weight="900" fill="#15803d">4 gerade Seiten</text>
+        </svg>`;
+
+      // 3. DREIECKE NACH SEITEN & WINKELN (S. 2, 3, 17, 18)
+      case "triangle_classified": {
+        const kind = spec.kind || "equilateral";
+        if (kind === "equilateral") {
+          const p1 = { x: 170, y: 26 };
+          const p2 = { x: 102, y: 144 };
+          const p3 = { x: 238, y: 144 };
+          return `<svg viewBox="0 0 340 185" aria-label="Gleichseitiges spitzwinkliges Dreieck">
+            <rect x="2" y="2" width="336" height="181" rx="12" fill="#ffffff" stroke="#e2e8f0"/>
+            <polygon points="${p1.x},${p1.y} ${p2.x},${p2.y} ${p3.x},${p3.y}" fill="#dcfce7" stroke="#15803d" stroke-width="3.2" stroke-linejoin="round"/>
+            ${svgTickMarks(p1.x, p1.y, p2.x, p2.y, 1, "#15803d")}
+            ${svgTickMarks(p2.x, p2.y, p3.x, p3.y, 1, "#15803d")}
+            ${svgTickMarks(p3.x, p3.y, p1.x, p1.y, 1, "#15803d")}
+            <text x="170" y="54" text-anchor="middle" font-size="11.5" font-weight="900" fill="#166534">s (60°)</text>
+            <text x="124" y="136" text-anchor="middle" font-size="11.5" font-weight="900" fill="#166534">s</text>
+            <text x="216" y="136" text-anchor="middle" font-size="11.5" font-weight="900" fill="#166534">s</text>
+            <text x="170" y="172" text-anchor="middle" font-size="12" font-weight="800" fill="#334155">Alle 3 Seiten gleich lang (|) · 3 spitze Winkel</text>
+          </svg>`;
+        }
+        if (kind === "isosceles_acute") {
+          const p1 = { x: 170, y: 20 };
+          const p2 = { x: 122, y: 148 };
+          const p3 = { x: 218, y: 148 };
+          return `<svg viewBox="0 0 340 185" aria-label="Gleichschenkliges spitzwinkliges Dreieck">
+            <rect x="2" y="2" width="336" height="181" rx="12" fill="#ffffff" stroke="#e2e8f0"/>
+            <polygon points="${p1.x},${p1.y} ${p2.x},${p2.y} ${p3.x},${p3.y}" fill="#e0f2fe" stroke="#0284c7" stroke-width="3.2" stroke-linejoin="round"/>
+            ${svgTickMarks(p1.x, p1.y, p2.x, p2.y, 1, "#0369a1")}
+            ${svgTickMarks(p3.x, p3.y, p1.x, p1.y, 1, "#0369a1")}
+            ${svgTickMarks(p2.x, p2.y, p3.x, p3.y, 2, "#dc2626")}
+            <text x="170" y="172" text-anchor="middle" font-size="12" font-weight="800" fill="#334155">2 Schenkel gleich lang (|) · Basis anders (||)</text>
+          </svg>`;
+        }
+        if (kind === "isosceles_obtuse") {
+          const p1 = { x: 170, y: 52 };
+          const p2 = { x: 64, y: 136 };
+          const p3 = { x: 276, y: 136 };
+          return `<svg viewBox="0 0 340 185" aria-label="Stumpfwinkliges gleichschenkliges Dreieck">
+            <rect x="2" y="2" width="336" height="181" rx="12" fill="#ffffff" stroke="#e2e8f0"/>
+            <polygon points="${p1.x},${p1.y} ${p2.x},${p2.y} ${p3.x},${p3.y}" fill="#fef3c7" stroke="#d97706" stroke-width="3.2" stroke-linejoin="round"/>
+            <path d="M 145 72 A 32 32 0 0 0 195 72" fill="rgba(220,38,38,0.2)" stroke="#dc2626" stroke-width="2.5"/>
+            <text x="170" y="42" text-anchor="middle" font-size="13" font-weight="900" fill="#dc2626">st (&gt; 90° stumpf!)</text>
+            ${svgTickMarks(p1.x, p1.y, p2.x, p2.y, 1, "#b45309")}
+            ${svgTickMarks(p3.x, p3.y, p1.x, p1.y, 1, "#b45309")}
+            ${svgTickMarks(p2.x, p2.y, p3.x, p3.y, 2, "#0f172a")}
+            <text x="170" y="172" text-anchor="middle" font-size="12" font-weight="800" fill="#334155">Oben 1 stumpfer Winkel (&gt; 90°) · 2 Seiten gleich lang</text>
+          </svg>`;
+        }
+        if (kind === "isosceles_right") {
+          const p1 = { x: 170, y: 40 };
+          const p2 = { x: 75, y: 135 };
+          const p3 = { x: 265, y: 135 };
+          return `<svg viewBox="0 0 340 185" aria-label="Rechtwinklig-gleichschenkliges Dreieck">
+            <rect x="2" y="2" width="336" height="181" rx="12" fill="#ffffff" stroke="#e2e8f0"/>
+            <polygon points="${p1.x},${p1.y} ${p2.x},${p2.y} ${p3.x},${p3.y}" fill="#ede9fe" stroke="#7c3aed" stroke-width="3.2" stroke-linejoin="round"/>
+            <!-- Cuadradito de 90° rotado en la cima (170,40) -->
+            <polygon points="170,40 156,54 170,68 184,54" fill="#dbeafe" stroke="#1d4ed8" stroke-width="2"/>
+            <circle cx="170" cy="54" r="2.2" fill="#1e40af"/>
+            <text x="170" y="26" text-anchor="middle" font-size="12.5" font-weight="900" fill="#1d4ed8">90° (Rechter Winkel ⦜)</text>
+            ${svgTickMarks(p1.x, p1.y, p2.x, p2.y, 1, "#6d28d9")}
+            ${svgTickMarks(p3.x, p3.y, p1.x, p1.y, 1, "#6d28d9")}
+            ${svgTickMarks(p2.x, p2.y, p3.x, p3.y, 2, "#0f172a")}
+            <text x="170" y="172" text-anchor="middle" font-size="12" font-weight="800" fill="#334155">1 rechter Winkel (90°) + 2 gleich lange Seiten (|)</text>
+          </svg>`;
+        }
+        if (kind === "scalene_right") {
+          const p1 = { x: 86, y: 34 };
+          const p2 = { x: 86, y: 138 };
+          const p3 = { x: 264, y: 138 };
+          return `<svg viewBox="0 0 340 185" aria-label="Rechtwinklig-ungleichseitiges Dreieck">
+            <rect x="2" y="2" width="336" height="181" rx="12" fill="#ffffff" stroke="#e2e8f0"/>
+            <polygon points="${p1.x},${p1.y} ${p2.x},${p2.y} ${p3.x},${p3.y}" fill="#f0f9ff" stroke="#0284c7" stroke-width="3.2" stroke-linejoin="round"/>
+            <rect x="86" y="116" width="22" height="22" fill="#dbeafe" stroke="#1d4ed8" stroke-width="2"/>
+            <circle cx="97" cy="127" r="2.2" fill="#1e40af"/>
+            ${svgTickMarks(p1.x, p1.y, p2.x, p2.y, 1, "#0f172a")}
+            ${svgTickMarks(p2.x, p2.y, p3.x, p3.y, 2, "#0f172a")}
+            ${svgTickMarks(p3.x, p3.y, p1.x, p1.y, 3, "#dc2626")}
+            <text x="170" y="172" text-anchor="middle" font-size="12" font-weight="800" fill="#334155">1 rechter Winkel (90° ⦜) + 3 verschiedene Seiten (|, ||, |||)</text>
+          </svg>`;
+        }
+        // Default: scalene_acute
+        const p1 = { x: 145, y: 28 };
+        const p2 = { x: 74, y: 142 };
+        const p3 = { x: 266, y: 142 };
+        return `<svg viewBox="0 0 340 185" aria-label="Allgemeines ungleichseitiges Dreieck">
+          <rect x="2" y="2" width="336" height="181" rx="12" fill="#ffffff" stroke="#e2e8f0"/>
+          <polygon points="${p1.x},${p1.y} ${p2.x},${p2.y} ${p3.x},${p3.y}" fill="#fce7f3" stroke="#db2777" stroke-width="3.2" stroke-linejoin="round"/>
+          ${svgTickMarks(p1.x, p1.y, p2.x, p2.y, 1, "#9d174d")}
+          ${svgTickMarks(p2.x, p2.y, p3.x, p3.y, 2, "#0f172a")}
+          ${svgTickMarks(p3.x, p3.y, p1.x, p1.y, 3, "#0284c7")}
+          <text x="170" y="172" text-anchor="middle" font-size="12" font-weight="800" fill="#334155">3 unterschiedlich lange Seiten: |, || und |||</text>
+        </svg>`;
+      }
+
+      // 4. TABLA 3x3 DE TRIÁNGULOS (S. 3)
+      case "triangle_matrix_3x3":
+        return `<svg viewBox="0 0 350 190" aria-label="3x3 Tabelle der Dreiecke von Seite 3">
+          <rect x="2" y="2" width="346" height="186" rx="12" fill="#ffffff" stroke="#cbd5e1"/>
+          <!-- Header -->
+          <rect x="10" y="10" width="94" height="36" fill="#f1f5f9" stroke="#94a3b8"/>
+          <text x="57" y="32" text-anchor="middle" font-size="10.5" font-weight="900" fill="#334155">Seiten \ Winkel</text>
+          <rect x="104" y="10" width="78" height="36" fill="#eff6ff" stroke="#94a3b8"/>
+          <text x="143" y="26" text-anchor="middle" font-size="10" font-weight="900" fill="#1e40af">spitzwinklig</text>
+          <text x="143" y="39" text-anchor="middle" font-size="8.5" fill="#1e40af">3 Winkel &lt; 90°</text>
+          <rect x="182" y="10" width="78" height="36" fill="#eff6ff" stroke="#94a3b8"/>
+          <text x="221" y="26" text-anchor="middle" font-size="10" font-weight="900" fill="#1e40af">rechtwinklig</text>
+          <text x="221" y="39" text-anchor="middle" font-size="8.5" fill="#1e40af">1 Winkel = 90°</text>
+          <rect x="260" y="10" width="80" height="36" fill="#eff6ff" stroke="#94a3b8"/>
+          <text x="300" y="26" text-anchor="middle" font-size="10" font-weight="900" fill="#1e40af">stumpfwinklig</text>
+          <text x="300" y="39" text-anchor="middle" font-size="8.5" fill="#1e40af">1 Winkel &gt; 90°</text>
+
+          <!-- Fila 1: gleichseitig -->
+          <rect x="10" y="46" width="94" height="44" fill="#f8fafc" stroke="#94a3b8"/>
+          <text x="57" y="65" text-anchor="middle" font-size="10" font-weight="900" fill="#0f172a">gleichseitig</text>
+          <text x="57" y="79" text-anchor="middle" font-size="8.5" fill="#475569">3 Seiten gleich</text>
+          <rect x="104" y="46" width="78" height="44" fill="#dcfce7" stroke="#94a3b8"/>
+          <polygon points="143,53 128,82 158,82" fill="#86efac" stroke="#15803d" stroke-width="2"/>
+          <rect x="182" y="46" width="78" height="44" fill="#fee2e2" stroke="#dc2626" stroke-width="2"/>
+          <text x="221" y="72" text-anchor="middle" font-size="11.5" font-weight="900" fill="#dc2626">LEER! Warum?</text>
+          <rect x="260" y="46" width="80" height="44" fill="#fee2e2" stroke="#dc2626" stroke-width="2"/>
+          <text x="300" y="72" text-anchor="middle" font-size="11.5" font-weight="900" fill="#dc2626">LEER! Warum?</text>
+
+          <!-- Fila 2: gleichschenklig -->
+          <rect x="10" y="90" width="94" height="42" fill="#f8fafc" stroke="#94a3b8"/>
+          <text x="57" y="108" text-anchor="middle" font-size="10" font-weight="900" fill="#0f172a">gleichschenklig</text>
+          <text x="57" y="122" text-anchor="middle" font-size="8.5" fill="#475569">2 Seiten gleich</text>
+          <rect x="104" y="90" width="78" height="42" fill="#ffffff" stroke="#94a3b8"/>
+          <text x="143" y="115" text-anchor="middle" font-size="13" font-weight="900" fill="#16a34a">✓ △</text>
+          <rect x="182" y="90" width="78" height="42" fill="#ffffff" stroke="#94a3b8"/>
+          <text x="221" y="115" text-anchor="middle" font-size="13" font-weight="900" fill="#16a34a">✓ ⦜△</text>
+          <rect x="260" y="90" width="80" height="42" fill="#ffffff" stroke="#94a3b8"/>
+          <text x="300" y="115" text-anchor="middle" font-size="13" font-weight="900" fill="#16a34a">✓ st△</text>
+
+          <!-- Fila 3: allgemein -->
+          <rect x="10" y="132" width="94" height="42" fill="#f8fafc" stroke="#94a3b8"/>
+          <text x="57" y="150" text-anchor="middle" font-size="10" font-weight="900" fill="#0f172a">allgemein</text>
+          <text x="57" y="164" text-anchor="middle" font-size="8.5" fill="#475569">3 verschieden</text>
+          <rect x="104" y="132" width="78" height="42" fill="#ffffff" stroke="#94a3b8"/>
+          <text x="143" y="157" text-anchor="middle" font-size="13" font-weight="900" fill="#16a34a">✓ △</text>
+          <rect x="182" y="132" width="78" height="42" fill="#ffffff" stroke="#94a3b8"/>
+          <text x="221" y="157" text-anchor="middle" font-size="13" font-weight="900" fill="#16a34a">✓ ⦜△</text>
+          <rect x="260" y="132" width="80" height="42" fill="#ffffff" stroke="#94a3b8"/>
+          <text x="300" y="157" text-anchor="middle" font-size="13" font-weight="900" fill="#16a34a">✓ st△</text>
+        </svg>`;
+
+      // 5. LÖSUNGSWORT-RÄTSEL (S. 19: HAUS, BAUM, AUTO)
+      case "triangle_word_puzzle": {
+        if (spec.puzzle === "HAUS") {
+          return `<svg viewBox="0 0 340 175" aria-label="Rechtwinklige Dreiecke ergeben HAUS">
+            <rect x="2" y="2" width="336" height="171" rx="12" fill="#ffffff" stroke="#e2e8f0"/>
+            <!-- H -->
+            <polygon points="22,32 22,108 78,108" fill="#dbeafe" stroke="#1d4ed8" stroke-width="2.5"/>
+            <rect x="22" y="92" width="16" height="16" fill="#bfdbfe" stroke="#1d4ed8" stroke-width="1.5"/>
+            <text x="42" y="88" font-size="16" font-weight="900" fill="#1e3a8a">H</text>
+            <!-- A -->
+            <polygon points="98,32 162,32 98,108" fill="#dbeafe" stroke="#1d4ed8" stroke-width="2.5"/>
+            <rect x="98" y="32" width="16" height="16" fill="#bfdbfe" stroke="#1d4ed8" stroke-width="1.5"/>
+            <text x="118" y="72" font-size="16" font-weight="900" fill="#1e3a8a">A</text>
+            <!-- U -->
+            <polygon points="182,32 244,32 182,108" fill="#dbeafe" stroke="#1d4ed8" stroke-width="2.5"/>
+            <rect x="182" y="32" width="16" height="16" fill="#bfdbfe" stroke="#1d4ed8" stroke-width="1.5"/>
+            <text x="200" y="72" font-size="16" font-weight="900" fill="#1e3a8a">U</text>
+            <!-- S -->
+            <polygon points="262,62 322,36 286,108" fill="#dbeafe" stroke="#1d4ed8" stroke-width="2.5"/>
+            <circle cx="274" cy="68" r="3" fill="#1d4ed8"/>
+            <text x="288" y="82" font-size="16" font-weight="900" fill="#1e3a8a">S</text>
+            <rect x="65" y="126" width="210" height="34" rx="8" fill="#f0fdf4" stroke="#16a34a" stroke-width="2"/>
+            <text x="170" y="148" text-anchor="middle" font-size="14" font-weight="900" fill="#166534">Lösungswort #1: H - A - U - S</text>
+          </svg>`;
+        }
+        return `<svg viewBox="0 0 340 175" aria-label="Gleichseitige Dreiecke ergeben BAUM und gleichschenklige AUTO">
+          <rect x="2" y="2" width="336" height="171" rx="12" fill="#ffffff" stroke="#e2e8f0"/>
+          <!-- Fila superior: B - A - U - M (gleichseitig) -->
+          <text x="170" y="24" text-anchor="middle" font-size="11.5" font-weight="900" fill="#15803d">#2 Gleichseitig (3 Seiten gleich lang):</text>
+          <polygon points="52,34 26,78 78,78" fill="#dcfce7" stroke="#16a34a" stroke-width="2.4"/><text x="52" y="69" text-anchor="middle" font-size="14" font-weight="900" fill="#14532d">B</text>
+          <polygon points="130,34 104,78 156,78" fill="#dcfce7" stroke="#16a34a" stroke-width="2.4"/><text x="130" y="69" text-anchor="middle" font-size="14" font-weight="900" fill="#14532d">A</text>
+          <polygon points="208,34 182,78 234,78" fill="#dcfce7" stroke="#16a34a" stroke-width="2.4"/><text x="208" y="69" text-anchor="middle" font-size="14" font-weight="900" fill="#14532d">U</text>
+          <polygon points="286,34 260,78 312,78" fill="#dcfce7" stroke="#16a34a" stroke-width="2.4"/><text x="286" y="69" text-anchor="middle" font-size="14" font-weight="900" fill="#14532d">M</text>
+
+          <!-- Fila inferior: A - U - T - O (gleichschenklig) -->
+          <text x="170" y="104" text-anchor="middle" font-size="11.5" font-weight="900" fill="#0369a1">#3 Gleichschenklig (2 Seiten gleich lang):</text>
+          <polygon points="52,112 22,158 82,158" fill="#e0f2fe" stroke="#0284c7" stroke-width="2.4"/><text x="52" y="150" text-anchor="middle" font-size="14" font-weight="900" fill="#0c4a6e">A</text>
+          <polygon points="130,112 100,158 160,158" fill="#e0f2fe" stroke="#0284c7" stroke-width="2.4"/><text x="130" y="150" text-anchor="middle" font-size="14" font-weight="900" fill="#0c4a6e">U</text>
+          <polygon points="208,112 184,158 232,158" fill="#e0f2fe" stroke="#0284c7" stroke-width="2.4"/><text x="208" y="150" text-anchor="middle" font-size="14" font-weight="900" fill="#0c4a6e">T</text>
+          <polygon points="286,110 270,158 302,158" fill="#e0f2fe" stroke="#0284c7" stroke-width="2.4"/><text x="286" y="150" text-anchor="middle" font-size="14" font-weight="900" fill="#0c4a6e">O</text>
+        </svg>`;
+      }
+
+      // 6. DIE 3 GRUPPEN DER VIERECKE (S. 4 & 5)
+      case "viereck_three_groups":
+        return `<svg viewBox="0 0 350 185" aria-label="Vierecke in 3 Gruppen nach parallelen Seiten">
+          <rect x="2" y="2" width="346" height="181" rx="12" fill="#ffffff" stroke="#e2e8f0"/>
+          <rect x="115" y="10" width="120" height="28" rx="14" fill="#f1f5f9" stroke="#0f172a" stroke-width="2"/>
+          <text x="175" y="29" text-anchor="middle" font-size="13" font-weight="900" fill="#0f172a">Vierecke (4 Ecken)</text>
+          <line x1="145" y1="38" x2="62" y2="62" stroke="#0f172a" stroke-width="2"/>
+          <line x1="175" y1="38" x2="175" y2="62" stroke="#0f172a" stroke-width="2"/>
+          <line x1="205" y1="38" x2="288" y2="62" stroke="#0f172a" stroke-width="2"/>
+
+          <!-- 1. Parallelogramm -->
+          <rect x="8" y="62" width="106" height="110" rx="10" fill="#e0f2fe" stroke="#0284c7" stroke-width="2"/>
+          <text x="61" y="80" text-anchor="middle" font-size="11" font-weight="900" fill="#0c4a6e">Parallelogramm</text>
+          <text x="61" y="95" text-anchor="middle" font-size="10.5" font-weight="800" fill="#0369a1">2 Paar ∥ Seiten</text>
+          <polygon points="34,110 96,110 84,152 22,152" fill="#7dd3fc" stroke="#0369a1" stroke-width="2.2"/>
+
+          <!-- 2. Trapez -->
+          <rect x="122" y="62" width="106" height="110" rx="10" fill="#fef3c7" stroke="#d97706" stroke-width="2"/>
+          <text x="175" y="80" text-anchor="middle" font-size="11" font-weight="900" fill="#78350f">Trapez</text>
+          <text x="175" y="95" text-anchor="middle" font-size="10.5" font-weight="800" fill="#b45309">1 Paar ∥ Seiten</text>
+          <polygon points="150,110 200,110 214,152 136,152" fill="#fde68a" stroke="#b45309" stroke-width="2.2"/>
+
+          <!-- 3. Trapezoid -->
+          <rect x="236" y="62" width="106" height="110" rx="10" fill="#fce7f3" stroke="#db2777" stroke-width="2"/>
+          <text x="289" y="80" text-anchor="middle" font-size="11" font-weight="900" fill="#831843">Trapezoid</text>
+          <text x="289" y="95" text-anchor="middle" font-size="10.5" font-weight="800" fill="#be185d">0 Paar ∥ Seiten</text>
+          <polygon points="289,104 315,124 289,162 263,124" fill="#fbcfe8" stroke="#be185d" stroke-width="2.2"/>
+        </svg>`;
+
+      // 7. VIERECKE SPEZIAL-FORMEN (S. 5, 11–16)
+      case "viereck_shape": {
+        const k = spec.kind || "parallelogramm_family";
+        if (k === "parallelogramm_family") {
+          return `<svg viewBox="0 0 350 180" aria-label="Die 4 Parallelogramme: Quadrat, Rechteck, Raute, Romboid">
+            <rect x="2" y="2" width="346" height="176" rx="12" fill="#ffffff" stroke="#e2e8f0"/>
+            <text x="175" y="22" text-anchor="middle" font-size="12" font-weight="900" fill="#0369a1">Gruppe Parallelogramm (alle haben 2 Paar ∥ Seiten!)</text>
+            <!-- Quadrat -->
+            <rect x="20" y="42" width="60" height="60" fill="#bae6fd" stroke="#0284c7" stroke-width="2.5"/>
+            <rect x="20" y="42" width="11" height="11" fill="none" stroke="#0369a1" stroke-width="1.5"/>
+            <text x="50" y="124" text-anchor="middle" font-size="11" font-weight="900" fill="#0f172a">Quadrat</text>
+            <text x="50" y="138" text-anchor="middle" font-size="9.5" fill="#475569">4 gleich · 4×90°</text>
+            <!-- Rechteck -->
+            <rect x="96" y="50" width="76" height="46" fill="#bae6fd" stroke="#0284c7" stroke-width="2.5"/>
+            <rect x="96" y="50" width="11" height="11" fill="none" stroke="#0369a1" stroke-width="1.5"/>
+            <text x="134" y="124" text-anchor="middle" font-size="11" font-weight="900" fill="#0f172a">Rechteck</text>
+            <text x="134" y="138" text-anchor="middle" font-size="9.5" fill="#475569">2 Paar · 4×90°</text>
+            <!-- Raute -->
+            <polygon points="216,36 248,72 216,108 184,72" fill="#bae6fd" stroke="#0284c7" stroke-width="2.5"/>
+            <text x="216" y="124" text-anchor="middle" font-size="11" font-weight="900" fill="#0f172a">Raute</text>
+            <text x="216" y="138" text-anchor="middle" font-size="9.5" fill="#475569">4 gleich · 0×90°</text>
+            <!-- Romboid -->
+            <polygon points="274,48 336,48 320,98 258,98" fill="#bae6fd" stroke="#0284c7" stroke-width="2.5"/>
+            <text x="297" y="124" text-anchor="middle" font-size="11" font-weight="900" fill="#0f172a">Romboid</text>
+            <text x="297" y="138" text-anchor="middle" font-size="9.5" fill="#475569">2 Paar · 0×90°</text>
+          </svg>`;
+        }
+        if (k === "quadrat_vs_raute") {
+          return `<svg viewBox="0 0 350 185" aria-label="Quadrat auf der Spitze vs. Raute">
+            <rect x="2" y="2" width="346" height="181" rx="12" fill="#ffffff" stroke="#e2e8f0"/>
+            <!-- Links: Gedrehtes Quadrat -->
+            <g transform="translate(92, 82) rotate(45)">
+              <rect x="-38" y="-38" width="76" height="76" fill="#dcfce7" stroke="#16a34a" stroke-width="3"/>
+              <rect x="-38" y="-38" width="13" height="13" fill="#bbf7d0" stroke="#15803d" stroke-width="1.5"/>
+              <rect x="25" y="-38" width="13" height="13" fill="#bbf7d0" stroke="#15803d" stroke-width="1.5"/>
+              <rect x="25" y="25" width="13" height="13" fill="#bbf7d0" stroke="#15803d" stroke-width="1.5"/>
+              <rect x="-38" y="25" width="13" height="13" fill="#bbf7d0" stroke="#15803d" stroke-width="1.5"/>
+            </g>
+            <text x="92" y="154" text-anchor="middle" font-size="12" font-weight="900" fill="#166534">Quadrat (4 × 90° ⦜)</text>
+            <text x="92" y="170" text-anchor="middle" font-size="10.5" fill="#15803d">4 gleich lange Seiten</text>
+
+            <!-- Rechts: Raute -->
+            <polygon points="258,26 298,82 258,138 218,82" fill="#fef3c7" stroke="#d97706" stroke-width="3"/>
+            ${svgTickMarks(258, 26, 298, 82, 1, "#b45309")}
+            ${svgTickMarks(298, 82, 258, 138, 1, "#b45309")}
+            ${svgTickMarks(258, 138, 218, 82, 1, "#b45309")}
+            ${svgTickMarks(218, 82, 258, 26, 1, "#b45309")}
+            <text x="258" y="154" text-anchor="middle" font-size="12" font-weight="900" fill="#b45309">Raute (0 × 90°!)</text>
+            <text x="258" y="170" text-anchor="middle" font-size="10.5" fill="#92400e">2 spitze + 2 stumpfe Winkel</text>
+          </svg>`;
+        }
+        if (k === "trapez_recht") {
+          return `<svg viewBox="0 0 340 185" aria-label="Rechtwinkliges Trapez mit 1 Paar parallelen Seiten und 2 rechten Winkeln">
+            <rect x="2" y="2" width="336" height="181" rx="12" fill="#ffffff" stroke="#e2e8f0"/>
+            <polygon points="85,38 215,38 265,134 85,134" fill="#fef3c7" stroke="#d97706" stroke-width="3.2" stroke-linejoin="round"/>
+            <!-- 2 rechte Winkel links oben und links unten -->
+            <rect x="85" y="38" width="20" height="20" fill="#dbeafe" stroke="#1d4ed8" stroke-width="2"/>
+            <circle cx="95" cy="48" r="2.2" fill="#1d4ed8"/>
+            <rect x="85" y="114" width="20" height="20" fill="#dbeafe" stroke="#1d4ed8" stroke-width="2"/>
+            <circle cx="95" cy="124" r="2.2" fill="#1d4ed8"/>
+            <!-- Pfeile für das 1 Paar paralleler Seiten -->
+            ${svgParallelArrows(85, 38, 215, 38, 1, "#dc2626")}
+            ${svgParallelArrows(85, 134, 265, 134, 1, "#dc2626")}
+            <text x="48" y="54" text-anchor="middle" font-size="11.5" font-weight="900" fill="#1d4ed8">90° #1</text>
+            <text x="48" y="128" text-anchor="middle" font-size="11.5" font-weight="900" fill="#1d4ed8">90° #2</text>
+            <text x="170" y="168" text-anchor="middle" font-size="12" font-weight="900" fill="#92400e">Rechtwinkliges Trapez: 1 Paar ∥ und 2 rechte Winkel!</text>
+          </svg>`;
+        }
+        if (k === "romboid_slanted_1f") {
+          // Figura 1f de la pág. 16: paralelogramo muy inclinado
+          const p1 = { x: 64, y: 122 };
+          const p2 = { x: 214, y: 34 };
+          const p3 = { x: 286, y: 34 };
+          const p4 = { x: 136, y: 122 };
+          return `<svg viewBox="0 0 340 185" aria-label="Schräges Romboid von Seite 16 Aufgabe 1f">
+            <rect x="2" y="2" width="336" height="181" rx="12" fill="#ffffff" stroke="#e2e8f0"/>
+            <polygon points="${p1.x},${p1.y} ${p2.x},${p2.y} ${p3.x},${p3.y} ${p4.x},${p4.y}" fill="#e0f2fe" stroke="#0284c7" stroke-width="3.2" stroke-linejoin="round"/>
+            ${svgParallelArrows(p2.x, p2.y, p3.x, p3.y, 1, "#dc2626")}
+            ${svgParallelArrows(p1.x, p1.y, p4.x, p4.y, 1, "#dc2626")}
+            ${svgParallelArrows(p1.x, p1.y, p2.x, p2.y, 2, "#16a34a")}
+            ${svgParallelArrows(p4.x, p4.y, p3.x, p3.y, 2, "#16a34a")}
+            <text x="170" y="158" text-anchor="middle" font-size="12" font-weight="900" fill="#0c4a6e">Aufgabe 1f (S. 16): Oben ∥ Unten (&gt;) UND Schräg ∥ Schräg (&gt;&gt;)</text>
+            <text x="170" y="174" text-anchor="middle" font-size="11.5" font-weight="800" fill="#15803d">→ 2 Paar ∥ Seiten = Romboid / Parallelogramm!</text>
+          </svg>`;
+        }
+        if (k === "drachen") {
+          const top = { x: 170, y: 20 };
+          const right = { x: 232, y: 68 };
+          const bottom = { x: 170, y: 150 };
+          const left = { x: 108, y: 68 };
+          return `<svg viewBox="0 0 340 185" aria-label="Drachen (Deltoid) mit Symmetrieachse">
+            <rect x="2" y="2" width="336" height="181" rx="12" fill="#ffffff" stroke="#e2e8f0"/>
+            <polygon points="${top.x},${top.y} ${right.x},${right.y} ${bottom.x},${bottom.y} ${left.x},${left.y}" fill="#fce7f3" stroke="#db2777" stroke-width="3.2" stroke-linejoin="round"/>
+            <!-- Symmetrieachse -->
+            <line x1="170" y1="12" x2="170" y2="158" stroke="#dc2626" stroke-width="2" stroke-dasharray="5,3"/>
+            ${svgTickMarks(top.x, top.y, right.x, right.y, 1, "#9d174d")}
+            ${svgTickMarks(left.x, left.y, top.x, top.y, 1, "#9d174d")}
+            ${svgTickMarks(right.x, right.y, bottom.x, bottom.y, 2, "#0284c7")}
+            ${svgTickMarks(bottom.x, bottom.y, left.x, left.y, 2, "#0284c7")}
+            <text x="170" y="174" text-anchor="middle" font-size="12" font-weight="900" fill="#831843">Drachen (Deltoid): 0 Paar ∥ · 2 Paar Nachbarseiten gleich · 1 Achse</text>
+          </svg>`;
+        }
+        // Default: three_trapeze_compare (S. 15 unten)
+        return `<svg viewBox="0 0 350 175" aria-label="Drei Trapeze a, b und c zum Vergleichen">
+          <rect x="2" y="2" width="346" height="171" rx="12" fill="#ffffff" stroke="#e2e8f0"/>
+          <!-- Trapez a -->
+          <polygon points="34,54 90,54 114,112 14,112" fill="#cbd5e1" stroke="#0f172a" stroke-width="2.5"/>
+          ${svgParallelArrows(34, 54, 90, 54, 1, "#dc2626")}
+          ${svgParallelArrows(14, 112, 114, 112, 1, "#dc2626")}
+          <text x="64" y="92" text-anchor="middle" font-size="14" font-weight="900">a</text>
+          <!-- Trapez b -->
+          <polygon points="140,64 212,42 212,122 140,104" fill="#cbd5e1" stroke="#0f172a" stroke-width="2.5"/>
+          ${svgParallelArrows(140, 104, 140, 64, 1, "#dc2626")}
+          ${svgParallelArrows(212, 122, 212, 42, 1, "#dc2626")}
+          <text x="180" y="88" text-anchor="middle" font-size="14" font-weight="900">b</text>
+          <!-- Trapez c -->
+          <polygon points="242,58 326,48 318,112 242,112" fill="#cbd5e1" stroke="#0f172a" stroke-width="2.5"/>
+          <rect x="242" y="98" width="14" height="14" fill="#dbeafe" stroke="#1d4ed8" stroke-width="1.5"/>
+          <text x="284" y="90" text-anchor="middle" font-size="14" font-weight="900">c</text>
+          <text x="175" y="154" text-anchor="middle" font-size="12" font-weight="900" fill="#b45309">Alle drei sind Trapeze → Gemeinsamkeit: 1 Paar ∥ Seiten!</text>
+        </svg>`;
+      }
+
+      // 8. SPRECHBLASEN-RÄTSEL: MIA & JIN (S. 12) ODER AJANI (S. 13)
+      case "riddle_character": {
+        if (spec.character === "mia_jin") {
+          return `<svg viewBox="0 0 350 180" aria-label="Mia und Jin sprechen über ein Quadrat">
+            <rect x="2" y="2" width="346" height="176" rx="12" fill="#ffffff" stroke="#e2e8f0"/>
+            <!-- Mia -->
+            <rect x="12" y="16" width="218" height="62" rx="10" fill="#f0fdf4" stroke="#16a34a" stroke-width="2"/>
+            <text x="24" y="36" font-size="12" font-weight="900" fill="#166534">👧 Mia sagt:</text>
+            <text x="24" y="54" font-size="11" font-weight="700" fill="#0f172a">„Dieses Viereck hat eine GERADE</text>
+            <text x="24" y="68" font-size="11" font-weight="700" fill="#0f172a">Anzahl rechte Winkel (4 Stück)!“</text>
+
+            <!-- Jin -->
+            <rect x="12" y="92" width="218" height="62" rx="10" fill="#fef2f2" stroke="#f87171" stroke-width="2"/>
+            <text x="24" y="112" font-size="12" font-weight="900" fill="#991b1b">👦 Jin sagt:</text>
+            <text x="24" y="130" font-size="11" font-weight="700" fill="#0f172a">„Ich glaube, es hat eine UNGERADE</text>
+            <text x="24" y="144" font-size="11" font-weight="700" fill="#0f172a">Anzahl rechte Winkel.“</text>
+
+            <!-- Quadrat rechts -->
+            <rect x="248" y="42" width="82" height="82" fill="#bae6fd" stroke="#0284c7" stroke-width="3"/>
+            <rect x="248" y="42" width="16" height="16" fill="#dbeafe" stroke="#1d4ed8" stroke-width="1.5"/>
+            <rect x="314" y="42" width="16" height="16" fill="#dbeafe" stroke="#1d4ed8" stroke-width="1.5"/>
+            <rect x="314" y="108" width="16" height="16" fill="#dbeafe" stroke="#1d4ed8" stroke-width="1.5"/>
+            <rect x="248" y="108" width="16" height="16" fill="#dbeafe" stroke="#1d4ed8" stroke-width="1.5"/>
+            <text x="289" y="88" text-anchor="middle" font-size="13" font-weight="900" fill="#0c4a6e">4 × 90°</text>
+            <text x="289" y="148" text-anchor="middle" font-size="11" font-weight="800" fill="#15803d">4 = gerade Zahl!</text>
+          </svg>`;
+        }
+        return `<svg viewBox="0 0 350 185" aria-label="Ajanis Viereck-Rätsel von Seite 13">
+          <rect x="2" y="2" width="346" height="181" rx="12" fill="#ffffff" stroke="#e2e8f0"/>
+          <rect x="14" y="12" width="322" height="58" rx="10" fill="#eff6ff" stroke="#3b82f6" stroke-width="2"/>
+          <text x="28" y="32" font-size="12" font-weight="900" fill="#1d4ed8">🧑 Ajani (Seite 13):</text>
+          <text x="28" y="49" font-size="11" font-weight="800" fill="#0f172a">„Meine Figur hat 4 Seiten, MINDESTENS 1 Paar ∥ Seiten</text>
+          <text x="28" y="63" font-size="11" font-weight="800" fill="#dc2626">und KEINEN rechten Winkel (0 × 90°)!“</text>
+
+          <!-- 3 Lösungen -->
+          <polygon points="34,92 98,92 84,142 20,142" fill="#dcfce7" stroke="#16a34a" stroke-width="2.5"/>
+          <text x="59" y="164" text-anchor="middle" font-size="11" font-weight="900" fill="#166534">1. Romboid</text>
+
+          <polygon points="175,82 212,116 175,150 138,116" fill="#fef3c7" stroke="#d97706" stroke-width="2.5"/>
+          <text x="175" y="164" text-anchor="middle" font-size="11" font-weight="900" fill="#b45309">2. Raute</text>
+
+          <polygon points="262,92 312,92 328,142 246,142" fill="#e0f2fe" stroke="#0284c7" stroke-width="2.5"/>
+          <text x="287" y="164" text-anchor="middle" font-size="11" font-weight="900" fill="#0369a1">3. Gleichsch. Trapez</text>
+        </svg>`;
+      }
+
+      // 9. SYMMETRIEACHSEN DER VIERECKE (S. 9 & 10)
+      case "viereck_symmetry_showcase":
+        return `<svg viewBox="0 0 350 185" aria-label="Symmetrieachsen der Vierecke">
+          <rect x="2" y="2" width="346" height="181" rx="12" fill="#ffffff" stroke="#e2e8f0"/>
+          <!-- Quadrat: 4 -->
+          <rect x="22" y="28" width="56" height="56" fill="#f0fdf4" stroke="#16a34a" stroke-width="2.2"/>
+          <line x1="50" y1="20" x2="50" y2="92" stroke="#dc2626" stroke-width="1.6" stroke-dasharray="3,2"/>
+          <line x1="14" y1="56" x2="86" y2="56" stroke="#dc2626" stroke-width="1.6" stroke-dasharray="3,2"/>
+          <line x1="18" y1="24" x2="82" y2="88" stroke="#dc2626" stroke-width="1.6" stroke-dasharray="3,2"/>
+          <line x1="82" y1="24" x2="18" y2="88" stroke="#dc2626" stroke-width="1.6" stroke-dasharray="3,2"/>
+          <text x="50" y="108" text-anchor="middle" font-size="10.5" font-weight="900">Quadrat: 4</text>
+
+          <!-- Rechteck: 2 -->
+          <rect x="108" y="36" width="68" height="42" fill="#eff6ff" stroke="#0284c7" stroke-width="2.2"/>
+          <line x1="142" y1="24" x2="142" y2="90" stroke="#dc2626" stroke-width="1.6" stroke-dasharray="3,2"/>
+          <line x1="98" y1="57" x2="186" y2="57" stroke="#dc2626" stroke-width="1.6" stroke-dasharray="3,2"/>
+          <text x="142" y="108" text-anchor="middle" font-size="10.5" font-weight="900">Rechteck: 2</text>
+
+          <!-- Raute: 2 -->
+          <polygon points="228,24 260,56 228,88 196,56" fill="#fef3c7" stroke="#d97706" stroke-width="2.2"/>
+          <line x1="228" y1="18" x2="228" y2="94" stroke="#dc2626" stroke-width="1.6" stroke-dasharray="3,2"/>
+          <line x1="190" y1="56" x2="266" y2="56" stroke="#dc2626" stroke-width="1.6" stroke-dasharray="3,2"/>
+          <text x="228" y="108" text-anchor="middle" font-size="10.5" font-weight="900">Raute: 2</text>
+
+          <!-- Drachen: 1 -->
+          <polygon points="306,22 332,48 306,90 280,48" fill="#fce7f3" stroke="#db2777" stroke-width="2.2"/>
+          <line x1="306" y1="16" x2="306" y2="96" stroke="#dc2626" stroke-width="1.8" stroke-dasharray="3,2"/>
+          <text x="306" y="108" text-anchor="middle" font-size="10.5" font-weight="900">Drachen: 1</text>
+
+          <!-- Bottom banner: Trapez 1, Romboid 0 -->
+          <rect x="20" y="124" width="310" height="44" rx="8" fill="#f8fafc" stroke="#cbd5e1"/>
+          <text x="175" y="143" text-anchor="middle" font-size="11" font-weight="900" fill="#0f172a">Gleichschenkliges Trapez = 1 Symmetrieachse</text>
+          <text x="175" y="159" text-anchor="middle" font-size="11" font-weight="900" fill="#dc2626">Romboid (allgemeines Parallelogramm) = 0 Symmetrieachsen!</text>
+        </svg>`;
+
+      // 10. KOORDINATENSYSTEM (PUNKTE, VEKTOREN & VIERECKE IM KS)
+      case "coord_grid": {
+        const maxX = spec.maxX || 10;
+        const maxY = spec.maxY || 10;
+        const padLeft = 34;
+        const padBottom = 28;
+        const padTop = 18;
+        const padRight = 22;
+        const plotW = 350 - padLeft - padRight;
+        const plotH = 210 - padTop - padBottom;
+        const stepX = plotW / maxX;
+        const stepY = plotH / maxY;
+
+        const toSvgX = (x) => padLeft + x * stepX;
+        const toSvgY = (y) => 210 - padBottom - y * stepY;
+
+        let gridHtml = "";
+        for (let x = 0; x <= maxX; x += 1) {
+          const sx = toSvgX(x);
+          gridHtml += `<line x1="${sx.toFixed(1)}" y1="${padTop}" x2="${sx.toFixed(1)}" y2="${210 - padBottom}" stroke="#e2e8f0" stroke-width="1"/>`;
+          gridHtml += `<text x="${sx.toFixed(1)}" y="${210 - padBottom + 14}" text-anchor="middle" font-size="9.5" font-weight="800" fill="#475569">${x}</text>`;
+        }
+        for (let y = 0; y <= maxY; y += 1) {
+          const sy = toSvgY(y);
+          gridHtml += `<line x1="${padLeft}" y1="${sy.toFixed(1)}" x2="${350 - padRight}" y2="${sy.toFixed(1)}" stroke="#e2e8f0" stroke-width="1"/>`;
+          if (y > 0) {
+            gridHtml += `<text x="${padLeft - 8}" y="${(sy + 3.5).toFixed(1)}" text-anchor="end" font-size="9.5" font-weight="800" fill="#475569">${y}</text>`;
+          }
+        }
+
+        // Ejes x e y
+        const oy = toSvgY(0);
+        const ox = toSvgX(0);
+        const axesHtml = `
+          <line x1="${ox}" y1="${oy}" x2="${350 - padRight + 8}" y2="${oy}" stroke="#0f172a" stroke-width="2"/>
+          <line x1="${ox}" y1="${oy}" x2="${ox}" y2="${padTop - 8}" stroke="#0f172a" stroke-width="2"/>
+          <text x="${350 - 8}" y="${oy + 4}" text-anchor="end" font-size="11" font-weight="900" fill="#0f172a">x</text>
+          <text x="${ox - 10}" y="${padTop - 4}" font-size="11" font-weight="900" fill="#0f172a">y</text>
+        `;
+
+        // Polígono / Viereck en el KS
+        let polyHtml = "";
+        if (spec.polygon && spec.polygon.length > 0) {
+          const ptsStr = spec.polygon
+            .map((p) => `${toSvgX(p.x).toFixed(1)},${toSvgY(p.y).toFixed(1)}`)
+            .join(" ");
+          const c = spec.polyColor || "#0284c7";
+          polyHtml += `<polygon points="${ptsStr}" fill="rgba(2, 132, 199, 0.14)" stroke="${c}" stroke-width="2.5" stroke-dasharray="${spec.polygon.some((p) => p.isMissing) ? "5,3" : "none"}"/>`;
+          spec.polygon.forEach((p) => {
+            const sx = toSvgX(p.x);
+            const sy = toSvgY(p.y);
+            const ly = sy < 40 ? sy + 16 : sy - 9;
+            if (p.isMissing) {
+              polyHtml += `
+                <circle cx="${sx.toFixed(1)}" cy="${sy.toFixed(1)}" r="7" fill="#fef08a" stroke="#dc2626" stroke-width="2.5" stroke-dasharray="3,2"/>
+                <text x="${sx.toFixed(1)}" y="${ly.toFixed(1)}" text-anchor="middle" font-size="11" font-weight="900" fill="#dc2626" style="paint-order:stroke;stroke:#fff;stroke-width:3px;">${p.label}</text>
+              `;
+            } else {
+              polyHtml += `
+                <circle cx="${sx.toFixed(1)}" cy="${sy.toFixed(1)}" r="4.5" fill="${c}"/>
+                <text x="${sx.toFixed(1)}" y="${ly.toFixed(1)}" text-anchor="middle" font-size="10.5" font-weight="900" fill="#0f172a" style="paint-order:stroke;stroke:#fff;stroke-width:3px;">${p.label}</text>
+              `;
+            }
+          });
+        }
+
+        // Vector de desplazamiento
+        let vecHtml = "";
+        if (spec.vector) {
+          const v = spec.vector;
+          const x1 = toSvgX(v.x1);
+          const y1 = toSvgY(v.y1);
+          const x2 = toSvgX(v.x2);
+          const y2 = toSvgY(v.y2);
+          // Componentes en L punteados (horizontal y luego vertical)
+          vecHtml += `
+            <line x1="${x1.toFixed(1)}" y1="${y1.toFixed(1)}" x2="${x2.toFixed(1)}" y2="${y1.toFixed(1)}" stroke="#0284c7" stroke-width="2" stroke-dasharray="4,3"/>
+            <line x1="${x2.toFixed(1)}" y1="${y1.toFixed(1)}" x2="${x2.toFixed(1)}" y2="${y2.toFixed(1)}" stroke="#9333ea" stroke-width="2" stroke-dasharray="4,3"/>
+            <line x1="${x1.toFixed(1)}" y1="${y1.toFixed(1)}" x2="${x2.toFixed(1)}" y2="${y2.toFixed(1)}" stroke="#dc2626" stroke-width="3"/>
+          `;
+          // Cabeza de flecha en (x2, y2)
+          const ang = Math.atan2(y2 - y1, x2 - x1);
+          const aLen = 9;
+          const ax1 = x2 - aLen * Math.cos(ang - 0.45);
+          const ay1 = y2 - aLen * Math.sin(ang - 0.45);
+          const ax2 = x2 - aLen * Math.cos(ang + 0.45);
+          const ay2 = y2 - aLen * Math.sin(ang + 0.45);
+          vecHtml += `<polygon points="${x2.toFixed(1)},${y2.toFixed(1)} ${ax1.toFixed(1)},${ay1.toFixed(1)} ${ax2.toFixed(1)},${ay2.toFixed(1)}" fill="#dc2626"/>`;
+          if (v.labelDe) {
+            vecHtml += `<rect x="85" y="6" width="195" height="20" rx="5" fill="rgba(254,242,242,0.95)" stroke="#f87171"/>
+              <text x="182" y="20" text-anchor="middle" font-size="10.5" font-weight="900" fill="#991b1b">${v.labelDe}</text>`;
+          }
+        }
+
+        // Puntos individuales
+        let ptsHtml = "";
+        if (spec.points) {
+          spec.points.forEach((pt) => {
+            const sx = toSvgX(pt.x);
+            const sy = toSvgY(pt.y);
+            if (spec.showGuides) {
+              ptsHtml += `<line x1="${sx.toFixed(1)}" y1="${oy}" x2="${sx.toFixed(1)}" y2="${sy.toFixed(1)}" stroke="#94a3b8" stroke-width="1" stroke-dasharray="3,3"/>`;
+              ptsHtml += `<line x1="${ox}" y1="${sy.toFixed(1)}" x2="${sx.toFixed(1)}" y2="${sy.toFixed(1)}" stroke="#94a3b8" stroke-width="1" stroke-dasharray="3,3"/>`;
+            }
+            const ly = sy < 36 ? sy + 15 : sy - 8;
+            ptsHtml += `
+              <circle cx="${sx.toFixed(1)}" cy="${sy.toFixed(1)}" r="4.8" fill="${pt.color || "#dc2626"}"/>
+              <text x="${(sx + 6).toFixed(1)}" y="${ly.toFixed(1)}" font-size="11" font-weight="900" fill="${pt.color || "#0f172a"}" style="paint-order:stroke;stroke:#fff;stroke-width:3px;">${pt.label}</text>
+            `;
+          });
+        }
+
+        return `<svg viewBox="0 0 350 210" aria-label="Koordinatensystem">
+          <rect x="2" y="2" width="346" height="206" rx="12" fill="#ffffff" stroke="#e2e8f0"/>
+          ${gridHtml}
+          ${axesHtml}
+          ${polyHtml}
+          ${vecHtml}
+          ${ptsHtml}
+        </svg>`;
+      }
+
+      // 11. SPIEGELUNG AN DER GERADEN g (Seite 9 Aufgabe 1b)
+      case "coord_mirror_s9":
+      default: {
+        // Reutilizamos coord_grid visualizando la recta g de (0|9) a (9|0), Raute ABCD y su reflejo A'B'C'D'
+        const padLeft = 32;
+        const padBottom = 26;
+        const step = 16;
+        const toX = (x) => padLeft + x * step;
+        const toY = (y) => 205 - padBottom - y * step;
+        let grid = "";
+        for (let i = 0; i <= 10; i += 1) {
+          grid += `<line x1="${toX(i)}" y1="${toY(10)}" x2="${toX(i)}" y2="${toY(0)}" stroke="#e2e8f0" stroke-width="1"/>`;
+          grid += `<line x1="${toX(0)}" y1="${toY(i)}" x2="${toX(10)}" y2="${toY(i)}" stroke="#e2e8f0" stroke-width="1"/>`;
+          grid += `<text x="${toX(i)}" y="${toY(0) + 13}" text-anchor="middle" font-size="9" font-weight="700" fill="#475569">${i}</text>`;
+          if (i > 0) {
+            grid += `<text x="${toX(0) - 6}" y="${toY(i) + 3}" text-anchor="end" font-size="9" font-weight="700" fill="#475569">${i}</text>`;
+          }
+        }
+        return `<svg viewBox="0 0 350 210" aria-label="Spiegelung der Raute ABCD an der Geraden g (Seite 9)">
+          <rect x="2" y="2" width="346" height="206" rx="12" fill="#ffffff" stroke="#e2e8f0"/>
+          ${grid}
+          <line x1="${toX(0)}" y1="${toY(0)}" x2="${toX(10.4)}" y2="${toY(0)}" stroke="#0f172a" stroke-width="2"/>
+          <line x1="${toX(0)}" y1="${toY(0)}" x2="${toX(0)}" y2="${toY(10.3)}" stroke="#0f172a" stroke-width="2"/>
+          <!-- Spiegelgerade g durch (0|9) und (9|0) -->
+          <line x1="${toX(0)}" y1="${toY(9)}" x2="${toX(9)}" y2="${toY(0)}" stroke="#dc2626" stroke-width="2.5"/>
+          <text x="${toX(1.2)}" y="${toY(8.3)}" font-size="11" font-weight="900" fill="#dc2626">Spiegel g</text>
+          <!-- Original Raute ABCD: A(0|5), B(2|4), C(4|5), D(2|6) -->
+          <polygon points="${toX(0)},${toY(5)} ${toX(2)},${toY(4)} ${toX(4)},${toY(5)} ${toX(2)},${toY(6)}" fill="rgba(2,132,199,0.2)" stroke="#0284c7" stroke-width="2.4"/>
+          <!-- Bild-Raute A'B'C'D': A'(4|9), B'(5|7), C'(4|5), D'(3|7) -->
+          <polygon points="${toX(4)},${toY(9)} ${toX(5)},${toY(7)} ${toX(4)},${toY(5)} ${toX(3)},${toY(7)}" fill="rgba(22,163,74,0.2)" stroke="#16a34a" stroke-width="2.4" stroke-dasharray="4,2"/>
+          <circle cx="${toX(4)}" cy="${toY(5)}" r="5" fill="#dc2626"/>
+          <text x="${toX(4) + 8}" y="${toY(5) + 4}" font-size="10.5" font-weight="900" fill="#dc2626">C = C'(4|5)</text>
+          <circle cx="${toX(2)}" cy="${toY(6)}" r="4" fill="#0284c7"/>
+          <text x="${toX(2) - 6}" y="${toY(6) - 6}" text-anchor="end" font-size="10" font-weight="900" fill="#0369a1">D(2|6)</text>
+          <circle cx="${toX(3)}" cy="${toY(7)}" r="4" fill="#16a34a"/>
+          <text x="${toX(3) + 6}" y="${toY(7) - 5}" font-size="10" font-weight="900" fill="#15803d">D'(3|7)</text>
+          <!-- Info box rechts -->
+          <rect x="206" y="24" width="134" height="122" rx="8" fill="#f8fafc" stroke="#cbd5e1"/>
+          <text x="273" y="42" text-anchor="middle" font-size="10.5" font-weight="900" fill="#0f172a">Lösung Seite 9 (1b):</text>
+          <text x="216" y="62" font-size="10" font-weight="800" fill="#0369a1">• A(0|5) → A'(4 | 9)</text>
+          <text x="216" y="80" font-size="10" font-weight="800" fill="#0369a1">• B(2|4) → B'(5 | 7)</text>
+          <text x="216" y="98" font-size="10" font-weight="900" fill="#dc2626">• C(4|5) → C'(4 | 5)</text>
+          <text x="216" y="116" font-size="10" font-weight="800" fill="#15803d">• D(2|6) → D'(3 | 7)</text>
+          <text x="273" y="136" text-anchor="middle" font-size="9" fill="#475569">(C liegt auf g!)</text>
+        </svg>`;
+      }
+    }
+  }
+
+  // Generador dinámico infinito para Welt 5 ("🎲 5. Zufalls-Maschine")
+  function generateMikaRandomQuestions() {
+    const pick = (arr) => arr[Math.floor(Math.random() * arr.length)];
+    const randInt = (min, max) => Math.floor(Math.random() * (max - min + 1)) + min;
+
+    // 1. Random Polygon
+    const polyPool = [
+      { n: 5, de: "Fünfeck", es: "Pentágono", color: "#ec4899", fill: "#fce7f3" },
+      { n: 6, de: "Sechseck", es: "Hexágono", color: "#eab308", fill: "#fef9c3" },
+      { n: 7, de: "Siebeneck", es: "Heptágono", color: "#0284c7", fill: "#e0f2fe" },
+      { n: 8, de: "Achteck", es: "Octágono", color: "#dc2626", fill: "#fee2e2" },
+      { n: 9, de: "Neuneck", es: "Nonágono / Eneágono", color: "#0d9488", fill: "#ccfbf1" },
+      { n: 10, de: "Zehneck", es: "Decágono", color: "#2563eb", fill: "#dbeafe" },
+      { n: 20, de: "Zwanzigeck", es: "Icoságono", color: "#7c3aed", fill: "#ede9fe" }
+    ];
+    const chosenPoly = pick(polyPool);
+    const wrongPolys = polyPool.filter((p) => p.n !== chosenPoly.n).sort(() => Math.random() - 0.5).slice(0, 3);
+
+    // 2. Random Punkt + Vektor = Zielpunkt
+    const sx = randInt(2, 7);
+    const sy = randInt(3, 7);
+    const dx = pick([-3, -2, -1, 1, 2, 3, 4]);
+    const dy = pick([-3, -2, -1, 0, 1, 2, 3]);
+    const ex = sx + dx;
+    const ey = sy + dy;
+    const dirXDe = dx >= 0 ? `${dx} rechts` : `${Math.abs(dx)} links`;
+    const dirYDe = dy >= 0 ? `${dy} oben` : `${Math.abs(dy)} unten`;
+
+    // 3. Random Vektor zwischen 2 Punkten finden (wie S. 8 Aufgabe e)
+    const p1x = randInt(2, 8);
+    const p1y = randInt(2, 8);
+    const vdx = pick([-4, -3, -2, 2, 3, 4]);
+    const vdy = pick([-3, -2, 0, 2, 3]);
+    const p2x = Math.max(1, Math.min(10, p1x + vdx));
+    const p2y = Math.max(1, Math.min(10, p1y + vdy));
+    const realDx = p2x - p1x;
+    const realDy = p2y - p1y;
+
+    // 4. Random 4. Eckpunkt eines Rechtecks im KS
+    const rx1 = randInt(1, 4);
+    const ry1 = randInt(2, 4);
+    const rw = randInt(3, 5);
+    const rh = randInt(2, 4);
+
+    // Mezclamos 4 generadas frescas con 8 seleccionadas al azar del banco de 38
+    const freshDynamic = [
+      {
+        id: "m13_dyn_poly_" + Date.now(),
+        world: "random_mix",
+        topicDe: "🎲 Zufalls-Polygon (Neu generiert)",
+        questionDe: `Dieses Polygon hat genau ${chosenPoly.n} Ecken, ${chosenPoly.n} Seiten und ${chosenPoly.n} Winkel. Wie heißt es auf Deutsch?`,
+        questionEs: `Este polígono tiene exactamente ${chosenPoly.n} vértices, ${chosenPoly.n} lados y ${chosenPoly.n} ángulos. ¿Cómo se llama en alemán?`,
+        hintDe: `Zähle die Zahl ${chosenPoly.n} auf Deutsch + „-eck“!`,
+        hintEs: `Combina el número ${chosenPoly.n} en alemán con «-eck».`,
+        svgSpec: { type: "polygon_regular", sides: chosenPoly.n, color: chosenPoly.color, fill: chosenPoly.fill, labelCenter: `${chosenPoly.n} Ecken` },
+        options: [
+          { textDe: `Das ${chosenPoly.de} (${chosenPoly.n} Ecken, ${chosenPoly.n} Seiten, ${chosenPoly.n} Winkel)`, textEs: `Das ${chosenPoly.de} (${chosenPoly.es})`, correct: true },
+          ...wrongPolys.map((wp) => ({
+            textDe: `Das ${wp.de} (${wp.n} Ecken)`,
+            textEs: `Das ${wp.de} (${wp.es})`,
+            correct: false
+          }))
+        ],
+        explanationDe: `Richtig! ${chosenPoly.n} Ecken, ${chosenPoly.n} Seiten und ${chosenPoly.n} Winkel = das ${chosenPoly.de}!`,
+        explanationEs: `¡Correcto! ${chosenPoly.n} vértices, lados y ángulos = das ${chosenPoly.de} (${chosenPoly.es}).`
+      },
+      {
+        id: "m13_dyn_vec_add_" + Date.now(),
+        world: "random_mix",
+        topicDe: "🎲 Punkt + Vektor (Neu generiert)",
+        questionDe: `Du startest beim Punkt S(${sx} | ${sy}) und bewegst dich mit dem Vektor →(${dx} | ${dy}). Was bedeutet der Vektor und auf welchem Zielpunkt Z landest du?`,
+        questionEs: `Partes en el punto S(${sx} | ${sy}) y te desplazas con el vector →(${dx} | ${dy}). ¿Qué significa ese vector y a qué punto final Z llegas?`,
+        hintDe: `Rechne x = ${sx} + (${dx}) und y = ${sy} + (${dy})!`,
+        hintEs: `Suma x = ${sx} + (${dx}) e y = ${sy} + (${dy}).`,
+        svgSpec: {
+          type: "coord_grid",
+          maxX: 11,
+          maxY: 11,
+          points: [
+            { label: `S(${sx}|${sy})`, x: sx, y: sy, color: "#0f172a" },
+            { label: `Z(?|?)`, x: ex, y: ey, color: "#16a34a" }
+          ],
+          vector: { x1: sx, y1: sy, x2: ex, y2: ey, labelDe: `Vektor →(${dx} | ${dy})` }
+        },
+        options: [
+          { textDe: `${dirXDe}, ${dirYDe} → Zielpunkt Z (${ex} | ${ey})`, textEs: `${dirXDe}, ${dirYDe} → Punto final Z (${ex} | ${ey})`, correct: true },
+          { textDe: `Zielpunkt Z (${sx - dx} | ${sy - dy}) (in die falsche Richtung gegangen)`, textEs: `Punto final Z (${sx - dx} | ${sy - dy})`, correct: false },
+          { textDe: `Zielpunkt Z (${ey} | ${ex}) (x und y vertauscht!)`, textEs: `Punto final Z (${ey} | ${ex}) (x e y al revés)`, correct: false },
+          { textDe: `Zielpunkt Z (${sx} | ${sy})`, textEs: `Punto final Z (${sx} | ${sy})`, correct: false }
+        ],
+        explanationDe: `Perfekt gerechnet! →(${dx}|${dy}) bedeutet ${dirXDe} und ${dirYDe}. Also (${sx} + (${dx}) | ${sy} + (${dy})) = (${ex} | ${ey})!`,
+        explanationEs: `¡Cálculo perfecto! (${sx} + (${dx}) | ${sy} + (${dy})) = (${ex} | ${ey}).`
+      },
+      {
+        id: "m13_dyn_vec_find_" + Date.now(),
+        world: "random_mix",
+        topicDe: "🎲 Vektor bestimmen (Neu generiert)",
+        questionDe: `Welcher Vektor →(x | y) verschiebt den Startpunkt A(${p1x} | ${p1y}) genau zum Zielpunkt B(${p2x} | ${p2y})?`,
+        questionEs: `¿Qué vector →(x | y) traslada el punto inicial A(${p1x} | ${p1y}) exactamente hasta el punto final B(${p2x} | ${p2y})?`,
+        hintDe: `Von ${p1x} bis ${p2x} auf der x-Achse und von ${p1y} bis ${p2y} auf der y-Achse!`,
+        hintEs: `Calcula el cambio en x (${p2x} − ${p1x}) y el cambio en y (${p2y} − ${p1y}).`,
+        svgSpec: {
+          type: "coord_grid",
+          maxX: 11,
+          maxY: 11,
+          points: [
+            { label: `A(${p1x}|${p1y})`, x: p1x, y: p1y, color: "#0f172a" },
+            { label: `B(${p2x}|${p2y})`, x: p2x, y: p2y, color: "#dc2626" }
+          ],
+          vector: { x1: p1x, y1: p1y, x2: p2x, y2: p2y, labelDe: "Welcher Vektor →(x | y)?" }
+        },
+        options: [
+          { textDe: `Vektor →(${realDx} | ${realDy})`, textEs: `Vector →(${realDx} | ${realDy})`, correct: true },
+          { textDe: `Vektor →(${-realDx} | ${-realDy}) (Vorzeichen verwechselt!)`, textEs: `Vector →(${-realDx} | ${-realDy}) (signo invertido)`, correct: false },
+          { textDe: `Vektor →(${realDy} | ${realDx}) (x und y vertauscht!)`, textEs: `Vector →(${realDy} | ${realDx}) (x e y invertidos)`, correct: false },
+          { textDe: `Vektor →(${p2x} | ${p2y})`, textEs: `Vector →(${p2x} | ${p2y})`, correct: false }
+        ],
+        explanationDe: `Von x = ${p1x} nach x = ${p2x} sind es ${realDx >= 0 ? "+" + realDx + " (rechts)" : realDx + " (links)"}, und von y = ${p1y} nach y = ${p2y} sind es ${realDy >= 0 ? "+" + realDy + " (oben)" : realDy + " (unten)"} → Vektor →(${realDx} | ${realDy})!`,
+        explanationEs: `De (${p1x}|${p1y}) a (${p2x}|${p2y}) el desplazamiento es →(${realDx} | ${realDy}).`
+      },
+      {
+        id: "m13_dyn_rect_4th_" + Date.now(),
+        world: "random_mix",
+        topicDe: "🎲 4. Eckpunkt im Koordinatensystem (Neu generiert)",
+        questionDe: `Die Punkte P(${rx1} | ${ry1}), Q(${rx1 + rw} | ${ry1}) und R(${rx1 + rw} | ${ry1 + rh}) sollen ein RECHTECK PQRS bilden. Welche Koordinaten hat der 4. Eckpunkt S oben links?`,
+        questionEs: `Los puntos P(${rx1} | ${ry1}), Q(${rx1 + rw} | ${ry1}) y R(${rx1 + rw} | ${ry1 + rh}) forman un RECHTECK (rectángulo) PQRS. ¿Qué coordenadas tiene el 4° vértice S arriba a la izquierda?`,
+        hintDe: `S liegt genau über P(${rx1} | ${ry1}) auf derselben Höhe wie R(${rx1 + rw} | ${ry1 + rh})!`,
+        hintEs: `S está justo encima de P (x = ${rx1}) y a la misma altura que R (y = ${ry1 + rh}).`,
+        svgSpec: {
+          type: "coord_grid",
+          maxX: 11,
+          maxY: 10,
+          polygon: [
+            { label: `P(${rx1}|${ry1})`, x: rx1, y: ry1 },
+            { label: `Q(${rx1 + rw}|${ry1})`, x: rx1 + rw, y: ry1 },
+            { label: `R(${rx1 + rw}|${ry1 + rh})`, x: rx1 + rw, y: ry1 + rh },
+            { label: "S(?|?)", x: rx1, y: ry1 + rh, isMissing: true }
+          ],
+          polyColor: "#0284c7"
+        },
+        options: [
+          { textDe: `S (${rx1} | ${ry1 + rh})`, textEs: `S (${rx1} | ${ry1 + rh})`, correct: true },
+          { textDe: `S (${ry1 + rh} | ${rx1}) (x und y vertauscht!)`, textEs: `S (${ry1 + rh} | ${rx1})`, correct: false },
+          { textDe: `S (${rx1 + rw} | ${ry1})`, textEs: `S (${rx1 + rw} | ${ry1})`, correct: false },
+          { textDe: `S (${rx1 + 1} | ${ry1 + rh + 1})`, textEs: `S (${rx1 + 1} | ${ry1 + rh + 1})`, correct: false }
+        ],
+        explanationDe: `Im Rechteck liegt S direkt über P(x = ${rx1}) und auf derselben Höhe wie R(y = ${ry1 + rh}) → S(${rx1} | ${ry1 + rh})!`,
+        explanationEs: `En el rectángulo, S está sobre P (x = ${rx1}) y a la altura de R (y = ${ry1 + rh}) → S(${rx1} | ${ry1 + rh}).`
+      }
+    ];
+
+    const sampledFromBank = [...DATA.mikaNov13Arena.questions]
+      .sort(() => Math.random() - 0.5)
+      .slice(0, 8);
+
+    return [...freshDynamic, ...sampledFromBank];
+  }
+
+  function initTab7MikaArena() {
+    const arenaData = DATA.mikaNov13Arena;
+    if (!arenaData) return;
+
+    // Botón de sonido
+    const soundBtn = document.getElementById("btn-mika-sound");
+    if (soundBtn) {
+      soundBtn.addEventListener("click", () => {
+        state.mikaSoundOn = !state.mikaSoundOn;
+        soundBtn.setAttribute("aria-pressed", String(state.mikaSoundOn));
+        soundBtn.textContent = state.mikaSoundOn ? "🔊 Sound: AN" : "🔇 Sound: AUS";
+      });
+    }
+
+    // Selector de modo (Arcade vs. Lista completa vs. Spickzettel)
+    document.querySelectorAll("[data-mika-view]").forEach((btn) => {
+      btn.addEventListener("click", () => {
+        document.querySelectorAll("[data-mika-view]").forEach((b) => b.classList.remove("active"));
+        btn.classList.add("active");
+        state.mikaView = btn.dataset.mikaView;
+        syncMikaSubViews();
+      });
+    });
+
+    // Selector de mundos temáticos
+    const worldsBar = document.getElementById("mika-worlds-bar");
+    if (worldsBar) {
+      worldsBar.querySelectorAll("[data-world]").forEach((btn) => {
+        btn.addEventListener("click", () => {
+          worldsBar.querySelectorAll("[data-world]").forEach((b) => b.classList.remove("active"));
+          btn.classList.add("active");
+          state.mikaWorld = btn.dataset.world;
+          state.mikaOnlyErrors = false;
+          if (state.mikaView === "spickzettel") {
+            state.mikaView = "arcade";
+            document.querySelectorAll("[data-mika-view]").forEach((b) => {
+              b.classList.toggle("active", b.dataset.mikaView === "arcade");
+            });
+            syncMikaSubViews();
+          }
+          buildMikaQuestionDeck();
+        });
+      });
+    }
+
+    // Botones Nur Fehler üben y Neu mischen
+    document.getElementById("btn-mika-retry-errors").addEventListener("click", () => {
+      if (state.mikaErrorIds.size === 0) return;
+      state.mikaOnlyErrors = true;
+      buildMikaQuestionDeck();
+    });
+
+    document.getElementById("btn-mika-shuffle").addEventListener("click", () => {
+      state.mikaOnlyErrors = false;
+      buildMikaQuestionDeck(true);
+    });
+
+    // Controles del modo Arcade
+    document.getElementById("btn-mika-hint").addEventListener("click", () => {
+      const hintBox = document.getElementById("mika-hint-box");
+      hintBox.hidden = !hintBox.hidden;
+    });
+
+    document.getElementById("btn-mika-prev").addEventListener("click", () => {
+      if (state.mikaItems.length === 0) return;
+      state.mikaIndex = (state.mikaIndex - 1 + state.mikaItems.length) % state.mikaItems.length;
+      renderMikaArcadeCard();
+    });
+
+    document.getElementById("btn-mika-next").addEventListener("click", () => {
+      if (state.mikaItems.length === 0) return;
+      if (state.mikaIndex < state.mikaItems.length - 1) {
+        state.mikaIndex += 1;
+        renderMikaArcadeCard();
+      } else {
+        showMikaArcadeCertificate();
+      }
+    });
+
+    document.getElementById("btn-mika-grade-now").addEventListener("click", () => {
+      showMikaArcadeCertificate();
+    });
+
+    // Botón evaluar lista completa
+    document.getElementById("btn-mika-evaluate-list").addEventListener("click", evaluateMikaListMode);
+
+    // Atajos de teclado lúdicos en Modo Arcade (1-4 / A-D y flechas ← / →)
+    document.addEventListener("keydown", (e) => {
+      const panel = document.getElementById("tab-mika13nov");
+      if (!panel || panel.hidden || state.mikaView !== "arcade") return;
+      const tag = (e.target && e.target.tagName) || "";
+      if (tag === "INPUT" || tag === "SELECT" || tag === "TEXTAREA") return;
+
+      const keyMap = { "1": 0, "2": 1, "3": 2, "4": 3, a: 0, b: 1, c: 2, d: 3 };
+      const lower = e.key.toLowerCase();
+      if (Object.prototype.hasOwnProperty.call(keyMap, lower)) {
+        const btns = document.querySelectorAll("#mika-arcade-options .mika-opt-btn");
+        if (btns[keyMap[lower]]) {
+          e.preventDefault();
+          btns[keyMap[lower]].click();
+        }
+      } else if (e.key === "ArrowRight") {
+        e.preventDefault();
+        document.getElementById("btn-mika-next").click();
+      } else if (e.key === "ArrowLeft") {
+        e.preventDefault();
+        document.getElementById("btn-mika-prev").click();
+      }
+    });
+
+    updateMikaHeroStats();
+    buildMikaQuestionDeck();
+  }
+
+  function syncMikaSubViews() {
+    const viewArcade = document.getElementById("mika-view-arcade");
+    const viewList = document.getElementById("mika-view-list");
+    const viewSpick = document.getElementById("mika-view-spickzettel");
+
+    viewArcade.hidden = state.mikaView !== "arcade";
+    viewList.hidden = state.mikaView !== "list";
+    viewSpick.hidden = state.mikaView !== "spickzettel";
+  }
+
+  function buildMikaQuestionDeck(shuffleOrder = false) {
+    let baseList = [];
+    if (state.mikaWorld === "random_mix") {
+      baseList = generateMikaRandomQuestions();
+    } else if (state.mikaWorld === "all") {
+      baseList = [...DATA.mikaNov13Arena.questions];
+    } else {
+      baseList = DATA.mikaNov13Arena.questions.filter((q) => q.world === state.mikaWorld);
+    }
+
+    if (state.mikaOnlyErrors && state.mikaErrorIds.size > 0) {
+      const errFiltered = baseList.filter((q) => state.mikaErrorIds.has(q.id));
+      if (errFiltered.length > 0) baseList = errFiltered;
+    }
+
+    if (shuffleOrder) {
+      baseList.sort(() => Math.random() - 0.5);
+    }
+
+    state.mikaItems = baseList.map((q) => ({
+      ...q,
+      shuffledOptions: [...q.options].sort(() => Math.random() - 0.5),
+      selectedIdx: null
+    }));
+    state.mikaIndex = 0;
+
+    const arcadeCert = document.getElementById("mika-arcade-certificate");
+    if (arcadeCert) arcadeCert.hidden = true;
+    const listCert = document.getElementById("mika-list-certificate");
+    if (listCert) listCert.hidden = true;
+
+    renderMikaArcadeCard();
+    renderMikaListCards();
+    updateMikaErrorCountBtn();
+  }
+
+  function updateMikaErrorCountBtn() {
+    const btn = document.getElementById("btn-mika-retry-errors");
+    const countSpan = document.getElementById("mika-error-count");
+    if (!btn || !countSpan) return;
+    countSpan.textContent = state.mikaErrorIds.size;
+    btn.hidden = state.mikaErrorIds.size === 0;
+  }
+
+  function renderMikaArcadeCard() {
+    if (state.mikaItems.length === 0) return;
+    const item = state.mikaItems[state.mikaIndex];
+    const total = state.mikaItems.length;
+
+    document.getElementById("mika-arcade-step-badge").textContent = `Frage ${state.mikaIndex + 1} / ${total}`;
+    document.getElementById("mika-arcade-topic-badge").textContent = item.topicDe;
+
+    const pct = Math.round(((state.mikaIndex + 1) / total) * 100);
+    document.getElementById("mika-progress-fill").style.width = `${pct}%`;
+
+    const correctSoFar = state.mikaItems.filter(
+      (q) => q.selectedIdx !== null && q.shuffledOptions[q.selectedIdx]?.correct
+    ).length;
+    document.getElementById("mika-arcade-live-score").textContent = `✓ ${correctSoFar} / ${total} richtig`;
+
+    document.getElementById("mika-arcade-svg").innerHTML = buildMikaNov13Svg(item.svgSpec);
+    document.getElementById("mika-arcade-q-de").textContent = item.questionDe;
+    document.getElementById("mika-arcade-q-es").textContent = item.questionEs;
+
+    const hintBox = document.getElementById("mika-hint-box");
+    hintBox.hidden = true;
+    hintBox.innerHTML = `<strong>💡 Tipp:</strong> ${item.hintDe || ""}<span class="es-sub">${item.hintEs || ""}</span>`;
+
+    const optsContainer = document.getElementById("mika-arcade-options");
+    optsContainer.innerHTML = "";
+    const letters = ["A", "B", "C", "D"];
+
+    const fb = document.getElementById("mika-arcade-feedback");
+    fb.hidden = true;
+
+    item.shuffledOptions.forEach((opt, oIdx) => {
+      const btn = document.createElement("button");
+      btn.type = "button";
+      btn.className = "mika-opt-btn";
+      btn.innerHTML = `
+        <span class="mika-opt-letter">${letters[oIdx] || "•"}</span>
+        <div>
+          <div><strong>${opt.textDe}</strong></div>
+          <small class="es-sub">${opt.textEs}</small>
+        </div>
+      `;
+
+      // Si ya fue respondida en esta ronda, mostrar su estado
+      if (item.selectedIdx !== null) {
+        if (opt.correct) btn.classList.add("correct-choice");
+        else if (oIdx === item.selectedIdx) btn.classList.add("wrong-choice");
+      }
+
+      btn.addEventListener("click", () => {
+        item.selectedIdx = oIdx;
+        optsContainer.querySelectorAll(".mika-opt-btn").forEach((b, idx) => {
+          b.classList.remove("correct-choice", "wrong-choice");
+          if (item.shuffledOptions[idx].correct) b.classList.add("correct-choice");
+        });
+
+        fb.hidden = false;
+        if (opt.correct) {
+          btn.classList.add("correct-choice");
+          state.mikaCombo += 1;
+          state.mikaSolvedSet.add(item.id);
+          state.mikaErrorIds.delete(item.id);
+          playMikaChime("ok");
+          triggerMikaConfetti();
+          awardSuccess("mika13_" + item.id, 15);
+          fb.className = "feedback-banner ok";
+          fb.innerHTML = `<strong>🎉 Super gemacht, Mika! (Combo ${state.mikaCombo}x 🔥)</strong> ${item.explanationDe}<span class="es-sub">${item.explanationEs}</span>`;
+        } else {
+          btn.classList.add("wrong-choice");
+          state.mikaCombo = 0;
+          state.mikaErrorIds.add(item.id);
+          playMikaChime("err");
+          registerMistake();
+          fb.className = "feedback-banner err";
+          fb.innerHTML = `<strong>💡 Merk-Tipp für morgen:</strong> ${item.explanationDe}<span class="es-sub">${item.explanationEs}</span>`;
+        }
+
+        updateMikaHeroStats();
+        updateMikaErrorCountBtn();
+
+        const updatedCorrect = state.mikaItems.filter(
+          (q) => q.selectedIdx !== null && q.shuffledOptions[q.selectedIdx]?.correct
+        ).length;
+        document.getElementById("mika-arcade-live-score").textContent = `✓ ${updatedCorrect} / ${total} richtig`;
+      });
+
+      optsContainer.appendChild(btn);
+    });
+
+    if (item.selectedIdx !== null) {
+      const chosen = item.shuffledOptions[item.selectedIdx];
+      fb.hidden = false;
+      fb.className = chosen.correct ? "feedback-banner ok" : "feedback-banner err";
+      fb.innerHTML = `<strong>${chosen.correct ? "✓ Richtig:" : "💡 Erklärung:"}</strong> ${item.explanationDe}<span class="es-sub">${item.explanationEs}</span>`;
+    }
+  }
+
+  function showMikaArcadeCertificate() {
+    const total = state.mikaItems.length;
+    if (total === 0) return;
+    const correct = state.mikaItems.filter(
+      (q) => q.selectedIdx !== null && q.shuffledOptions[q.selectedIdx]?.correct
+    ).length;
+    const pct = Math.round((correct / total) * 100);
+    const notaChile = computeChileanGrade(correct, total);
+    const deGrade = computeGermanNote(pct);
+    const toneClass = notaChile >= 6.0 ? "grade-excellent" : notaChile >= 4.5 ? "grade-good" : "grade-warn";
+
+    const cert = document.getElementById("mika-arcade-certificate");
+    cert.hidden = false;
+    cert.innerHTML = `
+      <h3>🏆 Mikas Zeugnis — Probe Freitag, 13. November</h3>
+      <div class="grade-boxes-row">
+        <div class="grade-big-box ${toneClass}">
+          <span class="grade-label">Chilenische Note (60% Skala)</span>
+          <strong class="grade-number">${notaChile.toFixed(1)}</strong>
+          <span class="grade-sub">Skala 1,0 bis 7,0</span>
+        </div>
+        <div class="grade-big-box ${toneClass}">
+          <span class="grade-label">Deutsche Schulnote</span>
+          <strong class="grade-number">${deGrade.note}</strong>
+          <span class="grade-sub">${deGrade.labelEs}</span>
+        </div>
+        <div class="grade-big-box">
+          <span class="grade-label">Erreichte Punkte</span>
+          <strong class="grade-number">${correct} / ${total}</strong>
+          <span class="grade-sub">${pct}% richtig beantwortet</span>
+        </div>
+      </div>
+      <p style="margin: 0.4rem 0 0; font-weight: 800;">
+        ${
+          notaChile >= 6.5
+            ? "👑 Unglaublich stark, Mika! Du bist bereit für die 7,0 am Freitag, 13. November!"
+            : notaChile >= 5.5
+            ? "🌟 Super Ergebnis! Klicke oben auf „🔁 Nur Fehler üben“, um dir auch noch die letzten Punkte zu sichern."
+            : "💪 Gutes Training! Klicke oben auf „🔁 Nur Fehler üben“, damit wir genau die kniffligen Figuren noch einmal üben."
+        }
+      </p>
+    `;
+    cert.scrollIntoView({ behavior: "smooth", block: "nearest" });
+  }
+
+  function renderMikaListCards() {
+    const container = document.getElementById("mika-list-container");
+    if (!container) return;
+    container.innerHTML = "";
+    const letters = ["A", "B", "C", "D"];
+
+    state.mikaItems.forEach((q, qIdx) => {
+      const card = document.createElement("article");
+      card.className = "quiz-card mika-list-card";
+      card.dataset.qid = q.id;
+
+      const optsHtml = q.shuffledOptions
+        .map(
+          (opt, oIdx) => `
+          <button type="button" class="mika-opt-btn mika-list-opt-btn" data-qidx="${qIdx}" data-oidx="${oIdx}">
+            <span class="mika-opt-letter">${letters[oIdx] || "•"}</span>
+            <div>
+              <div><strong>${opt.textDe}</strong></div>
+              <small class="es-sub">${opt.textEs}</small>
+            </div>
+          </button>
+        `
+        )
+        .join("");
+
+      card.innerHTML = `
+        <div>
+          <div class="card-top-meta">
+            <span class="step-badge">Frage ${qIdx + 1} / ${state.mikaItems.length}</span>
+            <span class="source-tag">${q.topicDe}</span>
+          </div>
+          <h3>${q.questionDe}</h3>
+          <p class="es-sub">${q.questionEs}</p>
+          <div class="quiz-card-svg">${buildMikaNov13Svg(q.svgSpec)}</div>
+          <div class="mika-options-grid">${optsHtml}</div>
+        </div>
+        <div class="feedback-banner mika-list-fb" hidden></div>
+      `;
+
+      container.appendChild(card);
+    });
+
+    container.querySelectorAll(".mika-list-opt-btn").forEach((btn) => {
+      btn.addEventListener("click", () => {
+        const qIdx = Number(btn.dataset.qidx);
+        const oIdx = Number(btn.dataset.oidx);
+        const qItem = state.mikaItems[qIdx];
+        qItem.selectedIdx = oIdx;
+
+        const card = btn.closest(".mika-list-card");
+        card.querySelectorAll(".mika-list-opt-btn").forEach((b, idx) => {
+          b.classList.remove("correct-choice", "wrong-choice");
+          if (qItem.shuffledOptions[idx].correct) b.classList.add("correct-choice");
+        });
+
+        const chosen = qItem.shuffledOptions[oIdx];
+        const fb = card.querySelector(".mika-list-fb");
+        fb.hidden = false;
+
+        if (chosen.correct) {
+          btn.classList.add("correct-choice");
+          state.mikaCombo += 1;
+          state.mikaSolvedSet.add(qItem.id);
+          state.mikaErrorIds.delete(qItem.id);
+          playMikaChime("ok");
+          awardSuccess("mika13_" + qItem.id, 15);
+          fb.className = "feedback-banner mika-list-fb ok";
+          fb.innerHTML = `<strong>✓ Richtig!</strong> ${qItem.explanationDe}<span class="es-sub">${qItem.explanationEs}</span>`;
+        } else {
+          btn.classList.add("wrong-choice");
+          state.mikaCombo = 0;
+          state.mikaErrorIds.add(qItem.id);
+          playMikaChime("err");
+          registerMistake();
+          fb.className = "feedback-banner mika-list-fb err";
+          fb.innerHTML = `<strong>💡 Aufgepasst:</strong> ${qItem.explanationDe}<span class="es-sub">${qItem.explanationEs}</span>`;
+        }
+
+        updateMikaHeroStats();
+        updateMikaErrorCountBtn();
+      });
+    });
+  }
+
+  function evaluateMikaListMode() {
+    let correct = 0;
+    const total = state.mikaItems.length;
+    if (total === 0) return;
+
+    const cards = document.querySelectorAll(".mika-list-card");
+    state.mikaItems.forEach((qItem, qIdx) => {
+      const card = cards[qIdx];
+      if (!card) return;
+      const fb = card.querySelector(".mika-list-fb");
+      const btns = card.querySelectorAll(".mika-list-opt-btn");
+      const chosen = qItem.selectedIdx !== null ? qItem.shuffledOptions[qItem.selectedIdx] : null;
+
+      btns.forEach((b, idx) => {
+        if (qItem.shuffledOptions[idx].correct) b.classList.add("correct-choice");
+      });
+
+      if (chosen && chosen.correct) {
+        correct += 1;
+        state.mikaErrorIds.delete(qItem.id);
+      } else {
+        if (qItem.selectedIdx !== null && btns[qItem.selectedIdx]) {
+          btns[qItem.selectedIdx].classList.add("wrong-choice");
+        }
+        state.mikaErrorIds.add(qItem.id);
+        fb.hidden = false;
+        fb.className = "feedback-banner mika-list-fb err";
+        fb.innerHTML = `<strong>Lösung:</strong> ${qItem.explanationDe}<span class="es-sub">${qItem.explanationEs}</span>`;
+      }
+    });
+
+    const pct = Math.round((correct / total) * 100);
+    const notaChile = computeChileanGrade(correct, total);
+    const deGrade = computeGermanNote(pct);
+    const toneClass = notaChile >= 6.0 ? "grade-excellent" : notaChile >= 4.5 ? "grade-good" : "grade-warn";
+
+    const cert = document.getElementById("mika-list-certificate");
+    cert.hidden = false;
+    cert.innerHTML = `
+      <h3>📝 Auswertung — Probe Freitag, 13. November (Mika)</h3>
+      <div class="grade-boxes-row">
+        <div class="grade-big-box ${toneClass}">
+          <span class="grade-label">Chilenische Note (60% Skala)</span>
+          <strong class="grade-number">${notaChile.toFixed(1)}</strong>
+          <span class="grade-sub">Skala 1,0 bis 7,0</span>
+        </div>
+        <div class="grade-big-box ${toneClass}">
+          <span class="grade-label">Deutsche Schulnote</span>
+          <strong class="grade-number">${deGrade.note}</strong>
+          <span class="grade-sub">${deGrade.labelEs}</span>
+        </div>
+        <div class="grade-big-box">
+          <span class="grade-label">Erreichte Punkte</span>
+          <strong class="grade-number">${correct} / ${total}</strong>
+          <span class="grade-sub">${pct}% richtig gelöst</span>
+        </div>
+      </div>
+    `;
+    cert.scrollIntoView({ behavior: "smooth", block: "nearest" });
+    updateMikaErrorCountBtn();
+  }
+
+  // =========================================================================
   // INICIALIZACIÓN
   // =========================================================================
   document.addEventListener("DOMContentLoaded", () => {
@@ -2464,5 +3901,6 @@
     initTab4Labor();
     initTab5Quiz();
     initTab6NeueProben();
+    initTab7MikaArena();
   });
 })();
