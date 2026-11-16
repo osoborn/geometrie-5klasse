@@ -762,11 +762,11 @@
         <div class="mika-hero-left">
           <div class="mika-rank-row">
             <span class="mika-rank-badge" id="mika-rank-badge">🐣 Rang 1: Ecken-Entdeckerin</span>
-            <span class="mika-date-pill">📅 Probe: Freitag, 13. November</span>
+            <span class="mika-date-pill">🔒 Prüfungs-Modus (Ohne Tipps · 112+ Fragen)</span>
           </div>
           <h2>🎮 Mikas Geometrie-Arena: Polygone, Dreiecke, Vierecke &amp; Vektoren</h2>
           <p class="es-sub">
-            Entrenador lúdico con todas las figuras de tu cuaderno y guías (26 de oct. al 11 de nov.): Polígonos, Triángulos (3×3), Cuadriláteros, Simetría, Coordenadas (x|y) y Vectores →(x|y).
+            Banco ampliado de 112 preguntas nuevas + generador infinito sin pistas ni ayudas en los dibujos: Polígonos, Triángulos (3×3 y palabras secretas), Cuadriláteros, Simetría, Coordenadas (x|y) y Vectores →(x|y).
           </p>
         </div>
 
@@ -777,7 +777,7 @@
           </div>
           <div class="mika-stat-box mika-stat-stars">
             <span class="mika-stat-label">Meister-Sterne 🏅</span>
-            <strong id="mika-stars-val">0 / 38</strong>
+            <strong id="mika-stars-val">0 / 112</strong>
           </div>
           <button type="button" id="btn-mika-sound" class="mika-sound-btn" aria-pressed="true">
             🔊 Sound: AN
@@ -785,18 +785,15 @@
         </div>
       </div>
 
-      <!-- Barra de modos (Arcade vs. Lista completa vs. Spickzettel) + Filtro de Mundos -->
+      <!-- Barra de modos (Arcade vs. Lista completa) + Filtro de Mundos -->
       <div class="mika-controls-card">
         <div class="mika-mode-row">
           <div class="mika-view-switcher" role="group" aria-label="Spielmodus wählen">
             <button type="button" class="mika-mode-btn active" data-mika-view="arcade">
-              🕹️ Spiel-Show (1 Frage groß &amp; lúdico)
+              🕹️ Spiel-Show (1 Frage groß)
             </button>
             <button type="button" class="mika-mode-btn" data-mika-view="list">
-              📋 Ganze Probe-Liste (Alle Karten + Note 1,0–7,0)
-            </button>
-            <button type="button" class="mika-mode-btn" data-mika-view="spickzettel">
-              🃏 Spickzettel 13. Nov (Resumen + 5 Trampas)
+              📋 Prüfungs-Liste (Alle Karten + Note 1,0–7,0)
             </button>
           </div>
 
@@ -810,41 +807,44 @@
           </div>
         </div>
 
-        <!-- Píldoras de los 6 Mundos Temáticos -->
+        <!-- Píldoras de los Mundos Temáticos (112 Fragen + Zufalls-Maschine) -->
         <div class="mika-worlds-bar" id="mika-worlds-bar" role="group" aria-label="Themenwelten">
-          <button type="button" class="mika-world-pill active" data-world="all">
-            🌟 Alle Themen (38)
+          <button type="button" class="mika-world-pill active" data-world="exam20">
+            🎯 20er-Prüfung (Zufall aus 112)
+          </button>
+          <button type="button" class="mika-world-pill" data-world="all">
+            🌟 Alle 112 Fragen
           </button>
           <button type="button" class="mika-world-pill" data-world="polygone">
-            🔷 1. Polygone (3–20 Ecken)
+            🔷 1. Polygone (26)
           </button>
           <button type="button" class="mika-world-pill" data-world="dreiecke">
-            🔺 2. Dreiecke &amp; Rätselwörter
+            🔺 2. Dreiecke &amp; Rätsel (28)
           </button>
           <button type="button" class="mika-world-pill" data-world="vierecke">
-            💎 3. Vierecke &amp; Symmetrie
+            💎 3. Vierecke &amp; Symmetrie (30)
           </button>
           <button type="button" class="mika-world-pill" data-world="koordinaten">
-            🧭 4. Koordinaten &amp; Vektoren
+            🧭 4. Koordinaten &amp; Vektoren (28)
           </button>
           <button type="button" class="mika-world-pill mika-world-random" data-world="random_mix">
-            🎲 5. Zufalls-Maschine (Unendlich!)
+            🎲 5. Zufalls-Generator (Immer neu!)
           </button>
         </div>
       </div>
 
       <!-- =================================================================
-           SUB-VISTA 1: ARCADE SPIEL-SHOW (1 FRAGE GROSS & LÚDICO)
+           SUB-VISTA 1: ARCADE SPIEL-SHOW (1 FRAGE GROSS & OHNE TIPPS)
       ================================================================== -->
       <div id="mika-view-arcade">
         <!-- Barra de progreso visual -->
         <div class="mika-progress-strip">
           <div class="mika-progress-info">
-            <span id="mika-arcade-step-badge" class="step-badge">Frage 1 / 38</span>
+            <span id="mika-arcade-step-badge" class="step-badge">Frage 1 / 20</span>
             <span id="mika-arcade-topic-badge" class="source-tag">Polygone</span>
           </div>
           <div class="mika-progress-track" aria-hidden="true">
-            <div class="mika-progress-fill" id="mika-progress-fill" style="width: 3%"></div>
+            <div class="mika-progress-fill" id="mika-progress-fill" style="width: 5%"></div>
           </div>
           <span class="mika-score-mini" id="mika-arcade-live-score">✓ 0 richtig</span>
         </div>
@@ -856,13 +856,6 @@
         <div class="mika-arcade-stage" id="mika-arcade-stage">
           <div class="mika-figure-card">
             <div id="mika-arcade-svg" class="svg-stage mika-svg-stage" aria-live="polite"></div>
-
-            <div class="mika-hint-area">
-              <button type="button" id="btn-mika-hint" class="btn-mika-hint">
-                💡 Kleiner Tipp anzeigen <span class="es-inline">(Ver pista)</span>
-              </button>
-              <div id="mika-hint-box" class="mika-hint-box" hidden></div>
-            </div>
           </div>
 
           <div class="mika-question-card">
@@ -891,141 +884,8 @@
         <div id="mika-list-container" class="quiz-list"></div>
         <div class="quiz-submit-bar">
           <button type="button" id="btn-mika-evaluate-list" class="btn-primary btn-lg">
-            📝 Ganze Probe vom 13. November benoten (Calcular Nota 1.0 a 7.0)
+            📝 Ganze Probe auswerten &amp; Note berechnen (Calcular Nota 1.0 a 7.0)
           </button>
-        </div>
-      </div>
-
-      <!-- =================================================================
-           SUB-VISTA 3: SPICKZETTEL 13. NOVEMBER (RESUMEN VISUAL DEL PDF)
-      ================================================================== -->
-      <div id="mika-view-spickzettel" hidden>
-        <div class="posters-grid">
-          <!-- Card 1: Polygone (26. Oktober) -->
-          <article class="poster-card">
-            <div class="poster-header">
-              <span class="poster-date">Montag, 26. Oktober · Heft S. 1</span>
-              <h3>🔷 1. Polygone <span class="es-inline">(Polígonos: Ecken = Seiten = Winkel)</span></h3>
-            </div>
-            <div class="poster-body">
-              <p class="mika-spick-lead">
-                Ein <strong>Polygon</strong> ist eine geschlossene Figur aus geraden Strecken. Es hat immer <strong>gleich viele Ecken, Seiten und Winkel</strong>!
-                <span class="es-sub">Un polígono es una figura cerrada de lados rectos. ¡Siempre tiene igual número de vértices (Ecken), lados (Seiten) y ángulos (Winkel)!</span>
-              </p>
-              <div class="mika-poly-mini-table">
-                <div class="mika-poly-chip"><strong>3</strong> · das <strong>Dreieck</strong> <span class="es-inline">(Triángulo)</span></div>
-                <div class="mika-poly-chip"><strong>4</strong> · das <strong>Viereck</strong> <span class="es-inline">(Cuadrilátero)</span></div>
-                <div class="mika-poly-chip"><strong>5</strong> · das <strong>Fünfeck</strong> <span class="es-inline">(Pentágono)</span></div>
-                <div class="mika-poly-chip highlight-bonus"><strong>6</strong> · das <strong>Sechseck</strong> <span class="es-inline">(Hexágono — mit „chs“!)</span></div>
-                <div class="mika-poly-chip"><strong>7</strong> · das <strong>Siebeneck</strong> <span class="es-inline">(Heptágono)</span></div>
-                <div class="mika-poly-chip"><strong>8</strong> · das <strong>Achteck</strong> <span class="es-inline">(Octágono)</span></div>
-                <div class="mika-poly-chip"><strong>9</strong> · das <strong>Neuneck</strong> <span class="es-inline">(Nonágono / Eneágono)</span></div>
-                <div class="mika-poly-chip"><strong>10</strong> · das <strong>Zehneck</strong> <span class="es-inline">(Decágono)</span></div>
-                <div class="mika-poly-chip"><strong>20</strong> · das <strong>Zwanzigeck</strong> <span class="es-inline">(Icoságono)</span></div>
-              </div>
-            </div>
-          </article>
-
-          <!-- Card 2: Dreiecke sortieren (27. Oktober & S. 3) -->
-          <article class="poster-card">
-            <div class="poster-header">
-              <span class="poster-date">Dienstag, 27. Oktober · Heft S. 2 &amp; 3</span>
-              <h3>🔺 2. Dreiecke sortieren <span class="es-inline">(Nach Seiten &amp; nach Winkeln)</span></h3>
-            </div>
-            <div class="poster-body">
-              <div class="concept-split">
-                <div class="concept-box">
-                  <h4>Nach Seitenlängen <span class="es-inline">(Por lados)</span></h4>
-                  <ul class="clean-list">
-                    <li><strong>gleichseitig</strong> <span class="es-inline">(equilátero)</span>: <strong>3 Seiten gleich lang</strong> (|, |, |). <em>Immer spitzwinklig (3 × 60°)!</em></li>
-                    <li><strong>gleichschenklig</strong> <span class="es-inline">(isósceles)</span>: <strong>2 Seiten gleich lang</strong> (|, |, ||).</li>
-                    <li><strong>allgemein / ungleichseitig</strong> <span class="es-inline">(escaleno)</span>: <strong>3 Seiten unterschiedlich lang</strong> (|, ||, |||).</li>
-                  </ul>
-                </div>
-                <div class="concept-box">
-                  <h4>Nach Winkelart <span class="es-inline">(Por ángulos)</span></h4>
-                  <ul class="clean-list">
-                    <li><strong>spitzwinklig</strong> <span class="es-inline">(acutángulo)</span>: <strong>3 spitze Winkel</strong> (&lt; 90°).</li>
-                    <li><strong>rechtwinklig</strong> <span class="es-inline">(rectángulo)</span>: <strong>1 rechter Winkel</strong> (= 90° ⦜).</li>
-                    <li><strong>stumpfwinklig</strong> <span class="es-inline">(obtusángulo)</span>: <strong>1 stumpfer Winkel</strong> (&gt; 90°).</li>
-                  </ul>
-                  <div class="heft-note-box">
-                    <strong>🔑 Lösungswörter S. 19:</strong> Rechtwinklig = <strong>HAUS</strong> · Gleichseitig = <strong>BAUM</strong> · Gleichschenklig = <strong>AUTO</strong>.
-                  </div>
-                </div>
-              </div>
-            </div>
-          </article>
-
-          <!-- Card 3: Vierecke in 3 Gruppen & Symmetrie (2. & 3. Nov) -->
-          <article class="poster-card">
-            <div class="poster-header">
-              <span class="poster-date">2. &amp; 3. November · Heft S. 4–5 &amp; S. 9–16</span>
-              <h3>💎 3. Vierecke: Die 3 Gruppen &amp; Symmetrieachsen</h3>
-            </div>
-            <div class="poster-body">
-              <ul class="clean-list">
-                <li>
-                  <strong>🟦 1. Gruppe: Parallelogramm (2 Paar ∥ parallele Seiten)</strong>
-                  <div class="mika-sub-chips">
-                    <span><strong>Quadrat:</strong> 4 gleich lange Seiten, 4 rechte Winkel (90°), <strong>4 Symmetrieachsen</strong></span>
-                    <span><strong>Rechteck:</strong> 2 Paar gleich lange Seiten, 4 rechte Winkel (90°), <strong>2 Symmetrieachsen</strong></span>
-                    <span><strong>Raute (Rombo):</strong> 4 gleich lange Seiten, 0 rechte Winkel, <strong>2 Symmetrieachsen</strong></span>
-                    <span><strong>Romboid:</strong> 2 Paar gleich lange Seiten, 0 rechte Winkel, <strong>0 Symmetrieachsen</strong></span>
-                  </div>
-                </li>
-                <li>
-                  <strong>🟧 2. Gruppe: Trapez (genau 1 Paar ∥ parallele Seiten)</strong>
-                  <div class="mika-sub-chips">
-                    <span><strong>rechtwinkliges Trapez:</strong> 1 Paar ∥ und <strong>2 rechte Winkel (90°)!</strong> (0 Achsen)</span>
-                    <span><strong>gleichschenkliges Trapez:</strong> 1 Paar ∥, Schenkel gleich lang, 0 rechte Winkel, <strong>1 Symmetrieachse</strong></span>
-                    <span><strong>ungleichseitiges Trapez:</strong> 1 Paar ∥, alle 4 Seiten verschieden (0 Achsen)</span>
-                  </div>
-                </li>
-                <li>
-                  <strong>🟪 3. Gruppe: Trapezoid (0 Paar ∥ — keine parallelen Seiten)</strong>
-                  <div class="mika-sub-chips">
-                    <span><strong>Drachen (Deltoid):</strong> 0 Paar ∥, 2 Paar gleich lange Nachbarseiten, <strong>1 Symmetrieachse</strong></span>
-                    <span><strong>Allgemeines Trapezoid:</strong> 0 Paar ∥ (auch Bumerang-Form)</span>
-                  </div>
-                </li>
-              </ul>
-            </div>
-          </article>
-
-          <!-- Card 4: Koordinatensystem, Vektoren & Die 5 Prüfungs-Fallen -->
-          <article class="poster-card">
-            <div class="poster-header">
-              <span class="poster-date">9. &amp; 11. November · Heft S. 6–10</span>
-              <h3>🧭 4. Koordinaten (x|y), Vektoren &amp; 5 Prüfungs-Tipps</h3>
-            </div>
-            <div class="poster-body">
-              <ul class="clean-list">
-                <li>
-                  <strong>Koordinaten <code>P(x | y)</code>:</strong> Immer zuerst <strong>x nach rechts</strong> (Rechtsachse), dann <strong>y nach oben</strong> (Hochachse)!
-                </li>
-                <li>
-                  <strong>Vektor <code>→(x, y)</code> (mit Pfeil darüber!):</strong>
-                  1. Zahl (x): <strong>+ = rechts</strong> (ohne +), <strong>− = links</strong> ·
-                  2. Zahl (y): <strong>+ = oben</strong>, <strong>− = unten</strong>, <strong>0 = 0 oben</strong>.
-                </li>
-                <li>
-                  <strong>Punkt + Vektor = Zielpunkt (S. 8):</strong>
-                  <code>(2|3) + →(3|5) = (5|8)</code> · <code>(8|10) + →(1|−2) = (9|8)</code> · <code>(6|5) + →(−1|2) = (5|7)</code>.
-                </li>
-              </ul>
-              <div class="mika-traps-alert">
-                <strong>⚠️ Deine 5 Gold-Tipps für die Probe morgen:</strong>
-                <ol>
-                  <li>6 Ecken = <strong>Sechseck</strong> (mit „chs“).</li>
-                  <li>Ein <strong>rechtwinkliges Trapez</strong> hat <strong>1 Paar ∥</strong> und <strong>2 rechte Winkel</strong> (nicht 1!).</li>
-                  <li>Auf S. 16 (1f): Das schräge Viereck hat 2 Paar ∥ Seiten → es ist ein <strong>Romboid / Parallelogramm</strong> (kein Trapezoid!).</li>
-                  <li>Von <code>(5|8)</code> nach <code>(9|8)</code> geht man 4 nach <strong>rechts</strong> → Vektor <strong><code>→(4 | 0)</code></strong> (ohne Minus!).</li>
-                  <li>Ein <strong>gleichseitiges Dreieck</strong> ist <strong>immer spitzwinklig</strong> (nie rechtwinklig oder stumpfwinklig!).</li>
-                </ol>
-              </div>
-            </div>
-          </article>
         </div>
       </div>
     </section>
