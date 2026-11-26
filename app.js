@@ -2680,8 +2680,8 @@
             <polyline points="154,66 108,66 108,120 156,120" fill="none" stroke="#1e293b" stroke-width="2.8"/>
             <!-- C: Rundbogen -->
             <path d="M 192 120 L 192 84 A 24 24 0 0 1 240 84 L 240 120 Z" fill="#e2e8f0" stroke="#1e293b" stroke-width="2.5"/>
-            <!-- D: Gedrehtes Viereck -->
-            <polygon points="301,58 329,88 301,118 273,88" fill="#e2e8f0" stroke="#1e293b" stroke-width="2.5"/>
+            <!-- D: Gedrehtes Viereck (exaktes Quadrat 30x30) -->
+            <polygon points="301,58 331,88 301,118 271,88" fill="#e2e8f0" stroke="#1e293b" stroke-width="2.5"/>
           `;
         }
 
@@ -2710,7 +2710,7 @@
         let fill = "#e0f2fe";
 
         if (kind === "equilateral") {
-          p1 = { x: 170, y: 28 };
+          p1 = { x: 170, y: 28.8 };
           p2 = { x: 100, y: 150 };
           p3 = { x: 240, y: 150 };
           ticks = [1, 1, 1];
@@ -2745,14 +2745,21 @@
           stroke = "#0284c7";
           fill = "#f0f9ff";
         } else if (kind === "scalene_obtuse") {
-          p1 = { x: 112, y: 42 };
+          p1 = { x: 124, y: 94 };
           p2 = { x: 64, y: 148 };
           p3 = { x: 282, y: 148 };
           ticks = [1, 2, 3];
           stroke = "#ea580c";
           fill = "#ffedd5";
-        } else if (kind === "near_right_89" || kind === "near_right_91") {
+        } else if (kind === "near_right_89") {
           p1 = { x: 96, y: 34 };
+          p2 = { x: 92, y: 148 };
+          p3 = { x: 256, y: 148 };
+          ticks = [0, 0, 0];
+          stroke = "#4f46e5";
+          fill = "#e0e7ff";
+        } else if (kind === "near_right_91") {
+          p1 = { x: 88, y: 34 };
           p2 = { x: 92, y: 148 };
           p3 = { x: 256, y: 148 };
           ticks = [0, 0, 0];
@@ -2871,9 +2878,9 @@
             <!-- E (recht rechts unten) -->
             <polygon points="326,22 264,82 326,82" fill="#f1f5f9" stroke="#334155" stroke-width="2.3"/>
             <text x="306" y="72" font-size="14" font-weight="900" fill="#0f172a">E</text>
-            <!-- L (stumpf) -->
-            <polygon points="62,118 18,166 122,166" fill="#f1f5f9" stroke="#334155" stroke-width="2.3"/>
-            <text x="66" y="156" text-anchor="middle" font-size="14" font-weight="900" fill="#0f172a">L</text>
+            <!-- L (stumpf ~123°) -->
+            <polygon points="62,134 18,166 122,166" fill="#f1f5f9" stroke="#334155" stroke-width="2.3"/>
+            <text x="66" y="160" text-anchor="middle" font-size="14" font-weight="900" fill="#0f172a">L</text>
             <!-- R (recht) -->
             <polygon points="154,104 154,166 220,166" fill="#f1f5f9" stroke="#334155" stroke-width="2.3"/>
             <text x="174" y="154" font-size="14" font-weight="900" fill="#0f172a">R</text>
@@ -2886,24 +2893,24 @@
           // 7 triangles: M(stumpf), P(spitz), O(stumpf), F(recht), N(stumpf), D(stumpf), X(spitz)
           return `<svg viewBox="0 0 350 185" aria-label="Sieben Dreiecke zum Untersuchen">
             <rect x="2" y="2" width="346" height="181" rx="12" fill="#ffffff" stroke="#e2e8f0"/>
-            <!-- M (stumpf) -->
-            <polygon points="58,44 14,84 102,84" fill="#f1f5f9" stroke="#334155" stroke-width="2.3"/>
-            <text x="58" y="76" text-anchor="middle" font-size="14" font-weight="900">M</text>
+            <!-- M (stumpf ~125°) -->
+            <polygon points="58,60 14,84 102,84" fill="#f1f5f9" stroke="#334155" stroke-width="2.3"/>
+            <text x="58" y="80" text-anchor="middle" font-size="13.5" font-weight="900">M</text>
             <!-- P (spitz) -->
             <polygon points="146,18 122,84 170,84" fill="#f1f5f9" stroke="#334155" stroke-width="2.3"/>
             <text x="146" y="72" text-anchor="middle" font-size="14" font-weight="900">P</text>
-            <!-- O (stumpf) -->
-            <polygon points="212,50 184,84 268,84" fill="#f1f5f9" stroke="#334155" stroke-width="2.3"/>
-            <text x="218" y="76" text-anchor="middle" font-size="14" font-weight="900">O</text>
+            <!-- O (stumpf ~120°) -->
+            <polygon points="212,60 184,84 268,84" fill="#f1f5f9" stroke="#334155" stroke-width="2.3"/>
+            <text x="218" y="80" text-anchor="middle" font-size="13.5" font-weight="900">O</text>
             <!-- F (recht) -->
             <polygon points="286,22 286,84 336,84" fill="#f1f5f9" stroke="#334155" stroke-width="2.3"/>
             <text x="302" y="72" font-size="14" font-weight="900">F</text>
-            <!-- N (stumpf) -->
-            <polygon points="68,128 18,168 118,168" fill="#f1f5f9" stroke="#334155" stroke-width="2.3"/>
-            <text x="68" y="160" text-anchor="middle" font-size="14" font-weight="900">N</text>
-            <!-- D (stumpf) -->
-            <polygon points="196,126 146,168 246,168" fill="#f1f5f9" stroke="#334155" stroke-width="2.3"/>
-            <text x="196" y="160" text-anchor="middle" font-size="14" font-weight="900">D</text>
+            <!-- N (stumpf ~125°) -->
+            <polygon points="68,142 18,168 118,168" fill="#f1f5f9" stroke="#334155" stroke-width="2.3"/>
+            <text x="68" y="164" text-anchor="middle" font-size="13.5" font-weight="900">N</text>
+            <!-- D (stumpf ~125°) -->
+            <polygon points="196,142 146,168 246,168" fill="#f1f5f9" stroke="#334155" stroke-width="2.3"/>
+            <text x="196" y="164" text-anchor="middle" font-size="13.5" font-weight="900">D</text>
             <!-- X (spitz) -->
             <polygon points="300,104 274,168 326,168" fill="#f1f5f9" stroke="#334155" stroke-width="2.3"/>
             <text x="300" y="156" text-anchor="middle" font-size="14" font-weight="900">X</text>
@@ -3023,10 +3030,10 @@
           <polygon points="298,18 274,82 322,82" fill="#f1f5f9" stroke="#334155" stroke-width="2.3"/>
           ${svgTickMarks(298, 18, 274, 82, 1)} ${svgTickMarks(322, 82, 298, 18, 1)}
           <text x="298" y="70" text-anchor="middle" font-size="13.5" font-weight="900">K</text>
-          <!-- R (recht + iso) -->
-          <polygon points="56,110 22,164 90,164" fill="#f1f5f9" stroke="#334155" stroke-width="2.3"/>
-          ${svgTickMarks(56, 110, 22, 164, 1)} ${svgTickMarks(90, 164, 56, 110, 1)}
-          <text x="56" y="154" text-anchor="middle" font-size="13.5" font-weight="900">R</text>
+          <!-- R (recht + iso: exakte 90° an der Spitze, h = 42 = halbe Basis 42) -->
+          <polygon points="56,122 14,164 98,164" fill="#f1f5f9" stroke="#334155" stroke-width="2.3"/>
+          ${svgTickMarks(56, 122, 14, 164, 1)} ${svgTickMarks(98, 164, 56, 122, 1)}
+          <text x="56" y="156" text-anchor="middle" font-size="13.5" font-weight="900">R</text>
           <!-- S (stumpf + iso) -->
           <polygon points="168,128 118,164 218,164" fill="#f1f5f9" stroke="#334155" stroke-width="2.3"/>
           ${svgTickMarks(168, 128, 118, 164, 1)} ${svgTickMarks(218, 164, 168, 128, 1)}
@@ -3173,44 +3180,50 @@
         </svg>`;
       }
 
-      // 7. KOORDINATENSYSTEM LIMPIO (Sin guías, sin 4° punto dibujado, sin punto final del vector dibujado)
+      // 7. KOORDINATENSYSTEM LIMPIO — ESCALA 1:1 ISOTRÓPICA (stepX === stepY = 24px!)
+      // Así todos los cuadraditos son 100% cuadrados y los ángulos de 90° y diagonales de 45° son exactos.
       case "coord_grid_clean":
       default: {
         const maxX = spec.maxX || 10;
         const maxY = spec.maxY || 10;
+        const step = 24;
         const padLeft = 34;
-        const padBottom = 28;
-        const padTop = 18;
-        const padRight = 22;
-        const plotW = 350 - padLeft - padRight;
-        const plotH = 210 - padTop - padBottom;
-        const stepX = plotW / maxX;
-        const stepY = plotH / maxY;
+        const padRight = 24;
+        const padTop = 22;
+        const padBottom = 30;
+        const plotW = maxX * step;
+        const plotH = maxY * step;
+        const svgW = padLeft + plotW + padRight;
+        const svgH = padTop + plotH + padBottom;
 
-        const toSvgX = (x) => padLeft + x * stepX;
-        const toSvgY = (y) => 210 - padBottom - y * stepY;
+        const toSvgX = (x) => padLeft + x * step;
+        const toSvgY = (y) => padTop + (maxY - y) * step;
 
         let gridHtml = "";
         for (let x = 0; x <= maxX; x += 1) {
           const sx = toSvgX(x);
-          gridHtml += `<line x1="${sx.toFixed(1)}" y1="${padTop}" x2="${sx.toFixed(1)}" y2="${210 - padBottom}" stroke="#e2e8f0" stroke-width="1"/>`;
-          gridHtml += `<text x="${sx.toFixed(1)}" y="${210 - padBottom + 14}" text-anchor="middle" font-size="9.5" font-weight="800" fill="#475569">${x}</text>`;
+          gridHtml += `<line x1="${sx.toFixed(1)}" y1="${padTop}" x2="${sx.toFixed(1)}" y2="${padTop + plotH}" stroke="#e2e8f0" stroke-width="1"/>`;
+          gridHtml += `<text x="${sx.toFixed(1)}" y="${padTop + plotH + 15}" text-anchor="middle" font-size="10.5" font-weight="800" fill="#475569">${x}</text>`;
         }
         for (let y = 0; y <= maxY; y += 1) {
           const sy = toSvgY(y);
-          gridHtml += `<line x1="${padLeft}" y1="${sy.toFixed(1)}" x2="${350 - padRight}" y2="${sy.toFixed(1)}" stroke="#e2e8f0" stroke-width="1"/>`;
+          gridHtml += `<line x1="${padLeft}" y1="${sy.toFixed(1)}" x2="${padLeft + plotW}" y2="${sy.toFixed(1)}" stroke="#e2e8f0" stroke-width="1"/>`;
           if (y > 0) {
-            gridHtml += `<text x="${padLeft - 8}" y="${(sy + 3.5).toFixed(1)}" text-anchor="end" font-size="9.5" font-weight="800" fill="#475569">${y}</text>`;
+            gridHtml += `<text x="${padLeft - 8}" y="${(sy + 3.5).toFixed(1)}" text-anchor="end" font-size="10.5" font-weight="800" fill="#475569">${y}</text>`;
           }
         }
 
         const oy = toSvgY(0);
         const ox = toSvgX(0);
+        const axEndX = padLeft + plotW + 10;
+        const axEndY = padTop - 10;
         const axesHtml = `
-          <line x1="${ox}" y1="${oy}" x2="${350 - padRight + 8}" y2="${oy}" stroke="#0f172a" stroke-width="2"/>
-          <line x1="${ox}" y1="${oy}" x2="${ox}" y2="${padTop - 8}" stroke="#0f172a" stroke-width="2"/>
-          <text x="${350 - 8}" y="${oy + 4}" text-anchor="end" font-size="11" font-weight="900" fill="#0f172a">x</text>
-          <text x="${ox - 10}" y="${padTop - 4}" font-size="11" font-weight="900" fill="#0f172a">y</text>
+          <line x1="${ox}" y1="${oy}" x2="${axEndX}" y2="${oy}" stroke="#0f172a" stroke-width="2"/>
+          <polygon points="${axEndX + 4},${oy} ${axEndX - 3},${oy - 3.5} ${axEndX - 3},${oy + 3.5}" fill="#0f172a"/>
+          <line x1="${ox}" y1="${oy}" x2="${ox}" y2="${axEndY}" stroke="#0f172a" stroke-width="2"/>
+          <polygon points="${ox},${axEndY - 4} ${ox - 3.5},${axEndY + 3} ${ox + 3.5},${axEndY + 3}" fill="#0f172a"/>
+          <text x="${axEndX + 1}" y="${oy + 15}" text-anchor="middle" font-size="11.5" font-weight="900" fill="#0f172a">x</text>
+          <text x="${ox - 13}" y="${axEndY + 4}" text-anchor="middle" font-size="11.5" font-weight="900" fill="#0f172a">y</text>
         `;
 
         // Recta de simetría g (si existe)
@@ -3221,9 +3234,22 @@
           const my1 = toSvgY(m.y1);
           const mx2 = toSvgX(m.x2);
           const my2 = toSvgY(m.y2);
+          let gx = mx2 - 10;
+          let gy = my2 + 16;
+          if (m.y1 === m.y2) {
+            gx = mx2 - 10;
+            gy = my2 - 7;
+          } else if (m.x1 === m.x2) {
+            gx = mx2 + 8;
+            gy = my2 + 14;
+          } else if (m.y1 > m.y2) {
+            // Diagonal descendente (ej. (0|9) -> (9|0))
+            gx = mx1 + 14;
+            gy = my1 + 6;
+          }
           mirrorHtml = `
             <line x1="${mx1.toFixed(1)}" y1="${my1.toFixed(1)}" x2="${mx2.toFixed(1)}" y2="${my2.toFixed(1)}" stroke="#dc2626" stroke-width="2.6"/>
-            <text x="${(mx2 - 10).toFixed(1)}" y="${(my2 + 16).toFixed(1)}" font-size="12" font-weight="900" fill="#dc2626">${m.label || "g"}</text>
+            <text x="${gx.toFixed(1)}" y="${gy.toFixed(1)}" font-size="12.5" font-weight="900" fill="#dc2626" style="paint-order:stroke;stroke:#fff;stroke-width:3px;">${m.label || "g"}</text>
           `;
         }
 
@@ -3238,10 +3264,11 @@
           spec.polygon.forEach((p) => {
             const sx = toSvgX(p.x);
             const sy = toSvgY(p.y);
-            const ly = sy < 36 ? sy + 15 : sy - 8;
+            const ly = sy < padTop + 18 ? sy + 16 : sy - 8;
+            const lx = sx > padLeft + plotW - 18 ? sx - 12 : sx + 7;
             polyHtml += `
               <circle cx="${sx.toFixed(1)}" cy="${sy.toFixed(1)}" r="4.5" fill="${c}"/>
-              <text x="${(sx + 6).toFixed(1)}" y="${ly.toFixed(1)}" font-size="11" font-weight="900" fill="#0f172a" style="paint-order:stroke;stroke:#fff;stroke-width:3px;">${p.label}</text>
+              <text x="${lx.toFixed(1)}" y="${ly.toFixed(1)}" font-size="11.5" font-weight="900" fill="#0f172a" style="paint-order:stroke;stroke:#fff;stroke-width:3px;">${p.label}</text>
             `;
           });
         }
@@ -3252,16 +3279,17 @@
           spec.points.forEach((pt) => {
             const sx = toSvgX(pt.x);
             const sy = toSvgY(pt.y);
-            const ly = sy < 36 ? sy + 15 : sy - 8;
+            const ly = sy < padTop + 18 ? sy + 16 : sy - 8;
+            const lx = sx > padLeft + plotW - 18 ? sx - 14 : sx + 7;
             ptsHtml += `
               <circle cx="${sx.toFixed(1)}" cy="${sy.toFixed(1)}" r="4.8" fill="${pt.color || "#dc2626"}"/>
-              <text x="${(sx + 6).toFixed(1)}" y="${ly.toFixed(1)}" font-size="11.5" font-weight="900" fill="${pt.color || "#0f172a"}" style="paint-order:stroke;stroke:#fff;stroke-width:3px;">${pt.label}</text>
+              <text x="${lx.toFixed(1)}" y="${ly.toFixed(1)}" font-size="12" font-weight="900" fill="${pt.color || "#0f172a"}" style="paint-order:stroke;stroke:#fff;stroke-width:3px;">${pt.label}</text>
             `;
           });
         }
 
-        return `<svg viewBox="0 0 350 210" aria-label="Koordinatensystem">
-          <rect x="2" y="2" width="346" height="206" rx="12" fill="#ffffff" stroke="#e2e8f0"/>
+        return `<svg viewBox="0 0 ${svgW} ${svgH}" preserveAspectRatio="xMidYMid meet" aria-label="Koordinatensystem mit quadratischem Raster">
+          <rect x="2" y="2" width="${svgW - 4}" height="${svgH - 4}" rx="12" fill="#ffffff" stroke="#e2e8f0"/>
           ${gridHtml}
           ${axesHtml}
           ${mirrorHtml}
